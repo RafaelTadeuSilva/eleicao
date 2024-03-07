@@ -1,4 +1,5 @@
-import 'package:eleicao/src/urna/pages/vereador_page.dart';
+import 'package:eleicao/src/urna/pages/candidato_page.dart';
+import 'package:eleicao/src/urna/pages/votacao_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const VereadorPage(),
+      home: const VotacaoPage(),
     );
   }
 }
