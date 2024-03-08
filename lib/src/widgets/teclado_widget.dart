@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:eleicao/src/urna/state/votacao_state.dart';
 import 'package:eleicao/src/widgets/function_button.dart';
 import 'package:eleicao/src/widgets/number_button.dart';
 import 'package:flutter/material.dart';
@@ -10,19 +11,18 @@ class TecladoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.all(4),
       color: Colors.grey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
         children: [
-          Text('Nome da Escola'),
           Text('Colégio Santa Teresinha'),
-          Text('Descrição da Votação'),
           Text('Eleição da Michelândia'),
           Padding(
-            padding: EdgeInsets.only(left: 50),
+            padding: EdgeInsets.only(left: 20),
             child: Table(
-              defaultColumnWidth: FixedColumnWidth(85),
+              defaultColumnWidth: FixedColumnWidth(70),
               children: [
                 TableRow(children: [
                   NumberButton(number: 1, onPressed: onPressNumber),
@@ -55,7 +55,11 @@ class TecladoWidget extends StatelessWidget {
                 text: 'BRANCO',
               ),
               FunctionButton(
-                onPressed: () {},
+                onPressed: () {
+                  numCandidato.value = '';
+                  numAtual.value = 0;
+                  urlImageCandidato.value = '';
+                },
                 backgroundColor: Colors.orange,
                 text: 'CORRIGE',
               ),

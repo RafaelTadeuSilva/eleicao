@@ -10,12 +10,12 @@ class NumberButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(4.0),
       child: ElevatedButton(
           style: ElevatedButton.styleFrom(
               shape: const RoundedRectangleBorder(),
               backgroundColor: Colors.black,
-              fixedSize: const Size(70, 70)),
+              fixedSize: const Size(60, 55)),
           onPressed: () => onPressed(number),
           child: Text(
             number.toString(),

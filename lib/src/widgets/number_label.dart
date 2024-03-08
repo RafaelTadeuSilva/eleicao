@@ -1,30 +1,63 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
-class NumberLabel extends StatelessWidget {
+class NumberLabel extends StatefulWidget {
   const NumberLabel({
     super.key,
-    required this.lbNum1,
+    this.shouldBlink = false,
+    required this.lbNum,
   });
 
-  final ValueNotifier<String> lbNum1;
+  final String lbNum;
+  final bool shouldBlink;
+  @override
+  State<NumberLabel> createState() => _NumberLabelState();
+}
+
+class _NumberLabelState extends State<NumberLabel> {
+  final visible = ValueNotifier(true);
+  @override
+  void initState() {
+    Timer.periodic(Durations.short4, (timer) {
+      if (widget.shouldBlink) {
+        visible.value = !visible.value;
+      } else {
+        visible.value = true;
+      }
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 100,
-      height: 100,
-      decoration: BoxDecoration(
-          border: Border(
-              bottom: BorderSide(),
-              top: BorderSide(),
-              left: BorderSide(),
-              right: BorderSide())),
-      child: Center(
-        child: Text(
-          lbNum1.value,
-          style: TextStyle(
-            height: 0.1,
-            fontSize: 90,
+    return Padding(
+      padding: const EdgeInsets.only(left: 4),
+      child: ValueListenableBuilder(
+        valueListenable: visible,
+        builder: (context, value, child) => Visibility(
+          maintainSize: true,
+          maintainAnimation: true,
+          maintainState: true,
+          visible: visible.value,
+          child: Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(),
+                    top: BorderSide(),
+                    left: BorderSide(),
+                    right: BorderSide())),
+            child: Center(
+              child: Text(
+                widget.lbNum,
+                style: TextStyle(
+                  height: 0.1,
+                  fontSize: 40,
+                ),
+              ),
+            ),
           ),
         ),
       ),

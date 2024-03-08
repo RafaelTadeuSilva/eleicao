@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:eleicao/src/urna/state/votacao_state.dart';
 import 'package:eleicao/src/widgets/number_label.dart';
-import 'package:eleicao/src/widgets/teclado_widget.dart';
 import 'package:flutter/material.dart';
 
 class CandidatoPage extends StatefulWidget {
@@ -12,43 +12,117 @@ class CandidatoPage extends StatefulWidget {
 }
 
 class _CandidatoPageState extends State<CandidatoPage> {
-  // final txtNum1 = TextEditingController();
-  // final txtNum2 = TextEditingController();
-  // final txtNum3 = TextEditingController();
-  // final txtNum4 = TextEditingController();
-  // final txtNum5 = TextEditingController();
-  final lbNum1 = ValueNotifier('1');
-  final lbNum2 = ValueNotifier(' ');
-  final lbNum3 = ValueNotifier(' ');
-  final lbNum4 = ValueNotifier(' ');
-  final lbNum5 = ValueNotifier(' ');
-
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.grey,
-      width: 600,
-      height: 600,
+      width: 500,
+      decoration: BoxDecoration(
+          color: Colors.grey,
+          border: Border(bottom: BorderSide(color: Colors.black, width: 3))),
       child: body(),
     );
   }
 
   Widget body() {
-    return Column(
-      children: [
-        Text('SEU VOTO PARA'),
-        Text('PREFEITO'),
-        Row(
-          children: [
-            Text('Número:'),
-            NumberLabel(lbNum1: lbNum1),
-            NumberLabel(lbNum1: lbNum2),
-            NumberLabel(lbNum1: lbNum3),
-            NumberLabel(lbNum1: lbNum4),
-            NumberLabel(lbNum1: lbNum5),
-          ],
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(5.0),
+      child: Row(
+        children: [
+          ValueListenableBuilder(
+            valueListenable: numCandidato,
+            builder: (context, value, child) => Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'SEU VOTO PARA',
+                  style: TextStyle(fontSize: 25),
+                ),
+                Row(
+                  children: [
+                    SizedBox(width: 60),
+                    Text(
+                      'PREFEITO',
+                      style: TextStyle(fontSize: 25),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 5),
+                Row(
+                  children: [
+                    Text('Número:'),
+                    SizedBox(width: 10),
+                    NumberLabel(
+                      lbNum:
+                          numCandidato.value.split('').elementAtOrNull(0) ?? '',
+                      shouldBlink: numAtual.value == 0,
+                    ),
+                    NumberLabel(
+                      lbNum:
+                          numCandidato.value.split('').elementAtOrNull(1) ?? '',
+                      shouldBlink: numAtual.value == 1,
+                    ),
+                    NumberLabel(
+                      lbNum:
+                          numCandidato.value.split('').elementAtOrNull(2) ?? '',
+                      shouldBlink: numAtual.value == 2,
+                    ),
+                    NumberLabel(
+                      lbNum:
+                          numCandidato.value.split('').elementAtOrNull(3) ?? '',
+                      shouldBlink: numAtual.value == 3,
+                    ),
+                    NumberLabel(
+                      lbNum:
+                          numCandidato.value.split('').elementAtOrNull(4) ?? '',
+                      shouldBlink: numAtual.value == 4,
+                    ),
+                  ],
+                ),
+                SizedBox(height: 5),
+                Row(
+                  children: [
+                    Text('Nome:'),
+                    SizedBox(width: 10),
+                    Text(
+                      'Aluno 1',
+                      style: TextStyle(fontSize: 25),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 5),
+                Row(
+                  children: [
+                    Text('Partido:'),
+                    SizedBox(width: 10),
+                    Text(
+                      'Partido 1',
+                      style: TextStyle(fontSize: 25),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Spacer(),
+          ValueListenableBuilder(
+            valueListenable: urlImageCandidato,
+            builder: (context, value, child) => Container(
+              decoration: BoxDecoration(
+                  image: urlImageCandidato.value == ''
+                      ? null
+                      : DecorationImage(
+                          image: AssetImage(urlImageCandidato.value)),
+                  border: Border(
+                      bottom: BorderSide(width: 1),
+                      left: BorderSide(width: 1),
+                      top: BorderSide(width: 1),
+                      right: BorderSide(width: 1))),
+              width: 180,
+              height: 200,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

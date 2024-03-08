@@ -14,19 +14,19 @@ class FunctionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(3.0),
+      padding: const EdgeInsets.all(2.0),
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
             padding: EdgeInsets.zero,
-            fixedSize: Size(110, 60),
+            fixedSize: Size(85, 60),
             backgroundColor: backgroundColor,
             shape: RoundedRectangleBorder()),
         child: Text(
           text,
           style: TextStyle(
             color: Colors.black,
-            fontSize: 20,
+            fontSize: 15,
           ),
         ),
       ),
