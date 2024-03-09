@@ -1,3 +1,4 @@
+import 'package:eleicao/src/urna/state/votacao_state.dart';
 import 'package:flutter/material.dart';
 
 class EleitorPage extends StatelessWidget {
@@ -9,21 +10,23 @@ class EleitorPage extends StatelessWidget {
       children: [
         Container(
           width: 500,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               color: Colors.grey,
               border:
                   Border(bottom: BorderSide(color: Colors.black, width: 3))),
           child: Padding(
             padding: const EdgeInsets.all(4),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Nome do aluno eleitor:'),
-                Text('Eleitor 1'),
-                Text('Série / Turma:'),
-                Text('6º B'),
-              ],
-            ),
+            child: ValueListenableBuilder(
+                valueListenable: eleitorAtual,
+                builder: (context, value, child) => Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('Nome do aluno eleitor:'),
+                        Text(value.nome),
+                        const Text('Série / Turma:'),
+                        Text(value.turma),
+                      ],
+                    )),
           ),
         ),
       ],

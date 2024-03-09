@@ -1,13 +1,17 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:eleicao/src/urna/state/votacao_state.dart';
+import 'package:eleicao/src/urna/controller/votacao_control.dart';
 import 'package:eleicao/src/widgets/function_button.dart';
 import 'package:eleicao/src/widgets/number_button.dart';
 import 'package:flutter/material.dart';
 
 class TecladoWidget extends StatelessWidget {
-  const TecladoWidget({super.key, required this.onPressNumber});
-  final void Function(int) onPressNumber;
+  const TecladoWidget(
+    this.control, {
+    super.key,
+  });
+  final VotacaoControl control;
+  // final void Function(int) onPressNumber;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -20,28 +24,28 @@ class TecladoWidget extends StatelessWidget {
           Text('Colégio Santa Teresinha'),
           Text('Eleição da Michelândia'),
           Padding(
-            padding: EdgeInsets.only(left: 20),
+            padding: EdgeInsets.only(left: 30),
             child: Table(
               defaultColumnWidth: FixedColumnWidth(70),
               children: [
                 TableRow(children: [
-                  NumberButton(number: 1, onPressed: onPressNumber),
-                  NumberButton(number: 2, onPressed: onPressNumber),
-                  NumberButton(number: 3, onPressed: onPressNumber),
+                  NumberButton(number: 1, onPressed: control.carregaCandidato),
+                  NumberButton(number: 2, onPressed: control.carregaCandidato),
+                  NumberButton(number: 3, onPressed: control.carregaCandidato),
                 ]),
                 TableRow(children: [
-                  NumberButton(number: 4, onPressed: onPressNumber),
-                  NumberButton(number: 5, onPressed: onPressNumber),
-                  NumberButton(number: 6, onPressed: onPressNumber),
+                  NumberButton(number: 4, onPressed: control.carregaCandidato),
+                  NumberButton(number: 5, onPressed: control.carregaCandidato),
+                  NumberButton(number: 6, onPressed: control.carregaCandidato),
                 ]),
                 TableRow(children: [
-                  NumberButton(number: 7, onPressed: onPressNumber),
-                  NumberButton(number: 8, onPressed: onPressNumber),
-                  NumberButton(number: 9, onPressed: onPressNumber),
+                  NumberButton(number: 7, onPressed: control.carregaCandidato),
+                  NumberButton(number: 8, onPressed: control.carregaCandidato),
+                  NumberButton(number: 9, onPressed: control.carregaCandidato),
                 ]),
                 TableRow(children: [
                   Container(),
-                  NumberButton(number: 0, onPressed: onPressNumber),
+                  NumberButton(number: 0, onPressed: control.carregaCandidato),
                   Container(),
                 ]),
               ],
@@ -50,21 +54,17 @@ class TecladoWidget extends StatelessWidget {
           Row(
             children: [
               FunctionButton(
-                onPressed: () {},
+                onPressed: control.votoBranco,
                 backgroundColor: Colors.white,
                 text: 'BRANCO',
               ),
               FunctionButton(
-                onPressed: () {
-                  numCandidato.value = '';
-                  numAtual.value = 0;
-                  urlImageCandidato.value = '';
-                },
+                onPressed: control.corrige,
                 backgroundColor: Colors.orange,
                 text: 'CORRIGE',
               ),
               FunctionButton(
-                onPressed: () {},
+                onPressed: control.confirma,
                 backgroundColor: Colors.green,
                 text: 'CONFIRMA',
               ),
