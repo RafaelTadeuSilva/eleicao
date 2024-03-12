@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:eleicao/src/urna/controller/votacao_control.dart';
+import 'package:eleicao/src/features/urna/controllers/votacao_control.dart';
 import 'package:eleicao/src/widgets/function_button.dart';
 import 'package:eleicao/src/widgets/number_button.dart';
 import 'package:flutter/material.dart';

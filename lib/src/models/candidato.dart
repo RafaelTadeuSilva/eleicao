@@ -1,4 +1,4 @@
-import 'package:eleicao/src/urna/enums/cargo.dart';
+import 'package:eleicao/src/features/urna/enums/cargo.dart';
 
 class Candidato {
   final String id;

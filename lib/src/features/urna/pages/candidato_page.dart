@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:eleicao/src/urna/functions/functions.dart';
-import 'package:eleicao/src/urna/state/votacao_state.dart';
+import 'package:eleicao/src/features/urna/functions/functions.dart';
+import 'package:eleicao/src/features/urna/state/votacao_state.dart';
 import 'package:eleicao/src/widgets/number_label.dart';
 import 'package:flutter/material.dart';
 
@@ -41,7 +41,7 @@ class _CandidatoPageState extends State<CandidatoPage> {
                       style: TextStyle(fontSize: 25),
                     ),
                     Row(
-                      children: [
+                      children: const [
                         SizedBox(width: 60),
                         Text(
                           'PREFEITO',

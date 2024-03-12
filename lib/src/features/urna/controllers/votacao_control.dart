@@ -1,9 +1,10 @@
-import 'package:eleicao/src/urna/enums/cargo.dart';
-import 'package:eleicao/src/urna/functions/functions.dart';
-import 'package:eleicao/src/urna/models/candidato.dart';
-import 'package:eleicao/src/urna/state/votacao_state.dart';
+import 'package:eleicao/src/features/urna/enums/cargo.dart';
+import 'package:eleicao/src/features/urna/functions/functions.dart';
+import 'package:eleicao/src/features/urna/state/votacao_state.dart';
+import 'package:eleicao/src/models/candidato.dart';
+import 'package:flutter/material.dart';
 
-class VotacaoControl {
+class VotacaoControl with ChangeNotifier {
   void carregaCandidato(int num) {
     final digitos = candidatoDigitos();
     if (numAtual.value < digitos) {
@@ -11,8 +12,9 @@ class VotacaoControl {
     }
     numAtual.value = numCandidato.value.length;
     if (numAtual.value == digitos) {
-      urlImageCandidato.value = 'assets/images/candidato.png';
       buscaCandidato(numCandidato.value);
+      urlImageCandidato.value =
+          candidatoAtual.value!.urlImage; //'assets/images/candidato.png';
     }
     numCandidato.notifyListeners();
   }

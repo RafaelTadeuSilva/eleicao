@@ -1,4 +1,4 @@
-import 'package:eleicao/src/urna/state/votacao_state.dart';
+import 'package:eleicao/src/features/urna/state/votacao_state.dart';
 import 'package:flutter/material.dart';
 
 class EleitorPage extends StatelessWidget {
@@ -22,7 +22,7 @@ class EleitorPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text('Nome do aluno eleitor:'),
-                        Text(value.nome),
+                        Text(value!.nome),
                         const Text('Série / Turma:'),
                         Text(value.turma),
                       ],

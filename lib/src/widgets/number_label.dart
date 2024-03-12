@@ -43,7 +43,7 @@ class _NumberLabelState extends State<NumberLabel> {
           child: Container(
             width: 40,
             height: 40,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
                 border: Border(
                     bottom: BorderSide(),
                     top: BorderSide(),
@@ -52,7 +52,7 @@ class _NumberLabelState extends State<NumberLabel> {
             child: Center(
               child: Text(
                 widget.lbNum,
-                style: TextStyle(
+                style: const TextStyle(
                   height: 0.1,
                   fontSize: 40,
                 ),

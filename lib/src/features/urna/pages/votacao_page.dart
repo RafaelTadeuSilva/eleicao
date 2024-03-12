@@ -1,6 +1,6 @@
-import 'package:eleicao/src/urna/controller/votacao_control.dart';
-import 'package:eleicao/src/urna/pages/candidato_page.dart';
-import 'package:eleicao/src/urna/pages/eleitor_page.dart';
+import 'package:eleicao/src/features/urna/controllers/votacao_control.dart';
+import 'package:eleicao/src/features/urna/pages/candidato_page.dart';
+import 'package:eleicao/src/features/urna/pages/eleitor_page.dart';
 import 'package:eleicao/src/widgets/teclado_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -25,11 +25,14 @@ class _VotacaoPageState extends State<VotacaoPage> {
         child: Scaffold(
       body: Row(
         children: [
-          Column(
+          const Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CandidatoPage(),
               EleitorPage(),
+              Text('Aperte a tecla:'),
+              Text('VERDE para confirmar'),
+              Text('LARANJA para corrigir'),
             ],
           ),
           TecladoWidget(control),
