@@ -3,7 +3,7 @@ import 'package:eleicao/src/features/cadastro/repositories/aluno_repository.dart
 import 'package:eleicao/src/features/cadastro/repositories/aluno_repository_sqflite.dart';
 import 'package:eleicao/src/features/home/home_page.dart';
 import 'package:eleicao/src/features/urna/pages/proximo_eleitor_page.dart';
-import 'package:eleicao/src/repositories/local/api_db.dart';
+import 'package:eleicao/src/repositories/api_db.dart';
 import 'package:eleicao/src/repositories/local/sqflite_db.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';

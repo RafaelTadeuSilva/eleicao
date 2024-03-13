@@ -1,4 +1,4 @@
-import 'package:eleicao/src/repositories/local/api_db.dart';
+import 'package:eleicao/src/repositories/api_db.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 

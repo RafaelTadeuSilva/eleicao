@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eleicao/src/features/cadastro/mapper/aluno_mapper_sqflite.dart';
 import 'package:eleicao/src/features/cadastro/repositories/aluno_repository.dart';
 import 'package:eleicao/src/models/aluno.dart';
-import 'package:eleicao/src/repositories/local/api_db.dart';
+import 'package:eleicao/src/repositories/api_db.dart';
 
 class AlunoRepositorySqflite implements AlunoRepository {
   final table = 'Alunos';
