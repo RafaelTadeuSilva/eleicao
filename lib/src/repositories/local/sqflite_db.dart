@@ -29,7 +29,8 @@ class SqfliteDb implements ApiDb {
 
   @override
   Future<String> create(String table, Map<String, dynamic> map) async {
-    final id = await db.insert(table, map);
+    final id = await db.insert(table, map,
+        conflictAlgorithm: ConflictAlgorithm.replace);
     return id.toString();
   }
 
@@ -43,12 +44,13 @@ class SqfliteDb implements ApiDb {
   Future<List<Map<String, dynamic>>> find(
       String table, Map<String, dynamic> filter) async {
     final nome = filter['nome'] ?? '';
-    return await db.query(table, where: 'nome LIKE ?', whereArgs: ['$nome%']);
+    return await db.query(table,
+        where: 'nome LIKE ?', whereArgs: ['$nome%'], orderBy: 'nome');
   }
 
   @override
   Future<Map<String, dynamic>> findOne(String table, String id) async {
-    final list = await db.query(table, where: 'nome = ?', whereArgs: [id]);
+    final list = await db.query(table, where: 'id = ?', whereArgs: [id]);
     return switch (list.length) {
       > 0 => list.first,
       _ => {},
@@ -58,6 +60,6 @@ class SqfliteDb implements ApiDb {
   @override
   Future<bool> update(String table, String id, Map<String, dynamic> map) async {
     final count = await db.update(table, map, where: 'id = ?', whereArgs: [id]);
-    return count == 0;
+    return count == 1;
   }
 }

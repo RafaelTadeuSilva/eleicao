@@ -6,11 +6,12 @@ import 'package:eleicao/src/models/aluno.dart';
 import 'package:flutter/material.dart';
 
 class ProximoEleitorControl {
-  late final Timer timer;
-  final BuildContext context;
-  ProximoEleitorControl(this.context) {
-    buscaProximoEleitor(context);
+  late Timer timer;
+
+  void stopTimer() {
+    timer.cancel();
   }
+
   void buscaProximoEleitor(BuildContext context) {
     timer = Timer.periodic(const Duration(seconds: 2), (_) {
       eleitorAtual.value =

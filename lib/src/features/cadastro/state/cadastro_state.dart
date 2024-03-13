@@ -11,3 +11,5 @@ final listTurmas = [
 ];
 
 final listAlunos = ValueNotifier(<Aluno>[]);
+
+// final alunoAtual = ValueNotifier<Aluno?>(null);

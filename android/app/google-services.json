@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "908730348210",
+    "project_id": "eleicao-99281",
+    "storage_bucket": "eleicao-99281.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:908730348210:android:3d72dd3a0bbccbe0844fab",
+        "android_client_info": {
+          "package_name": "br.com.sgtmobile.eleicao"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXY-KKWvfYCUm3caLZCoJWXPjVc2HA9vw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

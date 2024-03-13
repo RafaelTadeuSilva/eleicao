@@ -9,7 +9,16 @@ class AlunoControl with ChangeNotifier {
     listAlunos.notifyListeners();
   }
 
-  void salvar(Aluno aluno) async {
-    alunoRepository.create(aluno);
+  Future<Aluno> getById(String id) async {
+    return await alunoRepository.findOne(id);
+  }
+
+  Future<bool> create(Aluno aluno) async {
+    final result = await alunoRepository.create(aluno);
+    return result.isNotEmpty;
+  }
+
+  Future<bool> update(Aluno aluno) async {
+    return await alunoRepository.update(aluno.id, aluno);
   }
 }

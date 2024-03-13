@@ -1,17 +1,18 @@
 import 'package:eleicao/src/features/cadastro/controllers/aluno_control.dart';
 import 'package:eleicao/src/features/cadastro/pages/aluno_page.dart';
 import 'package:eleicao/src/features/cadastro/state/cadastro_state.dart';
+import 'package:eleicao/src/features/urna/pages/candidato_page.dart';
 import 'package:eleicao/src/models/aluno.dart';
 import 'package:flutter/material.dart';
 
-class ListaAlunosPage extends StatefulWidget {
-  const ListaAlunosPage({super.key});
+class ListaCandidatosPage extends StatefulWidget {
+  const ListaCandidatosPage({super.key});
 
   @override
-  State<ListaAlunosPage> createState() => _ListaAlunosPageState();
+  State<ListaCandidatosPage> createState() => _ListaCandidatosPageState();
 }
 
-class _ListaAlunosPageState extends State<ListaAlunosPage> {
+class _ListaCandidatosPageState extends State<ListaCandidatosPage> {
   late final AlunoControl control;
 
   @override
@@ -30,7 +31,7 @@ class _ListaAlunosPageState extends State<ListaAlunosPage> {
         body: montaBody(),
         floatingActionButton: FloatingActionButton(
           child: const Icon(Icons.add),
-          onPressed: navigateToAlunoPage,
+          onPressed: navigateToCandidatoPage,
         ));
   }
 
@@ -48,7 +49,7 @@ class _ListaAlunosPageState extends State<ListaAlunosPage> {
     final Aluno(:id, :nome, :turma) = list[index];
     return Card(
       child: InkWell(
-        onTap: () => navigateToAlunoPage(id),
+        onTap: () => navigateToCandidatoPage(id),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
@@ -69,9 +70,9 @@ class _ListaAlunosPageState extends State<ListaAlunosPage> {
     );
   }
 
-  void navigateToAlunoPage([String? id]) {
+  void navigateToCandidatoPage([String? id]) {
     Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => AlunoPage(id: id)))
+        .push(MaterialPageRoute(builder: (context) => CandidatoPage(id: id)))
         .whenComplete(() => control.listaAlunos());
   }
 }

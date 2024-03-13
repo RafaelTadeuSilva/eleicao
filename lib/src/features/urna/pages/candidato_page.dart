@@ -6,8 +6,8 @@ import 'package:eleicao/src/widgets/number_label.dart';
 import 'package:flutter/material.dart';
 
 class CandidatoPage extends StatefulWidget {
-  const CandidatoPage({super.key});
-
+  const CandidatoPage({super.key, this.id});
+  final String? id;
   @override
   State<CandidatoPage> createState() => _CandidatoPageState();
 }

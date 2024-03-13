@@ -1,6 +1,8 @@
 import 'package:eleicao/src/features/cadastro/pages/lista_alunos_page.dart';
+import 'package:eleicao/src/features/home/home_page.dart';
 import 'package:eleicao/src/features/urna/controllers/proximo_eleitor_control.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 
 class ProximoEleitorPage extends StatefulWidget {
   const ProximoEleitorPage({super.key});
@@ -10,25 +12,26 @@ class ProximoEleitorPage extends StatefulWidget {
 }
 
 class _ProximoEleitorPageState extends State<ProximoEleitorPage> {
-  late final ProximoEleitorControl control;
+  final control = ProximoEleitorControl();
 
   @override
   void initState() {
-    control = ProximoEleitorControl(context);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    control.buscaProximoEleitor(context);
     return Scaffold(
       body: InkWell(
-          onLongPress: () =>
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (context) {
-                  control.timer.cancel();
-                  return ListaAlunosPage();
-                },
-              )),
+          onLongPress: () {
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) {
+                control.stopTimer();
+                return HomePage();
+              },
+            ));
+          },
           child: const Center(
               child: Text(
             'Aguarde a liberação da urna',
