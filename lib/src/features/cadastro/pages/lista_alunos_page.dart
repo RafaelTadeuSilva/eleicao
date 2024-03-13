@@ -17,7 +17,7 @@ class _ListaAlunosPageState extends State<ListaAlunosPage> {
   @override
   void initState() {
     control = AlunoControl();
-
+    control.listaAlunos();
     super.initState();
   }
 

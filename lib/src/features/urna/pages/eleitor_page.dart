@@ -1,3 +1,4 @@
+import 'package:eleicao/src/features/cadastro/state/cadastro_state.dart';
 import 'package:eleicao/src/features/urna/state/votacao_state.dart';
 import 'package:flutter/material.dart';
 
@@ -24,7 +25,7 @@ class EleitorPage extends StatelessWidget {
                         const Text('Nome do aluno eleitor:'),
                         Text(value!.nome),
                         const Text('Série / Turma:'),
-                        Text(value.turma),
+                        Text(listTurmas[value.turma].$2),
                       ],
                     )),
           ),

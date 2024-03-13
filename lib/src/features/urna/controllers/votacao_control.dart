@@ -23,7 +23,7 @@ class VotacaoControl with ChangeNotifier {
     candidatoAtual.value = listCandidato.firstWhere((e) => e.id == numCandidato,
         orElse: () => Candidato(
             id: '',
-            nome: 'VOTO NULO',
+            nome: 'CANDIDATO INVÁLIDO',
             cargo: Cargo.nulo,
             partido: '',
             urlImage: ''));

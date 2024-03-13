@@ -76,31 +76,39 @@ class _CandidatoPageState extends State<CandidatoPage> {
                           SizedBox(width: 10),
                           ValueListenableBuilder(
                             valueListenable: candidatoAtual,
-                            builder: (context, value, child) => Text(
-                              value?.nome ?? '',
-                              style: TextStyle(fontSize: 25),
+                            builder: (context, value, child) => SizedBox(
+                              width: 200,
+                              height: 60,
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  softWrap: true,
+                                  value?.nome ?? '',
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                              ),
                             ),
                           ),
                         ],
                       ),
                     ),
                     SizedBox(height: 5),
-                    Visibility(
-                      visible: !emBranco,
-                      child: Row(
-                        children: [
-                          Text('Partido:'),
-                          SizedBox(width: 10),
-                          ValueListenableBuilder(
-                            valueListenable: candidatoAtual,
-                            builder: (context, value, child) => Text(
-                              value?.partido ?? '',
-                              style: TextStyle(fontSize: 25),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    // Visibility(
+                    //   visible: !emBranco,
+                    //   child: Row(
+                    //     children: [
+                    //       Text('Partido:'),
+                    //       SizedBox(width: 10),
+                    //       ValueListenableBuilder(
+                    //         valueListenable: candidatoAtual,
+                    //         builder: (context, value, child) => Text(
+                    //           value?.partido ?? '',
+                    //           style: TextStyle(fontSize: 25),
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                   ],
                 ),
                 Spacer(),

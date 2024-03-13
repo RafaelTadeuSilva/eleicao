@@ -14,7 +14,7 @@ class ProximoEleitorControl {
   void buscaProximoEleitor(BuildContext context) {
     timer = Timer.periodic(const Duration(seconds: 2), (_) {
       eleitorAtual.value =
-          Aluno(id: '10', nome: 'Aluno10', turma: '6º C', titulo: '');
+          Aluno(id: '10', nome: 'Aluno10', turma: 1, titulo: 1);
       Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (context) {
           timer.cancel();

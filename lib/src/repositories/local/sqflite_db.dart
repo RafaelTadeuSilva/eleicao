@@ -12,11 +12,11 @@ class SqfliteDb implements ApiDb {
     // await deleteDatabase(path);
 
 // open the database
-    Database database = await openDatabase(path, version: 1,
+    Database database = await openDatabase(path, version: 3,
         onCreate: (Database db, int version) async {
       // When creating the db, create the table
       await db.execute(
-          'CREATE TABLE Alunos (id INTEGER PRIMARY KEY, nome TEXT, turma TEXT)');
+          'CREATE TABLE Alunos (id INTEGER PRIMARY KEY, nome TEXT, turma INTEGER, titulo INTEGER)');
       await db.execute(
           'CREATE TABLE Candidatos (id INTEGER PRIMARY KEY, nome TEXT, urlImage TEXT, cargo INTEGER, partido TEXT)');
     });
@@ -42,7 +42,7 @@ class SqfliteDb implements ApiDb {
   @override
   Future<List<Map<String, dynamic>>> find(
       String table, Map<String, dynamic> filter) async {
-    final nome = filter['nome'];
+    final nome = filter['nome'] ?? '';
     return await db.query(table, where: 'nome LIKE ?', whereArgs: ['$nome%']);
   }
 

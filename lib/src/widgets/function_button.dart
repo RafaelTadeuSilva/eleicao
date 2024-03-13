@@ -19,7 +19,7 @@ class FunctionButton extends StatelessWidget {
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
             padding: EdgeInsets.zero,
-            fixedSize: Size(85, 60),
+            fixedSize: Size(130, 60),
             backgroundColor: backgroundColor,
             shape: RoundedRectangleBorder()),
         child: Text(

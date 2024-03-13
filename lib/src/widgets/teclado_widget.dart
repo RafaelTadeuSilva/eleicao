@@ -53,11 +53,11 @@ class TecladoWidget extends StatelessWidget {
           ),
           Row(
             children: [
-              FunctionButton(
-                onPressed: control.votoBranco,
-                backgroundColor: Colors.white,
-                text: 'BRANCO',
-              ),
+              // FunctionButton(
+              //   onPressed: control.votoBranco,
+              //   backgroundColor: Colors.white,
+              //   text: 'BRANCO',
+              // ),
               FunctionButton(
                 onPressed: control.corrige,
                 backgroundColor: Colors.orange,
