@@ -3,17 +3,16 @@ import 'package:eleicao/src/features/cadastro/state/cadastro_state.dart';
 import 'package:eleicao/src/models/aluno.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 
-class AlunoPage extends StatefulWidget {
-  const AlunoPage({super.key, this.id});
+class AlunoCadPage extends StatefulWidget {
+  const AlunoCadPage({super.key, this.id});
 
   final String? id;
   @override
-  State<AlunoPage> createState() => _AlunoPageState();
+  State<AlunoCadPage> createState() => _AlunoCadPageState();
 }
 
-class _AlunoPageState extends State<AlunoPage> {
+class _AlunoCadPageState extends State<AlunoCadPage> {
   final control = AlunoControl();
   final txtId = TextEditingController();
   final txtNome = TextEditingController();
@@ -108,8 +107,7 @@ class _AlunoPageState extends State<AlunoPage> {
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 keyboardType: TextInputType.number,
                 validator: (value) {
-                  if (value!.length != 4) return 'Titulo deve ter 4 digitos';
-                  return int.tryParse(value) == null
+                  return int.tryParse(value!) == null
                       ? 'Digite apenas números'
                       : null;
                 },
@@ -134,10 +132,14 @@ class _AlunoPageState extends State<AlunoPage> {
   Future<void> salvar() async {
     if (_formKey.currentState!.validate()) {
       final aluno = Aluno(
-          id: txtId.text,
-          nome: txtNome.text,
-          titulo: int.parse(txtTitulo.text),
-          turma: listTurmas.firstWhere((e) => e.$2 == txtTurma.text).$1);
+        id: txtId.text,
+        nome: txtNome.text,
+        titulo: int.parse(txtTitulo.text),
+        turma: listTurmas
+            .firstWhere((e) => e.$2 == txtTurma.text,
+                orElse: () => listTurmas.first)
+            .$1,
+      );
 
       final success = switch (widget.id) {
         null => await control.create(aluno),

@@ -1,7 +1,7 @@
-import 'package:eleicao/main.dart';
-import 'package:eleicao/src/features/cadastro/pages/lista_alunos_page.dart';
-import 'package:eleicao/src/features/cadastro/pages/lista_candidatos_page.dart';
+import 'package:eleicao/src/features/cadastro/pages/lista_alunos_cad_page.dart';
+import 'package:eleicao/src/features/cadastro/pages/lista_candidatos_cad_page.dart';
 import 'package:eleicao/src/features/urna/pages/proximo_eleitor_page.dart';
+import 'package:eleicao/src/injector.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -43,7 +43,7 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 10),
             ElevatedButton(
                 onPressed: () => changeTerminal(context),
-                child: Text(
+                child: const Text(
                   'Terminal',
                   style: TextStyle(fontSize: 25),
                 ))
@@ -55,19 +55,19 @@ class HomePage extends StatelessWidget {
 
   void navigateToAlunos(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => ListaAlunosPage(),
+      builder: (context) => const ListaAlunosCadPage(),
     ));
   }
 
   void navigateToCandidatos(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => ListaCandidatosPage(),
+      builder: (context) => const ListaCandidatosCadPage(),
     ));
   }
 
   void navigateToVotacao(BuildContext context) {
     Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => ProximoEleitorPage(),
+      builder: (context) => const ProximoEleitorPage(),
     ));
   }
 
@@ -75,13 +75,14 @@ class HomePage extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Mudar Terminal'),
+        title: const Text('Mudar Terminal'),
         content: TextField(
           controller: txtTerminal,
         ),
         actions: [
           ElevatedButton(
-              onPressed: () => setTerminal(context), child: Text('Salvar'))
+              onPressed: () => setTerminal(context),
+              child: const Text('Salvar'))
         ],
       ),
     );

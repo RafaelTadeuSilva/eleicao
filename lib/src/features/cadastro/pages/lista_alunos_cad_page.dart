@@ -1,17 +1,17 @@
 import 'package:eleicao/src/features/cadastro/controllers/aluno_control.dart';
-import 'package:eleicao/src/features/cadastro/pages/aluno_page.dart';
+import 'package:eleicao/src/features/cadastro/pages/aluno_cad_page.dart';
 import 'package:eleicao/src/features/cadastro/state/cadastro_state.dart';
 import 'package:eleicao/src/models/aluno.dart';
 import 'package:flutter/material.dart';
 
-class ListaAlunosPage extends StatefulWidget {
-  const ListaAlunosPage({super.key});
+class ListaAlunosCadPage extends StatefulWidget {
+  const ListaAlunosCadPage({super.key});
 
   @override
-  State<ListaAlunosPage> createState() => _ListaAlunosPageState();
+  State<ListaAlunosCadPage> createState() => _ListaAlunosCadPageState();
 }
 
-class _ListaAlunosPageState extends State<ListaAlunosPage> {
+class _ListaAlunosCadPageState extends State<ListaAlunosCadPage> {
   late final AlunoControl control;
 
   @override
@@ -25,12 +25,12 @@ class _ListaAlunosPageState extends State<ListaAlunosPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Lista de Alunos'),
+          title: const Text('Lista de Alunos'),
         ),
         body: montaBody(),
         floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.add),
           onPressed: navigateToAlunoPage,
+          child: const Icon(Icons.add),
         ));
   }
 
@@ -56,11 +56,11 @@ class _ListaAlunosPageState extends State<ListaAlunosPage> {
             children: [
               Text(
                 nome,
-                style: TextStyle(fontSize: 25),
+                style: const TextStyle(fontSize: 25),
               ),
               Text(
                 listTurmas.firstWhere((element) => element.$1 == turma).$2,
-                style: TextStyle(fontSize: 25),
+                style: const TextStyle(fontSize: 25),
               )
             ],
           ),
@@ -71,7 +71,7 @@ class _ListaAlunosPageState extends State<ListaAlunosPage> {
 
   void navigateToAlunoPage([String? id]) {
     Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => AlunoPage(id: id)))
+        .push(MaterialPageRoute(builder: (context) => AlunoCadPage(id: id)))
         .whenComplete(() => control.listaAlunos());
   }
 }

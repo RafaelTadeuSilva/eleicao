@@ -1,11 +1,10 @@
-import 'package:eleicao/main.dart';
 import 'package:eleicao/src/features/cadastro/mapper/aluno_mapper.dart';
-import 'package:eleicao/src/features/cadastro/repositories/aluno_repository.dart';
+import 'package:eleicao/src/features/cadastro/repositories/aluno/aluno_repository.dart';
 import 'package:eleicao/src/models/aluno.dart';
 import 'package:eleicao/src/repositories/api_db.dart';
 
 class AlunoRepositoryImpl implements AlunoRepository {
-  final table = 'alunos';
+  final table = 'Alunos';
   final ApiDb apiDb;
   final AlunoMapper mapper;
 
@@ -18,7 +17,7 @@ class AlunoRepositoryImpl implements AlunoRepository {
 
   @override
   Future<bool> delete(String id) {
-    return apidb.delete(table, id);
+    return apiDb.delete(table, id);
   }
 
   @override

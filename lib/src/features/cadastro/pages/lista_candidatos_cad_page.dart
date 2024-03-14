@@ -1,24 +1,23 @@
-import 'package:eleicao/src/features/cadastro/controllers/aluno_control.dart';
-import 'package:eleicao/src/features/cadastro/pages/aluno_page.dart';
+import 'package:eleicao/src/features/cadastro/controllers/candidato_control.dart';
+import 'package:eleicao/src/features/cadastro/pages/candidato_cad_page.dart';
 import 'package:eleicao/src/features/cadastro/state/cadastro_state.dart';
-import 'package:eleicao/src/features/urna/pages/candidato_page.dart';
-import 'package:eleicao/src/models/aluno.dart';
+import 'package:eleicao/src/models/candidato.dart';
 import 'package:flutter/material.dart';
 
-class ListaCandidatosPage extends StatefulWidget {
-  const ListaCandidatosPage({super.key});
+class ListaCandidatosCadPage extends StatefulWidget {
+  const ListaCandidatosCadPage({super.key});
 
   @override
-  State<ListaCandidatosPage> createState() => _ListaCandidatosPageState();
+  State<ListaCandidatosCadPage> createState() => _ListaCandidatosCadPageState();
 }
 
-class _ListaCandidatosPageState extends State<ListaCandidatosPage> {
-  late final AlunoControl control;
+class _ListaCandidatosCadPageState extends State<ListaCandidatosCadPage> {
+  late final CandidatoControl control;
 
   @override
   void initState() {
-    control = AlunoControl();
-    control.listaAlunos();
+    control = CandidatoControl();
+    control.listaCandidatos();
     super.initState();
   }
 
@@ -26,18 +25,18 @@ class _ListaCandidatosPageState extends State<ListaCandidatosPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Lista de Alunos'),
+          title: const Text('Lista de Candidatos'),
         ),
         body: montaBody(),
         floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.add),
           onPressed: navigateToCandidatoPage,
+          child: const Icon(Icons.add),
         ));
   }
 
   Widget montaBody() {
     return ValueListenableBuilder(
-      valueListenable: listAlunos,
+      valueListenable: listCandidatos,
       builder: (context, list, child) => ListView.builder(
         itemBuilder: (context, index) => montaItem(index, list),
         itemCount: list.length,
@@ -45,8 +44,8 @@ class _ListaCandidatosPageState extends State<ListaCandidatosPage> {
     );
   }
 
-  Widget montaItem(int index, List<Aluno> list) {
-    final Aluno(:id, :nome, :turma) = list[index];
+  Widget montaItem(int index, List<Candidato> list) {
+    final Candidato(:id, :nome, :cargo) = list[index];
     return Card(
       child: InkWell(
         onTap: () => navigateToCandidatoPage(id),
@@ -57,11 +56,11 @@ class _ListaCandidatosPageState extends State<ListaCandidatosPage> {
             children: [
               Text(
                 nome,
-                style: TextStyle(fontSize: 25),
+                style: const TextStyle(fontSize: 25),
               ),
               Text(
-                listTurmas.firstWhere((element) => element.$1 == turma).$2,
-                style: TextStyle(fontSize: 25),
+                cargo.descricao,
+                style: const TextStyle(fontSize: 25),
               )
             ],
           ),
@@ -72,7 +71,7 @@ class _ListaCandidatosPageState extends State<ListaCandidatosPage> {
 
   void navigateToCandidatoPage([String? id]) {
     Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => CandidatoPage(id: id)))
-        .whenComplete(() => control.listaAlunos());
+        .push(MaterialPageRoute(builder: (context) => CandidatoCadPage(id: id)))
+        .whenComplete(() => control.listaCandidatos());
   }
 }

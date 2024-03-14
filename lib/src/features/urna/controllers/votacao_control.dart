@@ -22,9 +22,10 @@ class VotacaoControl with ChangeNotifier {
   void buscaCandidato(String numCandidato) {
     candidatoAtual.value = listCandidato.firstWhere((e) => e.id == numCandidato,
         orElse: () => Candidato(
+            matricula: '',
             id: '',
             nome: 'CANDIDATO INVÁLIDO',
-            cargo: Cargo.nulo,
+            cargo: Cargo.prefeito,
             partido: '',
             urlImage: ''));
   }

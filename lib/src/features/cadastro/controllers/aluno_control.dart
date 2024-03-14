@@ -1,5 +1,5 @@
-import 'package:eleicao/main.dart';
 import 'package:eleicao/src/features/cadastro/state/cadastro_state.dart';
+import 'package:eleicao/src/injector.dart';
 import 'package:eleicao/src/models/aluno.dart';
 import 'package:flutter/material.dart';
 

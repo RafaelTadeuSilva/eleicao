@@ -1,4 +1,5 @@
 import 'package:eleicao/src/models/aluno.dart';
+import 'package:eleicao/src/models/candidato.dart';
 import 'package:flutter/material.dart';
 
 final listTurmas = [
@@ -12,4 +13,5 @@ final listTurmas = [
 
 final listAlunos = ValueNotifier(<Aluno>[]);
 
+final listCandidatos = ValueNotifier(<Candidato>[]);
 // final alunoAtual = ValueNotifier<Aluno?>(null);

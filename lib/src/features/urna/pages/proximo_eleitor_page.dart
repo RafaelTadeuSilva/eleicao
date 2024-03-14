@@ -1,8 +1,6 @@
-import 'package:eleicao/src/features/cadastro/pages/lista_alunos_page.dart';
 import 'package:eleicao/src/features/home/home_page.dart';
 import 'package:eleicao/src/features/urna/controllers/proximo_eleitor_control.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 
 class ProximoEleitorPage extends StatefulWidget {
   const ProximoEleitorPage({super.key});
