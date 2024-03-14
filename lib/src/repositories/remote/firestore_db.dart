@@ -2,29 +2,28 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eleicao/src/repositories/api_db.dart';
 
 class FirestoreDb implements ApiDb {
-  final table = 'Alunos';
   final db = FirebaseFirestore.instance;
 
   @override
-  Future<String> create(String table, Map<String, dynamic> map) async {
-    await db.collection(table).doc(map['id']).set(map);
+  Future<String> create(String colName, Map<String, dynamic> map) async {
+    await db.collection(colName).doc(map['id']).set(map);
     return map['id'];
   }
 
   @override
-  Future<bool> delete(String table, String id) async {
-    await db.collection(table).doc(id).delete();
+  Future<bool> delete(String colName, String id) async {
+    await db.collection(colName).doc(id).delete();
     return true;
   }
 
   @override
   Future<List<Map<String, dynamic>>> find(
-      String table, Map<String, dynamic> filter) async {
+      String colName, Map<String, dynamic> filter) async {
     final nome = filter['nome'] ?? '';
     final query = await db
-        .collection(table)
+        .collection(colName)
         .orderBy('nome')
-        .startAt([nome]).endAt(['${nome}a']).get();
+        .startAt([nome]).endAt(['${nome}z']).get();
     final list = <Map<String, dynamic>>[];
     for (var e in query.docs) {
       list.add(e.data());
@@ -33,14 +32,15 @@ class FirestoreDb implements ApiDb {
   }
 
   @override
-  Future<Map<String, dynamic>> findOne(String table, String id) {
-    // TODO: implement findOne
-    throw UnimplementedError();
+  Future<Map<String, dynamic>> findOne(String colName, String id) async {
+    final query = await db.collection(colName).doc(id).get();
+    return query.data() ?? {};
   }
 
   @override
-  Future<bool> update(String table, String id, Map<String, dynamic> map) {
-    // TODO: implement update
-    throw UnimplementedError();
+  Future<bool> update(
+      String colName, String id, Map<String, dynamic> map) async {
+    await db.collection(colName).doc(map['id']).set(map);
+    return true;
   }
 }
