@@ -1,11 +1,9 @@
 import 'package:eleicao/firebase_options.dart';
-import 'package:eleicao/src/features/cadastro/mapper/aluno_mapper_impl.dart';
 import 'package:eleicao/src/features/cadastro/mapper/candidato_mapper_impl.dart';
 import 'package:eleicao/src/features/cadastro/repositories/aluno/aluno_repository.dart';
-import 'package:eleicao/src/features/cadastro/repositories/aluno/aluno_repository_impl.dart';
 import 'package:eleicao/src/features/cadastro/repositories/aluno/aluno_repository_sqflite.dart';
 import 'package:eleicao/src/features/cadastro/repositories/candidato/candidato_repository.dart';
-import 'package:eleicao/src/features/cadastro/repositories/candidato/candidato_repository_impl.dart';
+import 'package:eleicao/src/features/cadastro/repositories/candidato/candidato_repository_sqflite.dart';
 import 'package:eleicao/src/repositories/api_db.dart';
 import 'package:eleicao/src/repositories/local/sqflite_db.dart';
 import 'package:eleicao/src/repositories/remote/firestore_db.dart';
@@ -31,13 +29,16 @@ Future<void> setTerminal() async {
 
 Future<void> inject() async {
   await setTerminal();
-  apidbLocal = await configSQFlite();
-  alunoRepositoryLocal = AlunoRepositorySqflite(apidbLocal);
-  // candidatoRepositoryLocal = CandidatoRepositorySqflite(apidbLocal);
+  // apidbLocal = await configSQFlite();
+  // alunoRepositoryLocal = AlunoRepositorySqflite(apidbLocal);
+  apidb = await configSQFlite();
+  alunoRepository = AlunoRepositorySqflite(apidb);
+  candidatoRepository =
+      CandidatoRepositorySqflite(apidb, CandidatoMapperImpl());
 
-  apidb = await configFirebase();
-  alunoRepository = AlunoRepositoryImpl(apidb, AlunoMapperImpl());
-  candidatoRepository = CandidatoRepositoryImpl(apidb, CandidatoMapperImpl());
+  // apidb = await configFirebase();
+  // alunoRepository = AlunoRepositoryImpl(apidb, AlunoMapperImpl());
+  // candidatoRepository = CandidatoRepositoryImpl(apidb, CandidatoMapperImpl());
 }
 
 Future<ApiDb> configFirebase() async {

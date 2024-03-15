@@ -24,6 +24,7 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   var ativaValidacaoForm = false;
+  List<Aluno> get _listAlunos => listAlunos.value;
 
   @override
   void initState() {
@@ -42,7 +43,6 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
   }
 
   Widget montaBody() {
-    final _listAlunos = listAlunos.value;
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Form(
@@ -63,8 +63,8 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
                           .firstWhere((e) => e.nome.contains(value!))
                           .nome,
                       dropdownMenuEntries: _listAlunos
-                          .map((e) =>
-                              DropdownMenuEntry(value: e.nome, label: e.nome))
+                          .map((e) => DropdownMenuEntry<String>(
+                              value: e.nome, label: e.nome))
                           .toList()),
                   onFocusChange: (hasFocus) {
                     if (!hasFocus) {
@@ -166,9 +166,13 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
   Future<void> buscaCandidato(String? idCandidato) async {
     await Future.delayed(Durations.short2);
     if (idCandidato != null) {
-      final Candidato(:id, :nome) = await control.getById(idCandidato);
+      final Candidato(:id, :nome, :cargo, :matricula, :urlImage) =
+          await control.getById(idCandidato);
       txtId.text = id;
       txtNome.text = nome;
+      txtCargo.text = cargo.descricao;
+      txtMatricula.text = matricula;
+      txtUrlImage.text = urlImage;
       // txtTurma.text = listTurmas.firstWhere((e) => e.$1 == turma).$2;
     }
   }

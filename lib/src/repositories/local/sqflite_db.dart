@@ -12,13 +12,13 @@ class SqfliteDb implements ApiDb {
     // await deleteDatabase(path);
 
 // open the database
-    Database database = await openDatabase(path, version: 3,
+    Database database = await openDatabase(path, version: 4,
         onCreate: (Database db, int version) async {
       // When creating the db, create the table
       await db.execute(
           'CREATE TABLE Alunos (id INTEGER PRIMARY KEY, nome TEXT, turma INTEGER, titulo INTEGER)');
       await db.execute(
-          'CREATE TABLE Candidatos (id INTEGER PRIMARY KEY, nome TEXT, urlImage TEXT, cargo INTEGER, partido TEXT)');
+          'CREATE TABLE Candidatos (id INTEGER PRIMARY KEY, nome TEXT, matricula TEXT, urlImage TEXT, cargo INTEGER, partido TEXT)');
     });
     return database;
   }

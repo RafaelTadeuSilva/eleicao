@@ -9,8 +9,8 @@ class CandidatoMapperImpl implements Mapper<Candidato> {
         matricula: map['matricula'].toString(),
         id: map['id'].toString(),
         nome: map['nome'],
-        urlImage: '',
-        cargo: Cargo.prefeito,
+        urlImage: map['urlImage'],
+        cargo: Cargo.values.firstWhere((e) => e.codigo == map['cargo']),
         partido: '');
   }
 
@@ -20,7 +20,7 @@ class CandidatoMapperImpl implements Mapper<Candidato> {
       'matricula': candidato.matricula,
       'id': candidato.id,
       'nome': candidato.nome,
-      'urlImage': '',
+      'urlImage': candidato.urlImage,
       'cargo': candidato.cargo.codigo,
       'partido': ''
     };
