@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:eleicao/src/features/cadastro/controllers/candidato_control.dart';
 import 'package:eleicao/src/features/cadastro/state/cadastro_state.dart';
 import 'package:eleicao/src/features/urna/enums/cargo.dart';
+import 'package:eleicao/src/injector.dart';
 import 'package:eleicao/src/models/aluno.dart';
 import 'package:eleicao/src/models/candidato.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class CandidatoCadPage extends StatefulWidget {
   const CandidatoCadPage({super.key, this.id});
@@ -21,6 +26,7 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
   final txtNome = TextEditingController();
   final txtCargo = TextEditingController();
   final txtUrlImage = TextEditingController();
+  var imageFile = File('');
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   var ativaValidacaoForm = false;
@@ -141,12 +147,31 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
                   },
                 ),
                 const SizedBox(height: 10),
-                TextFormField(
-                  controller: txtUrlImage,
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      label: Text('Foto do candidato')),
+                ValueListenableBuilder(
+                  valueListenable: txtUrlImage,
+                  builder: (context, value, child) => GestureDetector(
+                    onTap: buscaImagem,
+                    child: Container(
+                      height: 200,
+                      decoration: BoxDecoration(
+                        border: Border.all(),
+                      ),
+                      child: txtUrlImage.text.isEmpty
+                          ? Image.asset('assets/images/candidato.png')
+                          : txtUrlImage.text.contains('http')
+                              ? Image.network(txtUrlImage.text)
+                              : Image.file(imageFile),
+                    ),
+                  ),
                 ),
+
+                // const SizedBox(height: 10),
+                // TextFormField(
+                //   controller: txtUrlImage,
+                //   decoration: const InputDecoration(
+                //       border: OutlineInputBorder(),
+                //       label: Text('Foto do candidato')),
+                // ),
                 const SizedBox(height: 5),
                 Row(
                   children: [
@@ -179,13 +204,15 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
 
   Future<void> salvar() async {
     if (_formKey.currentState!.validate()) {
+      final remoteImagePath =
+          await apiStorage.uploadFile(txtUrlImage.text, 'cand${txtId.text}');
       final candidato = Candidato(
         id: txtId.text,
         nome: txtNome.text,
         cargo: Cargo.values.firstWhere((e) => e.descricao == txtCargo.text),
         matricula: txtMatricula.text,
         partido: '',
-        urlImage: txtUrlImage.text,
+        urlImage: remoteImagePath,
       );
 
       final success = switch (widget.id) {
@@ -210,6 +237,15 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
           }
         });
       }
+    }
+  }
+
+  Future<void> buscaImagem() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+    if (result != null) {
+      imageFile = File(result.files.single.path!);
+      txtUrlImage.text = result.files.single.path!;
     }
   }
 }

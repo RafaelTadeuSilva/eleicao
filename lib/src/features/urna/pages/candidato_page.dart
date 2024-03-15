@@ -122,7 +122,7 @@ class _CandidatoPageState extends State<CandidatoPage> {
                                 image: urlImageCandidato.value == ''
                                     ? null
                                     : DecorationImage(
-                                        image: AssetImage(
+                                        image: NetworkImage(
                                             urlImageCandidato.value)),
                                 border: Border(
                                     bottom: BorderSide(width: 1),

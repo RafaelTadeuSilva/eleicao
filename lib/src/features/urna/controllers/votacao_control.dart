@@ -1,10 +1,16 @@
 import 'package:eleicao/src/features/urna/enums/cargo.dart';
 import 'package:eleicao/src/features/urna/functions/functions.dart';
 import 'package:eleicao/src/features/urna/state/votacao_state.dart';
+import 'package:eleicao/src/injector.dart';
 import 'package:eleicao/src/models/candidato.dart';
 import 'package:flutter/material.dart';
 
 class VotacaoControl with ChangeNotifier {
+  VotacaoControl() {
+    carregaListaEleitores();
+    carregaListaCandidatos();
+  }
+
   void carregaCandidato(int num) {
     final digitos = candidatoDigitos();
     if (numAtual.value < digitos) {
@@ -43,4 +49,16 @@ class VotacaoControl with ChangeNotifier {
   }
 
   void confirma() {}
+
+  Future<void> carregaListaEleitores() async {
+    final list = await alunoRepository.find({});
+    listEleitor.clear();
+    listEleitor.addAll(list);
+  }
+
+  Future<void> carregaListaCandidatos() async {
+    final list = await candidatoRepository.find({});
+    listCandidato.clear();
+    listCandidato.addAll(list);
+  }
 }
