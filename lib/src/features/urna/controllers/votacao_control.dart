@@ -1,8 +1,6 @@
-import 'package:eleicao/src/features/urna/enums/cargo.dart';
 import 'package:eleicao/src/features/urna/functions/functions.dart';
 import 'package:eleicao/src/features/urna/state/votacao_state.dart';
 import 'package:eleicao/src/injector.dart';
-import 'package:eleicao/src/models/candidato.dart';
 import 'package:flutter/material.dart';
 
 class VotacaoControl with ChangeNotifier {
@@ -14,35 +12,30 @@ class VotacaoControl with ChangeNotifier {
   void carregaCandidato(int num) {
     final digitos = candidatoDigitos();
     if (numAtual.value < digitos) {
-      numCandidato.value = '${numCandidato.value}$num';
+      numCandidato.value = int.parse('${numCandidato.value ?? ''}$num');
     }
-    numAtual.value = numCandidato.value.length;
+    numAtual.value = numCandidato.value!.toString().length;
     if (numAtual.value == digitos) {
-      buscaCandidato(numCandidato.value);
-      urlImageCandidato.value =
-          candidatoAtual.value!.urlImage; //'assets/images/candidato.png';
+      buscaCandidato(numCandidato.value!);
     }
     numCandidato.notifyListeners();
   }
 
-  void buscaCandidato(String numCandidato) {
-    candidatoAtual.value = listCandidato.firstWhere((e) => e.id == numCandidato,
-        orElse: () => Candidato(
-            matricula: '',
-            id: '',
-            nome: 'CANDIDATO INVÁLIDO',
-            cargo: Cargo.prefeito,
-            partido: '',
-            urlImage: ''));
+  void buscaCandidato(int numCandidato) {
+    candidatoAtual.value =
+        listCandidato.where((e) => e.numero == numCandidato).firstOrNull;
+    if (candidatoAtual.value != null) {
+      urlImageCandidato.value = candidatoAtual.value!.urlImage;
+    }
   }
 
   void votoBranco() {
-    numCandidato.value = 'BRANCO';
+    // numCandidato.value = 'BRANCO';
     numAtual.value = 2;
   }
 
   void corrige() {
-    numCandidato.value = '';
+    numCandidato.value = null;
     numAtual.value = 0;
     urlImageCandidato.value = '';
     candidatoAtual.value = null;
@@ -59,6 +52,6 @@ class VotacaoControl with ChangeNotifier {
   Future<void> carregaListaCandidatos() async {
     final list = await candidatoRepository.find({});
     listCandidato.clear();
-    listCandidato.addAll(list);
+    listCandidato.addAll(list ?? []);
   }
 }

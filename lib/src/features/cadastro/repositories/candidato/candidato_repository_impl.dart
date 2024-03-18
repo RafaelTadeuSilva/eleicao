@@ -28,13 +28,13 @@ class CandidatoRepositoryImpl implements CandidatoRepository {
   }
 
   @override
-  Future<Candidato> findOne(String id) async {
-    final map = await apiDb.findOne(table, id);
+  Future<Candidato> findOne(String matricula) async {
+    final map = await apiDb.findOne(table, matricula);
     return mapper.fromMap(map);
   }
 
   @override
-  Future<bool> update(String id, Candidato candidato) async {
-    return await apiDb.update(table, id, mapper.toMap(candidato));
+  Future<bool> update(String matricula, Candidato candidato) async {
+    return await apiDb.update(table, matricula, mapper.toMap(candidato));
   }
 }

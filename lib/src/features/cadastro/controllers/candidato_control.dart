@@ -10,12 +10,17 @@ class CandidatoControl extends ChangeNotifier {
   }
 
   Future<void> listaCandidatos() async {
-    listCandidatos.value = await candidatoRepository.find({});
+    listCandidatos.value = await candidatoRepository.find({}) ?? [];
     listCandidatos.notifyListeners();
   }
 
-  Future<Candidato> getById(String id) async {
-    return await candidatoRepository.findOne(id);
+  Future<Candidato?> getById(String matricula) async {
+    return await candidatoRepository.findOne(matricula);
+  }
+
+  Future<Candidato?> getByNumero(int numero) async {
+    final list = await candidatoRepository.find({'numero': numero});
+    return list?.firstOrNull;
   }
 
   Future<bool> create(Candidato candidato) async {

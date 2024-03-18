@@ -6,8 +6,8 @@ class CandidatoMapperImpl implements Mapper<Candidato> {
   @override
   Candidato fromMap(Map<String, dynamic> map) {
     return Candidato(
-        matricula: map['matricula'].toString(),
-        id: map['id'].toString(),
+        id: map['id'],
+        numero: map['numero'],
         nome: map['nome'],
         urlImage: map['urlImage'],
         cargo: Cargo.values.firstWhere((e) => e.codigo == map['cargo']),
@@ -17,8 +17,8 @@ class CandidatoMapperImpl implements Mapper<Candidato> {
   @override
   Map<String, dynamic> toMap(Candidato candidato) {
     return {
-      'matricula': candidato.matricula,
       'id': candidato.id,
+      'numero': candidato.numero,
       'nome': candidato.nome,
       'urlImage': candidato.urlImage,
       'cargo': candidato.cargo.codigo,

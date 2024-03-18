@@ -3,17 +3,14 @@ import 'package:eleicao/src/features/cadastro/mapper/aluno_mapper_impl.dart';
 import 'package:eleicao/src/features/cadastro/mapper/candidato_mapper_impl.dart';
 import 'package:eleicao/src/features/cadastro/repositories/aluno/aluno_repository.dart';
 import 'package:eleicao/src/features/cadastro/repositories/aluno/aluno_repository_impl.dart';
-import 'package:eleicao/src/features/cadastro/repositories/aluno/aluno_repository_sqflite.dart';
 import 'package:eleicao/src/features/cadastro/repositories/candidato/candidato_repository.dart';
 import 'package:eleicao/src/features/cadastro/repositories/candidato/candidato_repository_impl.dart';
-import 'package:eleicao/src/features/cadastro/repositories/candidato/candidato_repository_sqflite.dart';
 import 'package:eleicao/src/repositories/api_db.dart';
 import 'package:eleicao/src/repositories/api_storage.dart';
 import 'package:eleicao/src/repositories/local/sqflite_db.dart';
 import 'package:eleicao/src/repositories/remote/firestore_db.dart';
 import 'package:eleicao/src/repositories/storage/api_storage_firebase.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 

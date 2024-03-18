@@ -28,7 +28,7 @@ class _CandidatoPageState extends State<CandidatoPage> {
     return ValueListenableBuilder(
         valueListenable: numCandidato,
         builder: (context, numberCandidato, child) {
-          final emBranco = numCandidato.value == "BRANCO";
+          const emBranco = false; // numCandidato.value == "BRANCO";
           return Padding(
             padding: const EdgeInsets.all(5.0),
             child: Row(
@@ -76,18 +76,25 @@ class _CandidatoPageState extends State<CandidatoPage> {
                           SizedBox(width: 10),
                           ValueListenableBuilder(
                             valueListenable: candidatoAtual,
-                            builder: (context, value, child) => SizedBox(
-                              width: 200,
-                              height: 60,
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  softWrap: true,
-                                  value?.nome ?? '',
-                                  style: TextStyle(fontSize: 20),
+                            builder: (context, value, child) {
+                              final nome = numberCandidato == null
+                                  ? ''
+                                  : value?.nome == null
+                                      ? 'CANDIDATO INVÁLIDO'
+                                      : value!.nome;
+                              return SizedBox(
+                                width: 200,
+                                height: 60,
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    softWrap: true,
+                                    nome,
+                                    style: TextStyle(fontSize: 20),
+                                  ),
                                 ),
-                              ),
-                            ),
+                              );
+                            },
                           ),
                         ],
                       ),
@@ -115,23 +122,20 @@ class _CandidatoPageState extends State<CandidatoPage> {
                 ValueListenableBuilder(
                   valueListenable: urlImageCandidato,
                   builder: (context, value, child) {
-                    return emBranco
-                        ? Container()
-                        : Container(
-                            decoration: BoxDecoration(
-                                image: urlImageCandidato.value == ''
-                                    ? null
-                                    : DecorationImage(
-                                        image: NetworkImage(
-                                            urlImageCandidato.value)),
-                                border: Border(
-                                    bottom: BorderSide(width: 1),
-                                    left: BorderSide(width: 1),
-                                    top: BorderSide(width: 1),
-                                    right: BorderSide(width: 1))),
-                            width: 180,
-                            height: 200,
-                          );
+                    return Container(
+                      decoration: BoxDecoration(
+                          image: urlImageCandidato.value == ''
+                              ? null
+                              : DecorationImage(
+                                  image: NetworkImage(urlImageCandidato.value)),
+                          border: Border(
+                              bottom: BorderSide(width: 1),
+                              left: BorderSide(width: 1),
+                              top: BorderSide(width: 1),
+                              right: BorderSide(width: 1))),
+                      width: 180,
+                      height: 200,
+                    );
                   },
                 ),
               ],
@@ -140,10 +144,11 @@ class _CandidatoPageState extends State<CandidatoPage> {
         });
   }
 
-  Widget montaNumeros(String numCandidato) {
+  Widget montaNumeros(int? numCandidato) {
     final digitos = candidatoDigitos();
     final listNumberLabel = <Widget>[];
-    final numbers = numCandidato.split('');
+
+    final numbers = numCandidato?.toString().split('') ?? [''];
     for (int i = 0; i < digitos; i++) {
       listNumberLabel.add(NumberLabel(
         lbNum: numbers.elementAtOrNull(i) ?? '',

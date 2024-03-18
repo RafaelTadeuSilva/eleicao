@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:eleicao/src/features/cadastro/controllers/candidato_control.dart';
 import 'package:eleicao/src/features/cadastro/state/cadastro_state.dart';
 import 'package:eleicao/src/features/urna/enums/cargo.dart';
+import 'package:eleicao/src/features/urna/state/votacao_state.dart';
 import 'package:eleicao/src/injector.dart';
 import 'package:eleicao/src/models/aluno.dart';
 import 'package:eleicao/src/models/candidato.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class CandidatoCadPage extends StatefulWidget {
   const CandidatoCadPage({super.key, this.id});
@@ -119,9 +119,11 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
                       label: Text('Número'),
                       border: OutlineInputBorder(),
                     ),
-                    validator: (value) => value!.length < 2
-                        ? 'Nome deve ter mais de 4 caracteres'
-                        : null),
+                    validator: (value) {
+                      if (value!.isEmpty) return 'Número é obrigatório';
+                      if (int.tryParse(value) == null) return 'Número inválido';
+                      return null;
+                    }),
                 const SizedBox(height: 10),
                 Focus(
                   child: DropdownMenu(
@@ -191,26 +193,47 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
   Future<void> buscaCandidato(String? idCandidato) async {
     await Future.delayed(Durations.short2);
     if (idCandidato != null) {
-      final Candidato(:id, :nome, :cargo, :matricula, :urlImage) =
-          await control.getById(idCandidato);
-      txtId.text = id;
-      txtNome.text = nome;
-      txtCargo.text = cargo.descricao;
-      txtMatricula.text = matricula;
-      txtUrlImage.text = urlImage;
+      final candidato = await control.getById(idCandidato);
+      if (candidato != null) {
+        final Candidato(:numero, :nome, :cargo, id: matricula, :urlImage) =
+            candidato;
+        txtId.text = numero.toString();
+        txtNome.text = nome;
+        txtCargo.text = cargo.descricao;
+        txtMatricula.text = matricula;
+        txtUrlImage.text = urlImage;
+      }
+
       // txtTurma.text = listTurmas.firstWhere((e) => e.$1 == turma).$2;
     }
   }
 
   Future<void> salvar() async {
     if (_formKey.currentState!.validate()) {
-      final remoteImagePath =
-          await apiStorage.uploadFile(txtUrlImage.text, 'cand${txtId.text}');
+      if (txtUrlImage.text.isEmpty) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            actions: [
+              ElevatedButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('OK'))
+            ],
+            content: const Text('Imagem é obrigatória'),
+          ),
+        );
+        return;
+      }
+      var remoteImagePath = txtUrlImage.text;
+      if (!txtUrlImage.text.startsWith('http')) {
+        remoteImagePath =
+            await apiStorage.uploadFile(txtUrlImage.text, 'cand${txtId.text}');
+      }
       final candidato = Candidato(
-        id: txtId.text,
+        numero: int.parse(txtId.text),
         nome: txtNome.text,
         cargo: Cargo.values.firstWhere((e) => e.descricao == txtCargo.text),
-        matricula: txtMatricula.text,
+        id: txtMatricula.text,
         partido: '',
         urlImage: remoteImagePath,
       );

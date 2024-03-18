@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 final numAtual = ValueNotifier(0);
 final numSeqEleicao = ValueNotifier(1);
-final numCandidato = ValueNotifier<String>('');
+final numCandidato = ValueNotifier<int?>(null);
 final urlImageCandidato = ValueNotifier<String>('');
 final eleitorAtual = ValueNotifier<Aluno?>(null);
 final candidatoAtual = ValueNotifier<Candidato?>(null);

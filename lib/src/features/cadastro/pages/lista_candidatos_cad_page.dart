@@ -45,10 +45,10 @@ class _ListaCandidatosCadPageState extends State<ListaCandidatosCadPage> {
   }
 
   Widget montaItem(int index, List<Candidato> list) {
-    final Candidato(:id, :nome, :cargo) = list[index];
+    final Candidato(id: matricula, :nome, :cargo) = list[index];
     return Card(
       child: InkWell(
-        onTap: () => navigateToCandidatoPage(id),
+        onTap: () => navigateToCandidatoPage(matricula),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
