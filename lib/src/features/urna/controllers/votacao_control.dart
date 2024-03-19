@@ -1,9 +1,14 @@
+import 'package:eleicao/src/features/urna/enums/cargo.dart';
 import 'package:eleicao/src/features/urna/functions/functions.dart';
+import 'package:eleicao/src/features/urna/pages/proximo_eleitor_page.dart';
 import 'package:eleicao/src/features/urna/state/votacao_state.dart';
 import 'package:eleicao/src/injector.dart';
+import 'package:eleicao/src/models/voto.dart';
 import 'package:flutter/material.dart';
 
 class VotacaoControl with ChangeNotifier {
+  List<Voto> votoAtual = [];
+
   VotacaoControl() {
     carregaListaEleitores();
     carregaListaCandidatos();
@@ -41,7 +46,33 @@ class VotacaoControl with ChangeNotifier {
     candidatoAtual.value = null;
   }
 
-  void confirma() {}
+  void confirma(BuildContext context) {
+    if (candidatoAtual.value != null) {
+      votoAtual.add(Voto(
+        cargo: Cargo.values
+            .firstWhere((e) => e.codigo == numSeqEleicao.value)
+            .descricao,
+        nome: candidatoAtual.value!.nome,
+        matricula: candidatoAtual.value!.id,
+      ));
+      corrige();
+      numSeqEleicao.value++;
+      if (numSeqEleicao.value > 3) {
+        gravaVoto();
+        fimVotacao(context);
+      }
+    }
+    print(numSeqEleicao.value);
+  }
+
+  void gravaVoto() {}
+
+  void fimVotacao(BuildContext context) {
+    numSeqEleicao.value = 1;
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+      builder: (context) => const ProximoEleitorPage(),
+    ));
+  }
 
   Future<void> carregaListaEleitores() async {
     final list = await alunoRepository.find({});

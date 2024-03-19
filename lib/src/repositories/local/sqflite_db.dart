@@ -18,7 +18,7 @@ class SqfliteDb implements ApiDb {
       await db.execute(
           'CREATE TABLE Alunos (id INTEGER PRIMARY KEY, nome TEXT, turma INTEGER, titulo INTEGER)');
       await db.execute(
-          'CREATE TABLE Candidatos (id INTEGER PRIMARY KEY, nome TEXT, matricula TEXT, urlImage TEXT, cargo INTEGER, partido TEXT)');
+          'CREATE TABLE Candidatos (id INTEGER PRIMARY KEY, nome TEXT, numero INTEGER, urlImage TEXT, cargo INTEGER, partido TEXT)');
     });
     return database;
   }

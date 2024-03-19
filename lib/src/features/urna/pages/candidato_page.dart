@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:eleicao/src/features/urna/enums/cargo.dart';
 import 'package:eleicao/src/features/urna/functions/functions.dart';
 import 'package:eleicao/src/features/urna/state/votacao_state.dart';
 import 'package:eleicao/src/widgets/number_label.dart';
@@ -41,11 +42,17 @@ class _CandidatoPageState extends State<CandidatoPage> {
                       style: TextStyle(fontSize: 25),
                     ),
                     Row(
-                      children: const [
+                      children: [
                         SizedBox(width: 60),
-                        Text(
-                          'PREFEITO',
-                          style: TextStyle(fontSize: 25),
+                        ValueListenableBuilder(
+                          valueListenable: numSeqEleicao,
+                          builder: (context, value, child) => Text(
+                            Cargo.values
+                                .firstWhere((e) => e.codigo == value)
+                                .descricao
+                                .toUpperCase(),
+                            style: TextStyle(fontSize: 25),
+                          ),
                         ),
                       ],
                     ),
@@ -124,15 +131,11 @@ class _CandidatoPageState extends State<CandidatoPage> {
                   builder: (context, value, child) {
                     return Container(
                       decoration: BoxDecoration(
-                          image: urlImageCandidato.value == ''
-                              ? null
-                              : DecorationImage(
-                                  image: NetworkImage(urlImageCandidato.value)),
-                          border: Border(
-                              bottom: BorderSide(width: 1),
-                              left: BorderSide(width: 1),
-                              top: BorderSide(width: 1),
-                              right: BorderSide(width: 1))),
+                          // image: urlImageCandidato.value == ''
+                          //     ? null
+                          //     : DecorationImage(
+                          //         image: NetworkImage(urlImageCandidato.value)),
+                          border: Border.all()),
                       width: 180,
                       height: 200,
                     );

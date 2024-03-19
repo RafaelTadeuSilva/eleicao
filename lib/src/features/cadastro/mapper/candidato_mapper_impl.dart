@@ -6,7 +6,7 @@ class CandidatoMapperImpl implements Mapper<Candidato> {
   @override
   Candidato fromMap(Map<String, dynamic> map) {
     return Candidato(
-        id: map['id'],
+        id: map['id'].toString(),
         numero: map['numero'],
         nome: map['nome'],
         urlImage: map['urlImage'],

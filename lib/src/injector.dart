@@ -1,10 +1,13 @@
 import 'package:eleicao/firebase_options.dart';
 import 'package:eleicao/src/features/cadastro/mapper/aluno_mapper_impl.dart';
 import 'package:eleicao/src/features/cadastro/mapper/candidato_mapper_impl.dart';
+import 'package:eleicao/src/features/cadastro/mapper/voto_mapper_impl.dart';
 import 'package:eleicao/src/features/cadastro/repositories/aluno/aluno_repository.dart';
 import 'package:eleicao/src/features/cadastro/repositories/aluno/aluno_repository_impl.dart';
 import 'package:eleicao/src/features/cadastro/repositories/candidato/candidato_repository.dart';
 import 'package:eleicao/src/features/cadastro/repositories/candidato/candidato_repository_impl.dart';
+import 'package:eleicao/src/features/cadastro/repositories/voto/voto_repository.dart';
+import 'package:eleicao/src/features/cadastro/repositories/voto/voto_repository_impl.dart';
 import 'package:eleicao/src/repositories/api_db.dart';
 import 'package:eleicao/src/repositories/api_storage.dart';
 import 'package:eleicao/src/repositories/local/sqflite_db.dart';
@@ -20,6 +23,7 @@ late final AlunoRepository alunoRepository;
 late final AlunoRepository alunoRepositoryLocal;
 late final CandidatoRepository candidatoRepository;
 late final CandidatoRepository candidatoRepositoryLocal;
+late final VotoRepository votoRepository;
 late final SharedPreferences prefs;
 late final ApiStorage apiStorage;
 
@@ -45,6 +49,7 @@ Future<void> inject() async {
   apiStorage = ApiStorageFirebase();
   alunoRepository = AlunoRepositoryImpl(apidb, AlunoMapperImpl());
   candidatoRepository = CandidatoRepositoryImpl(apidb, CandidatoMapperImpl());
+  votoRepository = VotoRepositoryImpl(apidb, VotoMapperImpl());
 }
 
 Future<ApiDb> configFirebase() async {

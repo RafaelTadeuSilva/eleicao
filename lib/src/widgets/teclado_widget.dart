@@ -64,7 +64,7 @@ class TecladoWidget extends StatelessWidget {
                 text: 'CORRIGE',
               ),
               FunctionButton(
-                onPressed: control.confirma,
+                onPressed: () => control.confirma(context),
                 backgroundColor: Colors.green,
                 text: 'CONFIRMA',
               ),

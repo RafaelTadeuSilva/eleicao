@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:eleicao/src/features/cadastro/controllers/candidato_control.dart';
 import 'package:eleicao/src/features/cadastro/state/cadastro_state.dart';
 import 'package:eleicao/src/features/urna/enums/cargo.dart';
-import 'package:eleicao/src/features/urna/state/votacao_state.dart';
 import 'package:eleicao/src/injector.dart';
 import 'package:eleicao/src/models/aluno.dart';
 import 'package:eleicao/src/models/candidato.dart';
@@ -225,7 +224,7 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
         return;
       }
       var remoteImagePath = txtUrlImage.text;
-      if (!txtUrlImage.text.startsWith('http')) {
+      if (!txtUrlImage.text.startsWith('http') && !Platform.isMacOS) {
         remoteImagePath =
             await apiStorage.uploadFile(txtUrlImage.text, 'cand${txtId.text}');
       }
