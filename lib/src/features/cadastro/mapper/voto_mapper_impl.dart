@@ -15,7 +15,6 @@ class VotoMapperImpl implements Mapper<Voto> {
   @override
   Map<String, dynamic> toMap(Voto voto) {
     return {
-      'id': voto.id,
       'cargo': voto.cargo,
       'matricula': voto.matricula,
       'nome': voto.nome,

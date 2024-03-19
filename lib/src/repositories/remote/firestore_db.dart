@@ -6,6 +6,10 @@ class FirestoreDb implements ApiDb {
 
   @override
   Future<String> create(String colName, Map<String, dynamic> map) async {
+    if (map['id'] == null) {
+      final doc = await db.collection(colName).add(map);
+      return doc.id;
+    }
     await db.collection(colName).doc(map['id']).set(map);
     return map['id'];
   }

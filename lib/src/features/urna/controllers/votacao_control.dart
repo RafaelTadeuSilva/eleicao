@@ -21,14 +21,15 @@ class VotacaoControl with ChangeNotifier {
     }
     numAtual.value = numCandidato.value!.toString().length;
     if (numAtual.value == digitos) {
-      buscaCandidato(numCandidato.value!);
+      buscaCandidato(numCandidato.value!, numSeqEleicao.value);
     }
     numCandidato.notifyListeners();
   }
 
-  void buscaCandidato(int numCandidato) {
-    candidatoAtual.value =
-        listCandidato.where((e) => e.numero == numCandidato).firstOrNull;
+  void buscaCandidato(int numCandidato, int seqEleicao) {
+    candidatoAtual.value = listCandidato
+        .where((e) => e.numero == numCandidato && e.cargo.codigo == seqEleicao)
+        .firstOrNull;
     if (candidatoAtual.value != null) {
       urlImageCandidato.value = candidatoAtual.value!.urlImage;
     }
@@ -57,7 +58,7 @@ class VotacaoControl with ChangeNotifier {
       ));
       corrige();
       numSeqEleicao.value++;
-      if (numSeqEleicao.value > 3) {
+      if (numSeqEleicao.value > 1) {
         gravaVoto();
         fimVotacao(context);
       }
@@ -65,13 +66,28 @@ class VotacaoControl with ChangeNotifier {
     print(numSeqEleicao.value);
   }
 
-  void gravaVoto() {}
+  Future<void> gravaVoto() async {
+    for (var voto in votoAtual) {
+      await votoRepository.create(voto);
+    }
+    votoAtual.clear();
+  }
 
-  void fimVotacao(BuildContext context) {
+  Future<void> fimVotacao(BuildContext context) async {
     numSeqEleicao.value = 1;
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => const ProximoEleitorPage(),
-    ));
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => Scaffold(
+              body: Center(
+                child: Text(
+                  'FIM',
+                  style: TextStyle(fontSize: 200),
+                ),
+              ),
+            )));
+    Future.delayed(Duration(seconds: 3)).whenComplete(
+        () => Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) => const ProximoEleitorPage(),
+            )));
   }
 
   Future<void> carregaListaEleitores() async {

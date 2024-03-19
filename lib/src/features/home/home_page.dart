@@ -42,6 +42,13 @@ class HomePage extends StatelessWidget {
                 )),
             const SizedBox(height: 10),
             ElevatedButton(
+                onPressed: () => navigateToApuracao(context),
+                child: const Text(
+                  'Apuração',
+                  style: TextStyle(fontSize: 25),
+                )),
+            const SizedBox(height: 10),
+            ElevatedButton(
                 onPressed: () => changeTerminal(context),
                 child: const Text(
                   'Terminal',
@@ -66,6 +73,12 @@ class HomePage extends StatelessWidget {
   }
 
   void navigateToVotacao(BuildContext context) {
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+      builder: (context) => const ProximoEleitorPage(),
+    ));
+  }
+
+  void navigateToApuracao(BuildContext context) {
     Navigator.of(context).pushReplacement(MaterialPageRoute(
       builder: (context) => const ProximoEleitorPage(),
     ));

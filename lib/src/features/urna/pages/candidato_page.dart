@@ -43,7 +43,6 @@ class _CandidatoPageState extends State<CandidatoPage> {
                     ),
                     Row(
                       children: [
-                        SizedBox(width: 60),
                         ValueListenableBuilder(
                           valueListenable: numSeqEleicao,
                           builder: (context, value, child) => Text(
@@ -131,10 +130,10 @@ class _CandidatoPageState extends State<CandidatoPage> {
                   builder: (context, value, child) {
                     return Container(
                       decoration: BoxDecoration(
-                          // image: urlImageCandidato.value == ''
-                          //     ? null
-                          //     : DecorationImage(
-                          //         image: NetworkImage(urlImageCandidato.value)),
+                          image: urlImageCandidato.value == ''
+                              ? null
+                              : DecorationImage(
+                                  image: NetworkImage(urlImageCandidato.value)),
                           border: Border.all()),
                       width: 180,
                       height: 200,

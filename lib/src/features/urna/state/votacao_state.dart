@@ -10,3 +10,4 @@ final eleitorAtual = ValueNotifier<Aluno?>(null);
 final candidatoAtual = ValueNotifier<Candidato?>(null);
 final listEleitor = <Aluno>[];
 final listCandidato = <Candidato>[];
+final tipoEleicao = <int>[1];
