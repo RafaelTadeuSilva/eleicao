@@ -1,5 +1,6 @@
 import 'package:eleicao/src/features/cadastro/pages/lista_alunos_cad_page.dart';
 import 'package:eleicao/src/features/cadastro/pages/lista_candidatos_cad_page.dart';
+import 'package:eleicao/src/features/urna/pages/liberacao_urna_page.dart';
 import 'package:eleicao/src/features/urna/pages/proximo_eleitor_page.dart';
 import 'package:eleicao/src/injector.dart';
 import 'package:flutter/material.dart';
@@ -42,6 +43,13 @@ class HomePage extends StatelessWidget {
                 )),
             const SizedBox(height: 10),
             ElevatedButton(
+                onPressed: () => navigateToLiberacao(context),
+                child: const Text(
+                  'Liberação',
+                  style: TextStyle(fontSize: 25),
+                )),
+            const SizedBox(height: 10),
+            ElevatedButton(
                 onPressed: () => navigateToApuracao(context),
                 child: const Text(
                   'Apuração',
@@ -75,6 +83,12 @@ class HomePage extends StatelessWidget {
   void navigateToVotacao(BuildContext context) {
     Navigator.of(context).pushReplacement(MaterialPageRoute(
       builder: (context) => const ProximoEleitorPage(),
+    ));
+  }
+
+  void navigateToLiberacao(BuildContext context) {
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+      builder: (context) => const LiberacaoUrnaPage(),
     ));
   }
 

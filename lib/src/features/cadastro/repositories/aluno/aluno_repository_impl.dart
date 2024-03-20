@@ -27,13 +27,21 @@ class AlunoRepositoryImpl implements AlunoRepository {
   }
 
   @override
-  Future<Aluno> findOne(String id) async {
+  Future<Aluno?> findOne(String id) async {
     final map = await apiDb.findOne(table, id);
+    if (map.isEmpty) return null;
     return mapper.fromMap(map);
   }
 
   @override
   Future<bool> update(String id, Aluno aluno) async {
     return await apiDb.update(table, id, mapper.toMap(aluno));
+  }
+
+  @override
+  Future<Aluno?> findByTitulo(String titulo) async {
+    final map = await apiDb.find(table, {'titulo': titulo});
+    if (map.isEmpty) return null;
+    return mapper.fromMap(map.first);
   }
 }

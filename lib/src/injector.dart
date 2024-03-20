@@ -1,13 +1,17 @@
 import 'package:eleicao/firebase_options.dart';
 import 'package:eleicao/src/features/cadastro/mapper/aluno_mapper_impl.dart';
 import 'package:eleicao/src/features/cadastro/mapper/candidato_mapper_impl.dart';
+import 'package:eleicao/src/features/cadastro/mapper/liberacao_urna_mapper_impl.dart';
 import 'package:eleicao/src/features/cadastro/mapper/voto_mapper_impl.dart';
 import 'package:eleicao/src/features/cadastro/repositories/aluno/aluno_repository.dart';
 import 'package:eleicao/src/features/cadastro/repositories/aluno/aluno_repository_impl.dart';
 import 'package:eleicao/src/features/cadastro/repositories/candidato/candidato_repository.dart';
 import 'package:eleicao/src/features/cadastro/repositories/candidato/candidato_repository_impl.dart';
+import 'package:eleicao/src/features/cadastro/repositories/liberacao_urna/liberacao_urna_repository.dart';
+import 'package:eleicao/src/features/cadastro/repositories/liberacao_urna/liberacao_urna_repository_impl.dart';
 import 'package:eleicao/src/features/cadastro/repositories/voto/voto_repository.dart';
 import 'package:eleicao/src/features/cadastro/repositories/voto/voto_repository_impl.dart';
+import 'package:eleicao/src/models/liberacao_urna.dart';
 import 'package:eleicao/src/repositories/api_db.dart';
 import 'package:eleicao/src/repositories/api_storage.dart';
 import 'package:eleicao/src/repositories/local/sqflite_db.dart';
@@ -17,12 +21,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-late final ApiDb apidb;
 late final ApiDb apidbLocal;
 late final AlunoRepository alunoRepository;
 late final AlunoRepository alunoRepositoryLocal;
 late final CandidatoRepository candidatoRepository;
 late final CandidatoRepository candidatoRepositoryLocal;
+late final LiberacaoUrnaRepository liberacaoUrnaRepository;
 late final VotoRepository votoRepository;
 late final SharedPreferences prefs;
 late final ApiStorage apiStorage;
@@ -45,11 +49,13 @@ Future<void> inject() async {
   // candidatoRepository =
   //     CandidatoRepositorySqflite(apidb, CandidatoMapperImpl());
 
-  apidb = await configFirebase();
+  final apidb = await configFirebase();
   apiStorage = ApiStorageFirebase();
   alunoRepository = AlunoRepositoryImpl(apidb, AlunoMapperImpl());
   candidatoRepository = CandidatoRepositoryImpl(apidb, CandidatoMapperImpl());
   votoRepository = VotoRepositoryImpl(apidb, VotoMapperImpl());
+  liberacaoUrnaRepository =
+      LiberacaoUrnaRepositoryImpl(apidb, LiberacaoUrnaMapperImpl());
 }
 
 Future<ApiDb> configFirebase() async {

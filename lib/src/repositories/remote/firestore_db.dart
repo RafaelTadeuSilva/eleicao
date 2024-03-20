@@ -20,17 +20,58 @@ class FirestoreDb implements ApiDb {
     return true;
   }
 
-  @override
-  Future<List<Map<String, dynamic>>> find(
-      String colName, Map<String, dynamic> filter) async {
-    final nome = filter['nome'] ?? '';
-    final query = await db
+  Future<QuerySnapshot<Map<String, dynamic>>> findByNome(
+      String colName, String nome) {
+    return db
         .collection(colName)
         .orderBy('nome')
         .startAt([nome]).endAt(['${nome}z']).get();
+  }
+
+  Future<QuerySnapshot<Map<String, dynamic>>> findByTitulo(
+      String colName, String value) {
+    return db
+        .collection(colName)
+        .where('titulo', isEqualTo: int.parse(value))
+        .get();
+  }
+
+  Future<QuerySnapshot<Map<String, dynamic>>> findByUrnaStatus(
+      String colName, String urna, String status) {
+    return db
+        .collection(colName)
+        .where('urna', isEqualTo: int.parse(urna))
+        .where('status', isEqualTo: int.parse(status))
+        .get();
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> find(
+      String colName, Map<String, dynamic> filter) async {
+    final String nome = filter['nome'] ?? '';
+    final String titulo = filter['titulo'] ?? '';
+    final String urna = filter['urna']?.toString() ?? '';
+    final String status = filter['status']?.toString() ?? '';
+    QuerySnapshot<Map<String, dynamic>> query;
+
+    if (titulo.isNotEmpty && int.tryParse(titulo) != null) {
+      query = await findByTitulo(colName, titulo);
+    } else if (urna.isNotEmpty &&
+        int.tryParse(urna) != null &&
+        status.isNotEmpty &&
+        int.tryParse(status) != null) {
+      query = await findByUrnaStatus(colName, urna, status);
+    } else {
+      query = await findByNome(colName, nome);
+    }
+
     final list = <Map<String, dynamic>>[];
     for (var e in query.docs) {
-      list.add(e.data());
+      final map = e.data();
+      if (!map.containsKey('id')) {
+        map['id'] = e.id;
+      }
+      list.add(map);
     }
     return list;
   }
@@ -44,7 +85,7 @@ class FirestoreDb implements ApiDb {
   @override
   Future<bool> update(
       String colName, String id, Map<String, dynamic> map) async {
-    await db.collection(colName).doc(map['id']).set(map);
+    await db.collection(colName).doc(id).set(map, SetOptions(merge: true));
     return true;
   }
 }

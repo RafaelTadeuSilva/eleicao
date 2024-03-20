@@ -10,7 +10,8 @@ class AlunoControl with ChangeNotifier {
   }
 
   Future<Aluno> getById(String id) async {
-    return await alunoRepository.findOne(id);
+    final aluno = await alunoRepository.findOne(id);
+    return aluno!;
   }
 
   Future<bool> create(Aluno aluno) async {
