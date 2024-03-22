@@ -59,7 +59,7 @@ class _ListaAlunosCadPageState extends State<ListaAlunosCadPage> {
                 style: const TextStyle(fontSize: 25),
               ),
               Text(
-                listTurmas.firstWhere((element) => element.$1 == turma).$2,
+                getTurmaById(turma).$2,
                 style: const TextStyle(fontSize: 25),
               )
             ],

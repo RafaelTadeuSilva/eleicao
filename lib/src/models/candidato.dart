@@ -9,6 +9,7 @@ class Candidato {
   final String? urlImageVice;
   final Cargo cargo;
   final String partido;
+  final int zone;
 
   Candidato({
     required this.id,
@@ -19,5 +20,6 @@ class Candidato {
     this.urlImageVice,
     required this.cargo,
     required this.partido,
+    required this.zone,
   });
 }

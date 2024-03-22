@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 class HomePage extends StatelessWidget {
   HomePage({super.key});
 
-  final txtTerminal =
-      TextEditingController(text: prefs.getInt('terminal').toString());
+  final txtTerminal = TextEditingController();
+  final txtZone = TextEditingController(text: prefs.getInt('zone').toString());
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +61,13 @@ class HomePage extends StatelessWidget {
                 child: const Text(
                   'Terminal',
                   style: TextStyle(fontSize: 25),
+                )),
+            const SizedBox(height: 10),
+            ElevatedButton(
+                onPressed: () => changeZone(context),
+                child: const Text(
+                  'Zona Eleitoral',
+                  style: TextStyle(fontSize: 25),
                 ))
           ],
         ),
@@ -99,6 +106,7 @@ class HomePage extends StatelessWidget {
   }
 
   void changeTerminal(BuildContext context) {
+    txtTerminal.text = prefs.getInt('terminal').toString();
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -115,9 +123,33 @@ class HomePage extends StatelessWidget {
     );
   }
 
+  void changeZone(BuildContext context) {
+    txtZone.text = prefs.getInt('zone').toString();
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Mudar Zona Eleitoral'),
+        content: TextField(
+          controller: txtZone,
+        ),
+        actions: [
+          ElevatedButton(
+              onPressed: () => setZone(context), child: const Text('Salvar'))
+        ],
+      ),
+    );
+  }
+
   void setTerminal(BuildContext context) {
     if (int.tryParse(txtTerminal.text) != null) {
       prefs.setInt('terminal', int.parse(txtTerminal.text));
+      Navigator.of(context).pop();
+    }
+  }
+
+  void setZone(BuildContext context) {
+    if (int.tryParse(txtZone.text) != null) {
+      prefs.setInt('zone', int.parse(txtZone.text));
       Navigator.of(context).pop();
     }
   }

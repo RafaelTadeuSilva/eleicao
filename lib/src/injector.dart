@@ -11,7 +11,6 @@ import 'package:eleicao/src/features/cadastro/repositories/liberacao_urna/libera
 import 'package:eleicao/src/features/cadastro/repositories/liberacao_urna/liberacao_urna_repository_impl.dart';
 import 'package:eleicao/src/features/cadastro/repositories/voto/voto_repository.dart';
 import 'package:eleicao/src/features/cadastro/repositories/voto/voto_repository_impl.dart';
-import 'package:eleicao/src/models/liberacao_urna.dart';
 import 'package:eleicao/src/repositories/api_db.dart';
 import 'package:eleicao/src/repositories/api_storage.dart';
 import 'package:eleicao/src/repositories/local/sqflite_db.dart';
@@ -21,11 +20,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-late final ApiDb apidbLocal;
 late final AlunoRepository alunoRepository;
-late final AlunoRepository alunoRepositoryLocal;
 late final CandidatoRepository candidatoRepository;
-late final CandidatoRepository candidatoRepositoryLocal;
 late final LiberacaoUrnaRepository liberacaoUrnaRepository;
 late final VotoRepository votoRepository;
 late final SharedPreferences prefs;
@@ -39,17 +35,19 @@ Future<void> setTerminal() async {
   }
 }
 
+Future<void> setZone() async {
+  final terminal = prefs.getInt('zone');
+  if (terminal == null) {
+    prefs.setInt('zone', 0);
+  }
+}
+
 Future<void> inject() async {
   await setTerminal();
-  // apidbLocal = await configSQFlite();
-  // alunoRepositoryLocal = AlunoRepositorySqflite(apidbLocal);
-
-  // apidb = await configSQFlite();
-  // alunoRepository = AlunoRepositorySqflite(apidb);
-  // candidatoRepository =
-  //     CandidatoRepositorySqflite(apidb, CandidatoMapperImpl());
+  await setZone();
 
   final apidb = await configFirebase();
+
   apiStorage = ApiStorageFirebase();
   alunoRepository = AlunoRepositoryImpl(apidb, AlunoMapperImpl());
   candidatoRepository = CandidatoRepositoryImpl(apidb, CandidatoMapperImpl());

@@ -10,4 +10,7 @@ enum Cargo {
   const Cargo(this.codigo, this.descricao);
   final int codigo;
   final String descricao;
+
+  static Cargo getCargoByCodigo(int codigo) =>
+      Cargo.values.firstWhere((e) => e.codigo == codigo);
 }

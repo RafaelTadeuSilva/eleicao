@@ -17,6 +17,14 @@ final listTurmas = [
   (12, '5° Turma B')
 ];
 
+(int, String)? getTurmaByName(String name) =>
+    listTurmas.where((e) => e.$2 == name).firstOrNull;
+
+(int, String)? findTurmaByName(String name) =>
+    listTurmas.where((e) => e.$2.contains(name)).firstOrNull;
+
+(int, String) getTurmaById(int? id) => listTurmas.firstWhere((e) => e.$1 == id);
+
 final listAlunos = ValueNotifier(<Aluno>[]);
 
 final listCandidatos = ValueNotifier(<Candidato>[]);

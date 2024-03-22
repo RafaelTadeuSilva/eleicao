@@ -79,8 +79,7 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
                                 orElse: () => _listAlunos.first);
                         txtNome.text = nome;
                         txtMatricula.text = id;
-                        txtTurma.text =
-                            listTurmas.firstWhere((e) => e.$1 == turma).$2;
+                        txtTurma.text = getTurmaById(turma).$2;
                       });
                     }
                   },
@@ -202,8 +201,6 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
         txtMatricula.text = matricula;
         txtUrlImage.text = urlImage;
       }
-
-      // txtTurma.text = listTurmas.firstWhere((e) => e.$1 == turma).$2;
     }
   }
 
@@ -235,6 +232,7 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
         id: txtMatricula.text,
         partido: '',
         urlImage: remoteImagePath,
+        zone: getTurmaByName(txtTurma.text)!.$1,
       );
 
       final success = switch (widget.id) {

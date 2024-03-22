@@ -82,17 +82,15 @@ class _AlunoCadPageState extends State<AlunoCadPage> {
                     expandedInsets: EdgeInsets.zero,
                     label: const Text('Escolha a turma'),
                     enableFilter: true,
-                    onSelected: (value) => txtTurma.text =
-                        listTurmas.firstWhere((e) => e.$1 == value).$2,
+                    onSelected: (value) =>
+                        txtTurma.text = getTurmaById(value).$2,
                     dropdownMenuEntries: listTurmas
                         .map((e) => DropdownMenuEntry(value: e.$1, label: e.$2))
                         .toList()),
                 onFocusChange: (hasFocus) {
                   if (!hasFocus) {
-                    txtTurma.text = listTurmas
-                        .firstWhere((e) => e.$2.contains(txtTurma.text),
-                            orElse: () => listTurmas.first)
-                        .$2;
+                    txtTurma.text =
+                        (findTurmaByName(txtTurma.text) ?? listTurmas.first).$2;
                   }
                 },
               ),
@@ -135,10 +133,7 @@ class _AlunoCadPageState extends State<AlunoCadPage> {
         id: txtId.text,
         nome: txtNome.text,
         titulo: int.parse(txtTitulo.text),
-        turma: listTurmas
-            .firstWhere((e) => e.$2 == txtTurma.text,
-                orElse: () => listTurmas.first)
-            .$1,
+        turma: (getTurmaByName(txtTurma.text) ?? listTurmas.first).$1,
       );
 
       final success = switch (widget.id) {
@@ -172,7 +167,7 @@ class _AlunoCadPageState extends State<AlunoCadPage> {
       final Aluno(:id, :nome, :turma, :titulo) = await control.getById(idAluno);
       txtId.text = id;
       txtNome.text = nome;
-      txtTurma.text = listTurmas.firstWhere((e) => e.$1 == turma).$2;
+      txtTurma.text = getTurmaById(turma).$2;
       txtTitulo.text = titulo.toString();
     }
   }

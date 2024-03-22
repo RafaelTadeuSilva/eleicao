@@ -17,11 +17,14 @@ class LiberacaoUrnaRepositoryImpl implements LiberacaoUrnaRepository {
 
   @override
   Future<LiberacaoUrna?> proximaLiberacao(int urna) async {
-    final list = await apiDb.find(table, {'urna': urna, 'status': 0});
-    if (list.isNotEmpty) {
-      return mapper.fromMap(list.first);
-    }
-    return null;
+    return LiberacaoUrna(
+        matricula: '0', nome: '', titulo: 0, turma: 0, urna: urna, status: 0);
+    //será utilizado na votação de presidente
+    // final list = await apiDb.find(table, {'urna': urna, 'status': 0});
+    // if (list.isNotEmpty) {
+    //   return mapper.fromMap(list.first);
+    // }
+    // return null;
   }
 
   @override

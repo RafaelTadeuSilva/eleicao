@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 
 class VotacaoControl with ChangeNotifier {
   List<Voto> votoAtual = [];
+  final zone = prefs.getInt('zone');
 
   VotacaoControl() {
     carregaListaEleitores();
@@ -55,6 +56,7 @@ class VotacaoControl with ChangeNotifier {
             .descricao,
         nome: candidatoAtual.value!.nome,
         matricula: candidatoAtual.value!.id,
+        zone: zone!,
       ));
       corrige();
       numSeqEleicao.value++;
@@ -99,6 +101,7 @@ class VotacaoControl with ChangeNotifier {
   Future<void> carregaListaCandidatos() async {
     final list = await candidatoRepository.find({});
     listCandidato.clear();
-    listCandidato.addAll(list ?? []);
+    final listFiltrada = list?.where((e) => e.zone == zone) ?? [];
+    listCandidato.addAll(listFiltrada);
   }
 }

@@ -3,10 +3,13 @@ class Voto {
   final String cargo;
   final String matricula;
   final String nome;
+  final int zone;
 
-  Voto(
-      {this.id,
-      required this.cargo,
-      required this.matricula,
-      required this.nome});
+  Voto({
+    this.id,
+    required this.cargo,
+    required this.matricula,
+    required this.nome,
+    required this.zone,
+  });
 }
