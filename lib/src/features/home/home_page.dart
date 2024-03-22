@@ -75,7 +75,7 @@ class HomePage extends StatelessWidget {
             ElevatedButton(
                 onPressed: () => changeTipoEleicao(context),
                 child: const Text(
-                  'Tipo de Eleição 1-Presidencia, 2-Vereador',
+                  'Tipo de Eleição',
                   style: TextStyle(fontSize: 25),
                 ))
           ],
@@ -143,7 +143,8 @@ class HomePage extends StatelessWidget {
         ),
         actions: [
           ElevatedButton(
-              onPressed: () => setZone(context), child: const Text('Salvar'))
+              onPressed: () => setTipoEleicao(context),
+              child: const Text('Salvar'))
         ],
       ),
     );
