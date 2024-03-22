@@ -42,9 +42,17 @@ Future<void> setZone() async {
   }
 }
 
+Future<void> setTipoEleicao() async {
+  final terminal = prefs.getInt('tipoeleicao');
+  if (terminal == null) {
+    prefs.setInt('tipoeleicao', 1);
+  }
+}
+
 Future<void> inject() async {
   await setTerminal();
   await setZone();
+  await setTipoEleicao();
 
   final apidb = await configFirebase();
 

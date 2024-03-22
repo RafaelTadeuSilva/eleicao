@@ -12,9 +12,9 @@ class CandidatoMapperImpl implements Mapper<Candidato> {
       nomeVice: map['nomeVice'],
       urlImage: map['urlImage'],
       urlImageVice: map['urlImageVice'],
-      cargo: Cargo.getCargoByCodigo(map['codigo'] ?? 1),
+      cargo: Cargo.getCargoByCodigo(map['cargo'] ?? 1),
       partido: '',
-      zone: map['zone'],
+      zone: map['zone'] ?? 0,
     );
   }
 

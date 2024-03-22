@@ -11,16 +11,20 @@ class VotacaoControl with ChangeNotifier {
   final zone = prefs.getInt('zone');
 
   VotacaoControl() {
+    tipoEleicao.clear();
+    tipoEleicao.add(prefs.getInt('tipoeleicao') ?? 1);
+    numSeqEleicao.value = tipoEleicao.first;
     carregaListaEleitores();
     carregaListaCandidatos();
   }
 
   void carregaCandidato(int num) {
     final digitos = candidatoDigitos();
+    final displayedNumbers = '${numCandidato.value ?? ''}$num';
     if (numAtual.value < digitos) {
-      numCandidato.value = int.parse('${numCandidato.value ?? ''}$num');
+      numCandidato.value = int.parse(displayedNumbers);
     }
-    numAtual.value = numCandidato.value!.toString().length;
+    numAtual.value = displayedNumbers.length;
     if (numAtual.value == digitos) {
       buscaCandidato(numCandidato.value!, numSeqEleicao.value);
     }
@@ -60,7 +64,7 @@ class VotacaoControl with ChangeNotifier {
       ));
       corrige();
       numSeqEleicao.value++;
-      if (numSeqEleicao.value > 1) {
+      if (numSeqEleicao.value > tipoEleicao.length) {
         gravaVoto();
         fimVotacao(context);
       }
@@ -76,7 +80,7 @@ class VotacaoControl with ChangeNotifier {
   }
 
   Future<void> fimVotacao(BuildContext context) async {
-    numSeqEleicao.value = 1;
+    numSeqEleicao.value = tipoEleicao.first;
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => Scaffold(
               body: Center(

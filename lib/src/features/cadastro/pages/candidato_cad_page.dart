@@ -193,12 +193,19 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
     if (idCandidato != null) {
       final candidato = await control.getById(idCandidato);
       if (candidato != null) {
-        final Candidato(:numero, :nome, :cargo, id: matricula, :urlImage) =
-            candidato;
+        final Candidato(
+          :numero,
+          :nome,
+          :cargo,
+          id: matricula,
+          :urlImage,
+          :zone
+        ) = candidato;
         txtId.text = numero.toString();
         txtNome.text = nome;
         txtCargo.text = cargo.descricao;
         txtMatricula.text = matricula;
+        txtTurma.text = getTurmaById(zone).$2;
         txtUrlImage.text = urlImage;
       }
     }

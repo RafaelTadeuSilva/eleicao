@@ -2,6 +2,7 @@ import 'package:eleicao/src/features/cadastro/pages/lista_alunos_cad_page.dart';
 import 'package:eleicao/src/features/cadastro/pages/lista_candidatos_cad_page.dart';
 import 'package:eleicao/src/features/urna/pages/liberacao_urna_page.dart';
 import 'package:eleicao/src/features/urna/pages/proximo_eleitor_page.dart';
+import 'package:eleicao/src/features/urna/state/votacao_state.dart';
 import 'package:eleicao/src/injector.dart';
 import 'package:flutter/material.dart';
 
@@ -9,7 +10,8 @@ class HomePage extends StatelessWidget {
   HomePage({super.key});
 
   final txtTerminal = TextEditingController();
-  final txtZone = TextEditingController(text: prefs.getInt('zone').toString());
+  final txtZone = TextEditingController();
+  final txtTipoEleicao = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +70,13 @@ class HomePage extends StatelessWidget {
                 child: const Text(
                   'Zona Eleitoral',
                   style: TextStyle(fontSize: 25),
+                )),
+            const SizedBox(height: 10),
+            ElevatedButton(
+                onPressed: () => changeTipoEleicao(context),
+                child: const Text(
+                  'Tipo de Eleição 1-Presidencia, 2-Vereador',
+                  style: TextStyle(fontSize: 25),
                 ))
           ],
         ),
@@ -123,6 +132,23 @@ class HomePage extends StatelessWidget {
     );
   }
 
+  void changeTipoEleicao(BuildContext context) {
+    txtTipoEleicao.text = prefs.getInt('tipoeleicao').toString();
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Mudar Tipo Eleição, 1-Presidencia, 2-Vereador'),
+        content: TextField(
+          controller: txtTipoEleicao,
+        ),
+        actions: [
+          ElevatedButton(
+              onPressed: () => setZone(context), child: const Text('Salvar'))
+        ],
+      ),
+    );
+  }
+
   void changeZone(BuildContext context) {
     txtZone.text = prefs.getInt('zone').toString();
     showDialog(
@@ -150,6 +176,15 @@ class HomePage extends StatelessWidget {
   void setZone(BuildContext context) {
     if (int.tryParse(txtZone.text) != null) {
       prefs.setInt('zone', int.parse(txtZone.text));
+      Navigator.of(context).pop();
+    }
+  }
+
+  void setTipoEleicao(BuildContext context) {
+    if (int.tryParse(txtTipoEleicao.text) != null) {
+      prefs.setInt('tipoeleicao', int.parse(txtTipoEleicao.text));
+      tipoEleicao.clear();
+      tipoEleicao.add(int.tryParse(txtTipoEleicao.text) ?? 1);
       Navigator.of(context).pop();
     }
   }
