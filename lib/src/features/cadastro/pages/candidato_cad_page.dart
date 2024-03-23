@@ -228,7 +228,8 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
         return;
       }
       var remoteImagePath = txtUrlImage.text;
-      if (!txtUrlImage.text.startsWith('http') && !Platform.isMacOS) {
+      if (!txtUrlImage.text.startsWith('http')) {
+        // && !Platform.isMacOS) {
         remoteImagePath =
             await apiStorage.uploadFile(txtUrlImage.text, 'cand${txtId.text}');
       }
