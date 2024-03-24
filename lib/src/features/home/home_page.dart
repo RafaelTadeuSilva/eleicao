@@ -1,5 +1,6 @@
 import 'package:eleicao/src/features/cadastro/pages/lista_alunos_cad_page.dart';
 import 'package:eleicao/src/features/cadastro/pages/lista_candidatos_cad_page.dart';
+import 'package:eleicao/src/features/urna/pages/apuracao_page.dart';
 import 'package:eleicao/src/features/urna/pages/liberacao_urna_page.dart';
 import 'package:eleicao/src/features/urna/pages/proximo_eleitor_page.dart';
 import 'package:eleicao/src/features/urna/state/votacao_state.dart';
@@ -103,14 +104,14 @@ class HomePage extends StatelessWidget {
   }
 
   void navigateToLiberacao(BuildContext context) {
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
+    Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => const LiberacaoUrnaPage(),
     ));
   }
 
   void navigateToApuracao(BuildContext context) {
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => const ProximoEleitorPage(),
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const ApuracaoPage(),
     ));
   }
 

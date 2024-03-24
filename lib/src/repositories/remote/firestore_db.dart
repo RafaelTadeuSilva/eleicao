@@ -36,6 +36,14 @@ class FirestoreDb implements ApiDb {
         .get();
   }
 
+  Future<QuerySnapshot<Map<String, dynamic>>> findByZone(
+      String colName, String value) {
+    return db
+        .collection(colName)
+        .where('zone', isEqualTo: int.parse(value))
+        .get();
+  }
+
   Future<QuerySnapshot<Map<String, dynamic>>> findByUrnaStatus(
       String colName, String urna, String status) {
     return db
@@ -52,10 +60,13 @@ class FirestoreDb implements ApiDb {
     final String titulo = filter['titulo'] ?? '';
     final String urna = filter['urna']?.toString() ?? '';
     final String status = filter['status']?.toString() ?? '';
+    final String zone = filter['zone']?.toString() ?? '';
     QuerySnapshot<Map<String, dynamic>> query;
 
     if (titulo.isNotEmpty && int.tryParse(titulo) != null) {
       query = await findByTitulo(colName, titulo);
+    } else if (zone.isNotEmpty && int.tryParse(zone) != null) {
+      query = await findByZone(colName, zone);
     } else if (urna.isNotEmpty &&
         int.tryParse(urna) != null &&
         status.isNotEmpty &&
