@@ -24,18 +24,21 @@ class _VotacaoPageState extends State<VotacaoPage> {
         child: Scaffold(
       body: Row(
         children: [
-          const Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CandidatoPage(),
-              //desabilitado até a votação presidente camara
-              //EleitorPage(),
-              Text('Aperte a tecla:'),
-              Text('VERDE para confirmar'),
-              Text('LARANJA para corrigir'),
-            ],
+          const Flexible(
+            flex: 3,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CandidatoPage(),
+                //desabilitado até a votação presidente camara
+                //EleitorPage(),
+                Text('Aperte a tecla:'),
+                Text('VERDE para confirmar'),
+                Text('LARANJA para corrigir'),
+              ],
+            ),
           ),
-          TecladoWidget(control),
+          Flexible(flex: 2, child: TecladoWidget(control)),
         ],
       ),
     ));
