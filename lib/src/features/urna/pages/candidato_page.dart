@@ -150,7 +150,9 @@ class _CandidatoPageState extends State<CandidatoPage> {
     final digitos = candidatoDigitos();
     final listNumberLabel = <Widget>[];
 
-    final numbers = numCandidato?.toString().split('') ?? [''];
+    final numbers =
+        numCandidato?.toString().padLeft(numAtual.value, '0').split('') ?? [''];
+
     for (int i = 0; i < digitos; i++) {
       listNumberLabel.add(NumberLabel(
         lbNum: numbers.elementAtOrNull(i) ?? '',

@@ -1,5 +1,6 @@
 import 'package:eleicao/src/features/cadastro/pages/lista_alunos_cad_page.dart';
 import 'package:eleicao/src/features/cadastro/pages/lista_candidatos_cad_page.dart';
+import 'package:eleicao/src/features/cadastro/state/cadastro_state.dart';
 import 'package:eleicao/src/features/urna/pages/apuracao_page.dart';
 import 'package:eleicao/src/features/urna/pages/liberacao_urna_page.dart';
 import 'package:eleicao/src/features/urna/pages/proximo_eleitor_page.dart';
@@ -157,7 +158,10 @@ class HomePage extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Mudar Zona Eleitoral'),
-        content: TextField(
+        content: DropdownMenu(
+          dropdownMenuEntries: listTurmas
+              .map((e) => DropdownMenuEntry(value: e.$1, label: e.$2))
+              .toList(),
           controller: txtZone,
         ),
         actions: [
@@ -176,8 +180,9 @@ class HomePage extends StatelessWidget {
   }
 
   void setZone(BuildContext context) {
-    if (int.tryParse(txtZone.text) != null) {
-      prefs.setInt('zone', int.parse(txtZone.text));
+    if (txtZone.text.isNotEmpty) {
+      final zone = getTurmaByName(txtZone.text)?.$1 ?? 0;
+      prefs.setInt('zone', zone);
       Navigator.of(context).pop();
     }
   }

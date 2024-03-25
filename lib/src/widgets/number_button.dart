@@ -16,7 +16,9 @@ class NumberButton extends StatelessWidget {
               shape: const RoundedRectangleBorder(),
               backgroundColor: Colors.black,
               fixedSize: const Size(60, 55)),
-          onPressed: () => onPressed(number),
+          onPressed: () {
+            onPressed(number);
+          },
           child: Text(
             number.toString(),
             style: TextStyle(color: Colors.white, fontSize: 20),

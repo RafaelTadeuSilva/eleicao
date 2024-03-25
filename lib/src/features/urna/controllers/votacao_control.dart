@@ -2,6 +2,7 @@ import 'package:eleicao/src/features/urna/enums/cargo.dart';
 import 'package:eleicao/src/features/urna/functions/functions.dart';
 import 'package:eleicao/src/features/urna/pages/proximo_eleitor_page.dart';
 import 'package:eleicao/src/features/urna/state/votacao_state.dart';
+import 'package:eleicao/src/functions/audio_player.dart';
 import 'package:eleicao/src/injector.dart';
 import 'package:eleicao/src/models/voto.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ class VotacaoControl with ChangeNotifier {
     final displayedNumbers = '${numCandidato.value ?? ''}$num';
     if (numAtual.value < digitos) {
       numCandidato.value = int.parse(displayedNumbers);
+      soundPlayer.play(AudioFiles.tecla);
     }
     numAtual.value = displayedNumbers.length;
     if (numAtual.value == digitos) {
@@ -81,6 +83,7 @@ class VotacaoControl with ChangeNotifier {
 
   Future<void> fimVotacao(BuildContext context) async {
     numSeqEleicao.value = tipoEleicao.first;
+    soundPlayer.play(AudioFiles.confirma);
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => Scaffold(
               body: Center(

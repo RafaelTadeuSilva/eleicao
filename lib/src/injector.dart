@@ -11,6 +11,7 @@ import 'package:eleicao/src/features/cadastro/repositories/liberacao_urna/libera
 import 'package:eleicao/src/features/cadastro/repositories/liberacao_urna/liberacao_urna_repository_impl.dart';
 import 'package:eleicao/src/features/cadastro/repositories/voto/voto_repository.dart';
 import 'package:eleicao/src/features/cadastro/repositories/voto/voto_repository_impl.dart';
+import 'package:eleicao/src/functions/audio_player.dart';
 import 'package:eleicao/src/repositories/api_db.dart';
 import 'package:eleicao/src/repositories/api_storage.dart';
 import 'package:eleicao/src/repositories/local/sqflite_db.dart';
@@ -26,6 +27,7 @@ late final LiberacaoUrnaRepository liberacaoUrnaRepository;
 late final VotoRepository votoRepository;
 late final SharedPreferences prefs;
 late final ApiStorage apiStorage;
+late final SoundPlayer soundPlayer;
 
 Future<void> setTerminal() async {
   prefs = await SharedPreferences.getInstance();
@@ -55,6 +57,8 @@ Future<void> inject() async {
   await setTipoEleicao();
 
   final apidb = await configFirebase();
+
+  soundPlayer = SoundPlayerImpl();
 
   apiStorage = ApiStorageFirebase();
   alunoRepository = AlunoRepositoryImpl(apidb, AlunoMapperImpl());
