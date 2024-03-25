@@ -1,11 +1,17 @@
 import 'package:eleicao/src/features/home/home_page.dart';
 import 'package:eleicao/src/injector.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-Future<void> main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  await inject();
-  runApp(const MyApp());
+
+  SystemChrome.setPreferredOrientations(
+          [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown])
+      .then((_) async {
+    await inject();
+    runApp(const MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {

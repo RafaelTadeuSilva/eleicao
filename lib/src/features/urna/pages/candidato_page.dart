@@ -42,7 +42,7 @@ class _CandidatoPageState extends State<CandidatoPage> {
                       children: [
                         Text(
                           'SEU VOTO PARA',
-                          style: TextStyle(fontSize: 25),
+                          style: TextStyle(fontSize: 40),
                         ),
                         Row(
                           children: [
@@ -53,7 +53,7 @@ class _CandidatoPageState extends State<CandidatoPage> {
                                     .firstWhere((e) => e.codigo == value)
                                     .descricao
                                     .toUpperCase(),
-                                style: TextStyle(fontSize: 25),
+                                style: TextStyle(fontSize: 40),
                               ),
                             ),
                           ],
@@ -81,7 +81,10 @@ class _CandidatoPageState extends State<CandidatoPage> {
                           visible: !emBranco,
                           child: Row(
                             children: [
-                              Text('Nome:'),
+                              Text(
+                                'Nome:',
+                                style: TextStyle(fontSize: 25),
+                              ),
                               SizedBox(width: 10),
                               ValueListenableBuilder(
                                 valueListenable: candidatoAtual,
@@ -99,7 +102,7 @@ class _CandidatoPageState extends State<CandidatoPage> {
                                       child: Text(
                                         softWrap: true,
                                         nome,
-                                        style: TextStyle(fontSize: 20),
+                                        style: TextStyle(fontSize: 25),
                                       ),
                                     ),
                                   );
@@ -169,7 +172,14 @@ class _CandidatoPageState extends State<CandidatoPage> {
       ));
     }
     return Row(
-      children: [Text('Número:'), SizedBox(width: 10), ...listNumberLabel],
+      children: [
+        Text(
+          'Número:',
+          style: TextStyle(fontSize: 25),
+        ),
+        SizedBox(width: 10),
+        ...listNumberLabel
+      ],
     );
   }
 }

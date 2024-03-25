@@ -20,6 +20,12 @@ class _ApuracaoPageState extends State<ApuracaoPage> {
         title: Text('Apuração dos Votos'),
       ),
       body: montaBody(),
+      floatingActionButton: Card(
+        child: ValueListenableBuilder(
+            valueListenable: control.totalVotos,
+            builder: (context, value, child) =>
+                Text('Total: ${control.totalVotos.value}')),
+      ),
     );
   }
 

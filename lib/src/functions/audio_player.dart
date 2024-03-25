@@ -1,4 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:eleicao/src/injector.dart';
 
 enum AudioFiles {
   tecla('tecla.mov'),
@@ -6,6 +7,10 @@ enum AudioFiles {
 
   const AudioFiles(this.name);
   final String name;
+
+  void play() {
+    soundPlayer.play(this);
+  }
 }
 
 abstract class SoundPlayer {

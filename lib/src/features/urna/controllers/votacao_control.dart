@@ -24,7 +24,7 @@ class VotacaoControl with ChangeNotifier {
     final displayedNumbers = '${numCandidato.value ?? ''}$num';
     if (numAtual.value < digitos) {
       numCandidato.value = int.parse(displayedNumbers);
-      soundPlayer.play(AudioFiles.tecla);
+      AudioFiles.tecla.play();
     }
     numAtual.value = displayedNumbers.length;
     if (numAtual.value == digitos) {
@@ -83,7 +83,7 @@ class VotacaoControl with ChangeNotifier {
 
   Future<void> fimVotacao(BuildContext context) async {
     numSeqEleicao.value = tipoEleicao.first;
-    soundPlayer.play(AudioFiles.confirma);
+    AudioFiles.confirma.play();
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => Scaffold(
               body: Center(

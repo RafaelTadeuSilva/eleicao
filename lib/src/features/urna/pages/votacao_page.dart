@@ -2,6 +2,8 @@ import 'package:eleicao/src/features/urna/controllers/votacao_control.dart';
 import 'package:eleicao/src/features/urna/pages/candidato_page.dart';
 import 'package:eleicao/src/widgets/teclado_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 
 class VotacaoPage extends StatefulWidget {
   const VotacaoPage({super.key});
@@ -15,6 +17,8 @@ class _VotacaoPageState extends State<VotacaoPage> {
   @override
   void initState() {
     control = VotacaoControl();
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.landscapeRight, DeviceOrientation.landscapeLeft]);
     super.initState();
   }
 
@@ -29,12 +33,28 @@ class _VotacaoPageState extends State<VotacaoPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CandidatoPage(),
+                Expanded(child: CandidatoPage()),
                 //desabilitado até a votação presidente camara
                 //EleitorPage(),
-                Text('Aperte a tecla:'),
-                Text('VERDE para confirmar'),
-                Text('LARANJA para corrigir'),
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        'Aperte a tecla:',
+                        style: TextStyle(fontSize: 30),
+                      ),
+                      Text(
+                        'VERDE para confirmar',
+                        style: TextStyle(fontSize: 30),
+                      ),
+                      Text(
+                        'LARANJA para corrigir',
+                        style: TextStyle(fontSize: 30),
+                      ),
+                    ],
+                  ),
+                )
               ],
             ),
           ),

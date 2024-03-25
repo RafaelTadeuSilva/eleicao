@@ -41,8 +41,8 @@ class _NumberLabelState extends State<NumberLabel> {
           maintainState: true,
           visible: visible.value,
           child: Container(
-            width: 40,
-            height: 40,
+            width: 80,
+            height: 80,
             decoration: const BoxDecoration(
                 border: Border(
                     bottom: BorderSide(),
@@ -54,7 +54,7 @@ class _NumberLabelState extends State<NumberLabel> {
                 widget.lbNum,
                 style: const TextStyle(
                   height: 0.1,
-                  fontSize: 40,
+                  fontSize: 60,
                 ),
               ),
             ),

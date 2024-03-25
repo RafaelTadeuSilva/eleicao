@@ -1,9 +1,12 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:eleicao/src/features/cadastro/state/cadastro_state.dart';
+import 'package:eleicao/src/features/home/home_page.dart';
 import 'package:eleicao/src/features/urna/controllers/votacao_control.dart';
 import 'package:eleicao/src/widgets/function_button.dart';
 import 'package:eleicao/src/widgets/number_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class TecladoWidget extends StatelessWidget {
   const TecladoWidget(
@@ -26,8 +29,25 @@ class TecladoWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
             children: [
-              Text('Colégio Santa Teresinha'),
-              Text('Eleição da Michelândia'),
+              Text(
+                'Colégio Santa Teresinha',
+                style: TextStyle(fontSize: 15),
+              ),
+              Text(
+                'Eleição da Michelândia',
+                style: TextStyle(fontSize: 15),
+              ),
+              GestureDetector(
+                onLongPress: () => Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HomePage(),
+                    )),
+                child: Text(
+                  getTurmaById(control.zone ?? 0).$2,
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
               Padding(
                 padding: EdgeInsets.only(left: 30),
                 child: Table(
