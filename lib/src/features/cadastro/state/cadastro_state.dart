@@ -3,6 +3,7 @@ import 'package:eleicao/src/models/candidato.dart';
 import 'package:flutter/material.dart';
 
 final listTurmas = [
+  (0, 'Geral'),
   (1, '1° Turma A'),
   (2, '1° Turma B'),
   (3, '1° Turma C'),

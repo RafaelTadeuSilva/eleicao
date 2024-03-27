@@ -11,7 +11,8 @@ class ApuracaoControl extends ChangeNotifier {
     final list = (await votoRepository.find({'zone': value ?? 0})) ?? [];
     Map<String, int> map = {};
     for (var voto in list) {
-      map.update(voto.nome, (value) => value + 1, ifAbsent: () => 1);
+      map.update('${voto.nome} - ${voto.cargo}', (value) => value + 1,
+          ifAbsent: () => 1);
     }
     map.forEach((key, value) => listApuracao.value.add((key, value)));
     listApuracao.value.sort((a, b) => b.$1.compareTo(a.$1));

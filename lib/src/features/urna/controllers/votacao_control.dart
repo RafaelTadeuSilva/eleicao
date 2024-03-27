@@ -12,8 +12,8 @@ class VotacaoControl with ChangeNotifier {
   final zone = prefs.getInt('zone');
 
   VotacaoControl() {
-    tipoEleicao.clear();
-    tipoEleicao.add(prefs.getInt('tipoeleicao') ?? 1);
+    // tipoEleicao.clear();
+    // tipoEleicao.add(prefs.getInt('tipoeleicao') ?? 1);
     numSeqEleicao.value = tipoEleicao.first;
     carregaListaEleitores();
     carregaListaCandidatos();

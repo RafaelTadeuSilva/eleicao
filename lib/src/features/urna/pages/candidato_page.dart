@@ -53,7 +53,7 @@ class _CandidatoPageState extends State<CandidatoPage> {
                                     .firstWhere((e) => e.codigo == value)
                                     .descricao
                                     .toUpperCase(),
-                                style: TextStyle(fontSize: 40),
+                                style: TextStyle(fontSize: 30),
                               ),
                             ),
                           ],
@@ -110,6 +110,41 @@ class _CandidatoPageState extends State<CandidatoPage> {
                               ),
                             ],
                           ),
+                        ),
+                        Visibility(
+                          visible: !emBranco,
+                          child: candidatoAtual.value?.nomeVice == null
+                              ? Container()
+                              : Row(
+                                  children: [
+                                    Text(
+                                      'Vice:',
+                                      style: TextStyle(fontSize: 25),
+                                    ),
+                                    SizedBox(width: 10),
+                                    ValueListenableBuilder(
+                                      valueListenable: candidatoAtual,
+                                      builder: (context, value, child) {
+                                        final nome = numberCandidato == null
+                                            ? ''
+                                            : value?.nomeVice ?? '';
+                                        return ConstrainedBox(
+                                          constraints: BoxConstraints(
+                                              minHeight: 80,
+                                              maxWidth: width * .4),
+                                          child: Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                              softWrap: true,
+                                              nome,
+                                              style: TextStyle(fontSize: 25),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
                         ),
                         SizedBox(height: 5),
                         // Visibility(
