@@ -4,7 +4,7 @@ import 'package:eleicao/src/models/aluno.dart';
 import 'package:eleicao/src/repositories/api_db.dart';
 
 class AlunoRepositoryImpl implements AlunoRepository {
-  final table = 'Alunos';
+  final table = 'Alunos2025';
   final ApiDb apiDb;
   final AlunoMapper mapper;
 

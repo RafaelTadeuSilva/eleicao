@@ -4,7 +4,7 @@ import 'package:eleicao/src/models/liberacao_urna.dart';
 import 'package:eleicao/src/repositories/api_db.dart';
 
 class LiberacaoUrnaRepositoryImpl implements LiberacaoUrnaRepository {
-  final table = "LiberacaoUrna";
+  final table = "LiberacaoUrna2025";
   final ApiDb apiDb;
   final Mapper<LiberacaoUrna> mapper;
 
