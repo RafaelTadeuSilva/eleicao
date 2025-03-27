@@ -3,6 +3,7 @@
 import 'package:eleicao/src/features/urna/enums/cargo.dart';
 import 'package:eleicao/src/features/urna/functions/functions.dart';
 import 'package:eleicao/src/features/urna/state/votacao_state.dart';
+import 'package:eleicao/src/models/candidato.dart';
 import 'package:eleicao/src/widgets/number_label.dart';
 import 'package:flutter/material.dart';
 
@@ -53,7 +54,7 @@ class _CandidatoPageState extends State<CandidatoPage> {
                                     .firstWhere((e) => e.codigo == value)
                                     .descricao
                                     .toUpperCase(),
-                                style: TextStyle(fontSize: 30),
+                                style: TextStyle(fontSize: 28),
                               ),
                             ),
                           ],
@@ -175,12 +176,7 @@ class _CandidatoPageState extends State<CandidatoPage> {
                           decoration: BoxDecoration(
                               image: urlImageCandidato.value == ''
                                   ? null
-                                  : DecorationImage(
-                                      fit: BoxFit.none,
-                                      scale: 3,
-                                      alignment: Alignment.topCenter,
-                                      image: NetworkImage(
-                                          urlImageCandidato.value)),
+                                  : imageCandidato(candidatoAtual.value),
                               border: Border.all()),
                         );
                       },
@@ -191,6 +187,17 @@ class _CandidatoPageState extends State<CandidatoPage> {
             });
       },
     );
+  }
+
+  DecorationImage imageCandidato(Candidato? value) {
+    final isPrefeito =
+        switch (value?.cargo) { Cargo.prefeito => true, _ => false };
+
+    return DecorationImage(
+        fit: BoxFit.none,
+        scale: 3,
+        alignment: !isPrefeito ? Alignment.topCenter : Alignment.center,
+        image: NetworkImage(urlImageCandidato.value));
   }
 
   Widget montaNumeros(int? numCandidato) {

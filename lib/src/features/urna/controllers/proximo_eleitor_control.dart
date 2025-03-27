@@ -14,7 +14,7 @@ class ProximoEleitorControl {
   }
 
   void buscaProximoEleitor(BuildContext context) {
-    timer = Timer.periodic(const Duration(seconds: 2), (_) async {
+    timer = Timer.periodic(const Duration(seconds: 3), (_) async {
       final urna = prefs.getInt('terminal');
       await liberacaoUrnaRepository
           .proximaLiberacao(urna ?? 0)
