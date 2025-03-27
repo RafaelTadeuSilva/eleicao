@@ -108,6 +108,10 @@ class VotacaoControl with ChangeNotifier {
   Future<void> carregaListaCandidatos() async {
     final list = await candidatoRepository.find({});
     listCandidato.clear();
+    if (zone == 0) {
+      listCandidato.addAll(list ?? []);
+      return;
+    }
     final listFiltrada = list?.where((e) => e.zone == zone) ?? [];
     listCandidato.addAll(listFiltrada);
   }
