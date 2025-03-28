@@ -31,9 +31,12 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
   var ativaValidacaoForm = false;
   List<Aluno> get _listAlunos => listAlunos.value;
 
+  final focusAluno = FocusNode();
+
   @override
   void initState() {
     buscaCandidato(widget.id);
+    focusAluno.requestFocus();
     super.initState();
   }
 
@@ -60,6 +63,7 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
               children: [
                 Focus(
                   child: DropdownMenu<String>(
+                      focusNode: focusAluno,
                       controller: txtNome,
                       expandedInsets: EdgeInsets.zero,
                       label: const Text('Escolha o aluno'),
@@ -125,6 +129,7 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
                 const SizedBox(height: 10),
                 Focus(
                   child: DropdownMenu(
+                      initialSelection: Cargo.vereador.codigo,
                       controller: txtCargo,
                       expandedInsets: EdgeInsets.zero,
                       label: const Text('Escolha o cargo'),
@@ -254,6 +259,7 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
             builder: (context) => AlertDialog(
                     actions: [
                       ElevatedButton(
+                          autofocus: true,
                           onPressed: () => Navigator.of(context).pop(),
                           child: const Text('OK'))
                     ],

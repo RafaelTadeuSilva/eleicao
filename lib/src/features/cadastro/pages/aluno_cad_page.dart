@@ -51,6 +51,7 @@ class _AlunoCadPageState extends State<AlunoCadPage> {
           child: Column(
             children: [
               TextFormField(
+                autofocus: true,
                 controller: txtId,
                 decoration: const InputDecoration(
                     border: OutlineInputBorder(), label: Text('Matrícula')),
@@ -147,6 +148,7 @@ class _AlunoCadPageState extends State<AlunoCadPage> {
             builder: (context) => AlertDialog(
                     actions: [
                       ElevatedButton(
+                          autofocus: true,
                           onPressed: () => Navigator.of(context).pop(),
                           child: const Text('OK'))
                     ],

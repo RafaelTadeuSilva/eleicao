@@ -9,13 +9,15 @@ final listTurmas = [
   (3, '1° Turma C'),
   (4, '2° Turma A'),
   (5, '2° Turma B'),
-  (6, '3° Turma A'),
-  (7, '3° Turma B'),
-  (8, '4° Turma A'),
-  (9, '4° Turma B'),
-  (10, '4° Turma C'),
-  (11, '5° Turma A'),
-  (12, '5° Turma B')
+  (6, '2° Turma C'),
+  (7, '3° Turma A'),
+  (8, '3° Turma B'),
+  (9, '4° Turma A'),
+  (10, '4° Turma B'),
+  (11, '4° Turma C'),
+  (12, '5° Turma A'),
+  (13, '5° Turma B'),
+  (14, '5° Turma C'),
 ];
 
 (int, String)? getTurmaByName(String name) =>

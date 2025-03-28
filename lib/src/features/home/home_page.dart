@@ -191,7 +191,15 @@ class HomePage extends StatelessWidget {
     if (int.tryParse(txtTipoEleicao.text) != null) {
       prefs.setInt('tipoeleicao', int.parse(txtTipoEleicao.text));
       tipoEleicao.clear();
-      tipoEleicao.add(int.tryParse(txtTipoEleicao.text) ?? 1);
+
+      if (txtTipoEleicao.text == '1') {
+        tipoEleicao.add(1);
+        tipoEleicao.add(2);
+      } else {
+        tipoEleicao.add(4);
+      }
+
+      //tipoEleicao.add(int.tryParse(txtTipoEleicao.text) ?? 1);
       Navigator.of(context).pop();
     }
   }
