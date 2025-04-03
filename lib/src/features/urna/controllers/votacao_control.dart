@@ -39,6 +39,7 @@ class VotacaoControl with ChangeNotifier {
         .firstOrNull;
     if (candidatoAtual.value != null) {
       urlImageCandidato.value = candidatoAtual.value!.urlImage;
+      urlImageVice.value = candidatoAtual.value!.urlImageVice ?? '';
     }
   }
 
@@ -51,6 +52,7 @@ class VotacaoControl with ChangeNotifier {
     numCandidato.value = null;
     numAtual.value = 0;
     urlImageCandidato.value = '';
+    urlImageVice.value = '';
     candidatoAtual.value = null;
   }
 

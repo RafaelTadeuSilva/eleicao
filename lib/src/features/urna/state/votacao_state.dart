@@ -7,6 +7,7 @@ final tipoEleicao = <int>[4];
 final numSeqEleicao = ValueNotifier(tipoEleicao.first);
 final numCandidato = ValueNotifier<int?>(null);
 final urlImageCandidato = ValueNotifier<String>('');
+final urlImageVice = ValueNotifier<String>('');
 final eleitorAtual = ValueNotifier<Aluno?>(null);
 final candidatoAtual = ValueNotifier<Candidato?>(null);
 final listEleitor = <Aluno>[];

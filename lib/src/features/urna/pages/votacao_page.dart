@@ -36,6 +36,7 @@ class _VotacaoPageState extends State<VotacaoPage> {
                 Expanded(child: CandidatoPage()),
                 //desabilitado até a votação presidente camara
                 //EleitorPage(),
+
                 Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Column(
@@ -52,6 +53,10 @@ class _VotacaoPageState extends State<VotacaoPage> {
                         'LARANJA para corrigir',
                         style: TextStyle(fontSize: 30),
                       ),
+                      //para tirar print pro video
+                      // SizedBox(
+                      //   height: 50,
+                      // ),
                     ],
                   ),
                 )
