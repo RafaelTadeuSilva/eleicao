@@ -44,8 +44,8 @@ class _CandidatoPageState extends State<CandidatoPage> {
           OverlayPortal(
             controller: overlay,
             overlayChildBuilder: (context) => Positioned(
-              top: height - 50,
-              left: width - width * .3,
+              top: height - 40,
+              left: width - width * .3 -5,
               child: ValueListenableBuilder(
                 valueListenable: urlImageVice,
                 builder: (context, value, child) {
@@ -151,7 +151,7 @@ class _CandidatoPageState extends State<CandidatoPage> {
                               ],
                             ),
                           ),
-                          SizedBox(height: 20),
+                          Spacer(),
                           Visibility(
                             visible:
                                 candidatoAtual.value?.cargo == Cargo.prefeito,
