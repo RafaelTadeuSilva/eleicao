@@ -4,9 +4,13 @@ import 'package:flutter/material.dart';
 
 class NumberButton extends StatelessWidget {
   const NumberButton(
-      {super.key, required this.number, required this.onPressed});
+      {super.key,
+      required this.number,
+      required this.onPressed,
+      this.size = 60});
   final int number;
   final void Function(int) onPressed;
+  final double size;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -15,11 +19,13 @@ class NumberButton extends StatelessWidget {
           style: ElevatedButton.styleFrom(
               shape: const RoundedRectangleBorder(),
               backgroundColor: Colors.black,
-              fixedSize: const Size(60, 55)),
-          onPressed: () => onPressed(number),
+              fixedSize: Size(size, size)),
+          onPressed: () {
+            onPressed(number);
+          },
           child: Text(
             number.toString(),
-            style: TextStyle(color: Colors.white, fontSize: 20),
+            style: TextStyle(color: Colors.white, fontSize: size / 2),
           )),
     );
   }

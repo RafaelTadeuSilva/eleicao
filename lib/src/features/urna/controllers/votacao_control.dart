@@ -2,24 +2,31 @@ import 'package:eleicao/src/features/urna/enums/cargo.dart';
 import 'package:eleicao/src/features/urna/functions/functions.dart';
 import 'package:eleicao/src/features/urna/pages/proximo_eleitor_page.dart';
 import 'package:eleicao/src/features/urna/state/votacao_state.dart';
+import 'package:eleicao/src/functions/audio_player.dart';
 import 'package:eleicao/src/injector.dart';
 import 'package:eleicao/src/models/voto.dart';
 import 'package:flutter/material.dart';
 
 class VotacaoControl with ChangeNotifier {
   List<Voto> votoAtual = [];
+  final zone = prefs.getInt('zone');
 
   VotacaoControl() {
+    // tipoEleicao.clear();
+    // tipoEleicao.add(prefs.getInt('tipoeleicao') ?? 1);
+    numSeqEleicao.value = tipoEleicao.first;
     carregaListaEleitores();
     carregaListaCandidatos();
   }
 
   void carregaCandidato(int num) {
     final digitos = candidatoDigitos();
+    final displayedNumbers = '${numCandidato.value ?? ''}$num';
     if (numAtual.value < digitos) {
-      numCandidato.value = int.parse('${numCandidato.value ?? ''}$num');
+      numCandidato.value = int.parse(displayedNumbers);
+      AudioFiles.tecla.play();
     }
-    numAtual.value = numCandidato.value!.toString().length;
+    numAtual.value = displayedNumbers.length;
     if (numAtual.value == digitos) {
       buscaCandidato(numCandidato.value!, numSeqEleicao.value);
     }
@@ -32,6 +39,7 @@ class VotacaoControl with ChangeNotifier {
         .firstOrNull;
     if (candidatoAtual.value != null) {
       urlImageCandidato.value = candidatoAtual.value!.urlImage;
+      urlImageVice.value = candidatoAtual.value!.urlImageVice ?? '';
     }
   }
 
@@ -44,6 +52,7 @@ class VotacaoControl with ChangeNotifier {
     numCandidato.value = null;
     numAtual.value = 0;
     urlImageCandidato.value = '';
+    urlImageVice.value = '';
     candidatoAtual.value = null;
   }
 
@@ -55,10 +64,11 @@ class VotacaoControl with ChangeNotifier {
             .descricao,
         nome: candidatoAtual.value!.nome,
         matricula: candidatoAtual.value!.id,
+        zone: zone!,
       ));
       corrige();
       numSeqEleicao.value++;
-      if (numSeqEleicao.value > 1) {
+      if (numSeqEleicao.value > tipoEleicao.length) {
         gravaVoto();
         fimVotacao(context);
       }
@@ -74,7 +84,8 @@ class VotacaoControl with ChangeNotifier {
   }
 
   Future<void> fimVotacao(BuildContext context) async {
-    numSeqEleicao.value = 1;
+    numSeqEleicao.value = tipoEleicao.first;
+    AudioFiles.confirma.play();
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => Scaffold(
               body: Center(
@@ -99,6 +110,11 @@ class VotacaoControl with ChangeNotifier {
   Future<void> carregaListaCandidatos() async {
     final list = await candidatoRepository.find({});
     listCandidato.clear();
-    listCandidato.addAll(list ?? []);
+    if (zone == 0) {
+      listCandidato.addAll(list ?? []);
+      return;
+    }
+    final listFiltrada = list?.where((e) => e.zone == zone) ?? [];
+    listCandidato.addAll(listFiltrada);
   }
 }

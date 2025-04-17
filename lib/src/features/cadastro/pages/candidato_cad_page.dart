@@ -23,17 +23,25 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
   final txtTurma = TextEditingController();
   final txtId = TextEditingController();
   final txtNome = TextEditingController();
+  final txtNomeVice = TextEditingController();
   final txtCargo = TextEditingController();
   final txtUrlImage = TextEditingController();
+  final txtUrlImageVice = TextEditingController();
   var imageFile = File('');
+  var imageFileVice = File('');
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   var ativaValidacaoForm = false;
   List<Aluno> get _listAlunos => listAlunos.value;
 
+  var showVice = ValueNotifier(false);
+
+  final focusAluno = FocusNode();
+
   @override
   void initState() {
     buscaCandidato(widget.id);
+    focusAluno.requestFocus();
     super.initState();
   }
 
@@ -60,6 +68,7 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
               children: [
                 Focus(
                   child: DropdownMenu<String>(
+                      focusNode: focusAluno,
                       controller: txtNome,
                       expandedInsets: EdgeInsets.zero,
                       label: const Text('Escolha o aluno'),
@@ -79,8 +88,7 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
                                 orElse: () => _listAlunos.first);
                         txtNome.text = nome;
                         txtMatricula.text = id;
-                        txtTurma.text =
-                            listTurmas.firstWhere((e) => e.$1 == turma).$2;
+                        txtTurma.text = getTurmaById(turma).$2;
                       });
                     }
                   },
@@ -126,13 +134,17 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
                 const SizedBox(height: 10),
                 Focus(
                   child: DropdownMenu(
+                      initialSelection: Cargo.vereador.codigo,
                       controller: txtCargo,
                       expandedInsets: EdgeInsets.zero,
                       label: const Text('Escolha o cargo'),
                       enableFilter: true,
-                      onSelected: (value) => txtCargo.text = Cargo.values
-                          .firstWhere((e) => e.codigo == value)
-                          .descricao,
+                      onSelected: (value) {
+                        txtCargo.text = Cargo.values
+                            .firstWhere((e) => e.codigo == value)
+                            .descricao;
+                        showVice.value = value == Cargo.prefeito.codigo;
+                      },
                       dropdownMenuEntries: Cargo.values
                           .map((e) => DropdownMenuEntry(
                               value: e.codigo, label: e.descricao))
@@ -151,7 +163,15 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
                 ValueListenableBuilder(
                   valueListenable: txtUrlImage,
                   builder: (context, value, child) => GestureDetector(
-                    onTap: buscaImagem,
+                    onTap: () async {
+                      final (filepath, file) = await buscaImagem();
+                      if (file != null) {
+                        // setState(() {
+                        imageFile = file;
+                        txtUrlImage.text = filepath;
+                        // });
+                      }
+                    },
                     child: Container(
                       height: 200,
                       decoration: BoxDecoration(
@@ -165,14 +185,48 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
                     ),
                   ),
                 ),
-
-                // const SizedBox(height: 10),
-                // TextFormField(
-                //   controller: txtUrlImage,
-                //   decoration: const InputDecoration(
-                //       border: OutlineInputBorder(),
-                //       label: Text('Foto do candidato')),
-                // ),
+                ValueListenableBuilder(
+                    valueListenable: showVice,
+                    builder: (context, value, child) {
+                      return Visibility(
+                        visible: txtCargo.text == Cargo.prefeito.descricao,
+                        child: Column(children: [
+                          const SizedBox(height: 10),
+                          TextFormField(
+                            controller: txtNomeVice,
+                            decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                label: Text('Nome do vice candidato')),
+                          ),
+                          const SizedBox(height: 10),
+                          ValueListenableBuilder(
+                            valueListenable: txtUrlImageVice,
+                            builder: (context, value, child) => GestureDetector(
+                              onTap: () async {
+                                final (filepath, file) = await buscaImagem();
+                                if (file != null) {
+                                  // setState(() {
+                                  imageFileVice = file;
+                                  txtUrlImageVice.text = filepath;
+                                  // });
+                                }
+                              },
+                              child: Container(
+                                height: 200,
+                                decoration: BoxDecoration(
+                                  border: Border.all(),
+                                ),
+                                child: txtUrlImageVice.text.isEmpty
+                                    ? Image.asset('assets/images/candidato.png')
+                                    : txtUrlImageVice.text.contains('http')
+                                        ? Image.network(txtUrlImageVice.text)
+                                        : Image.file(imageFileVice),
+                              ),
+                            ),
+                          ),
+                        ]),
+                      );
+                    }),
                 const SizedBox(height: 5),
                 Row(
                   children: [
@@ -194,16 +248,26 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
     if (idCandidato != null) {
       final candidato = await control.getById(idCandidato);
       if (candidato != null) {
-        final Candidato(:numero, :nome, :cargo, id: matricula, :urlImage) =
-            candidato;
+        final Candidato(
+          :numero,
+          :nome,
+          :nomeVice,
+          :cargo,
+          id: matricula,
+          :urlImage,
+          :urlImageVice,
+          :zone
+        ) = candidato;
         txtId.text = numero.toString();
         txtNome.text = nome;
+        txtNomeVice.text = nomeVice ?? '';
         txtCargo.text = cargo.descricao;
         txtMatricula.text = matricula;
+        txtTurma.text = getTurmaById(zone).$2;
         txtUrlImage.text = urlImage;
+        txtUrlImageVice.text = urlImageVice ?? '';
+        showVice.value = cargo == Cargo.prefeito;
       }
-
-      // txtTurma.text = listTurmas.firstWhere((e) => e.$1 == turma).$2;
     }
   }
 
@@ -224,17 +288,27 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
         return;
       }
       var remoteImagePath = txtUrlImage.text;
-      if (!txtUrlImage.text.startsWith('http') && !Platform.isMacOS) {
+      if (!txtUrlImage.text.startsWith('http')) {
+        // && !Platform.isMacOS) {
         remoteImagePath =
             await apiStorage.uploadFile(txtUrlImage.text, 'cand${txtId.text}');
+      }
+      var remoteImageVicePath = txtUrlImageVice.text;
+      if (!txtUrlImageVice.text.startsWith('http')) {
+        // && !Platform.isMacOS) {
+        remoteImageVicePath = await apiStorage.uploadFile(
+            txtUrlImageVice.text, 'cand${txtId.text}_vice');
       }
       final candidato = Candidato(
         numero: int.parse(txtId.text),
         nome: txtNome.text,
+        nomeVice: txtNomeVice.text,
         cargo: Cargo.values.firstWhere((e) => e.descricao == txtCargo.text),
         id: txtMatricula.text,
         partido: '',
         urlImage: remoteImagePath,
+        urlImageVice: remoteImageVicePath,
+        zone: getTurmaByName(txtTurma.text)!.$1,
       );
 
       final success = switch (widget.id) {
@@ -248,6 +322,7 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
             builder: (context) => AlertDialog(
                     actions: [
                       ElevatedButton(
+                          autofocus: true,
                           onPressed: () => Navigator.of(context).pop(),
                           child: const Text('OK'))
                     ],
@@ -262,12 +337,13 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
     }
   }
 
-  Future<void> buscaImagem() async {
+  Future<(String, File?)> buscaImagem() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
 
     if (result != null) {
-      imageFile = File(result.files.single.path!);
-      txtUrlImage.text = result.files.single.path!;
+      final file = File(result.files.single.path!);
+      return (result.files.single.path!, file);
     }
+    return ("", null);
   }
 }

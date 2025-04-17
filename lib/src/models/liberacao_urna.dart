@@ -7,12 +7,13 @@ class LiberacaoUrna {
   final int urna;
   final int status;
 
-  LiberacaoUrna(
-      {this.id,
-      required this.matricula,
-      required this.nome,
-      required this.titulo,
-      required this.turma,
-      required this.urna,
-      required this.status});
+  LiberacaoUrna({
+    this.id,
+    required this.matricula,
+    required this.nome,
+    required this.titulo,
+    required this.turma,
+    required this.urna,
+    required this.status,
+  });
 }

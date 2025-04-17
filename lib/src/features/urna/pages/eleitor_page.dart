@@ -25,7 +25,7 @@ class EleitorPage extends StatelessWidget {
                         const Text('Nome do aluno eleitor:'),
                         Text(value!.nome),
                         const Text('Série / Turma:'),
-                        Text(listTurmas[value.turma].$2),
+                        Text(getTurmaById(value.turma).$2),
                       ],
                     )),
           ),

@@ -9,6 +9,7 @@ class VotoMapperImpl implements Mapper<Voto> {
       matricula: map['matricula'],
       nome: map['nome'],
       cargo: map['cargo'],
+      zone: map['zone'],
     );
   }
 
@@ -18,6 +19,7 @@ class VotoMapperImpl implements Mapper<Voto> {
       'cargo': voto.cargo,
       'matricula': voto.matricula,
       'nome': voto.nome,
+      'zone': voto.zone,
     };
   }
 }

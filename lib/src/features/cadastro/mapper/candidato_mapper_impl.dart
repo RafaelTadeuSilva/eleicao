@@ -6,14 +6,16 @@ class CandidatoMapperImpl implements Mapper<Candidato> {
   @override
   Candidato fromMap(Map<String, dynamic> map) {
     return Candidato(
-        id: map['id'].toString(),
-        numero: map['numero'],
-        nome: map['nome'],
-        nomeVice: map['nomeVice'],
-        urlImage: map['urlImage'],
-        urlImageVice: map['urlImageVice'],
-        cargo: Cargo.values.firstWhere((e) => e.codigo == map['cargo']),
-        partido: '');
+      id: map['id'].toString(),
+      numero: map['numero'],
+      nome: map['nome'],
+      nomeVice: map['nomeVice'],
+      urlImage: map['urlImage'],
+      urlImageVice: map['urlImageVice'],
+      cargo: Cargo.getCargoByCodigo(map['cargo'] ?? 1),
+      partido: '',
+      zone: map['zone'] ?? 0,
+    );
   }
 
   @override
@@ -26,7 +28,8 @@ class CandidatoMapperImpl implements Mapper<Candidato> {
       'urlImage': candidato.urlImage,
       'urlImageVice': candidato.urlImageVice,
       'cargo': candidato.cargo.codigo,
-      'partido': ''
+      'partido': '',
+      'zone': candidato.zone,
     };
   }
 }

@@ -7,10 +7,12 @@ class FunctionButton extends StatelessWidget {
       {super.key,
       required this.onPressed,
       required this.text,
-      required this.backgroundColor});
+      required this.backgroundColor,
+      this.size = 60});
   final VoidCallback onPressed;
   final String text;
   final Color backgroundColor;
+  final double size;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -19,14 +21,14 @@ class FunctionButton extends StatelessWidget {
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
             padding: EdgeInsets.zero,
-            fixedSize: Size(130, 60),
+            fixedSize: Size(size * 2.5, size),
             backgroundColor: backgroundColor,
             shape: RoundedRectangleBorder()),
         child: Text(
           text,
           style: TextStyle(
             color: Colors.black,
-            fontSize: 15,
+            fontSize: size * .4,
           ),
         ),
       ),

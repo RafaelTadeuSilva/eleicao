@@ -4,7 +4,7 @@ import 'package:eleicao/src/models/voto.dart';
 import 'package:eleicao/src/repositories/api_db.dart';
 
 class VotoRepositoryImpl implements VotoRepository {
-  final table = 'Votos';
+  final table = 'Votos2025_2dia';
   final ApiDb apiDb;
   final Mapper<Voto> mapper;
 

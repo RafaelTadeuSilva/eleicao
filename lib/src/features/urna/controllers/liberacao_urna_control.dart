@@ -13,7 +13,7 @@ class LiberacaoUrnaControl {
   Future<void> confirmar() async {
     final titulo = int.parse(txtTituloEleitor.text);
     final urna = int.parse(txtUrna.text);
-    final turma = listTurmas.firstWhere((e) => e.$2 == txtTurma.text).$1;
+    final turma = (getTurmaByName(txtTurma.text) ?? listTurmas.first).$1;
 
     final libUrna = LiberacaoUrna(
       titulo: titulo,
@@ -32,7 +32,7 @@ class LiberacaoUrnaControl {
       if (aluno != null) {
         txtNome.text = aluno.nome;
         txtMatricula.text = aluno.id;
-        txtTurma.text = listTurmas.firstWhere((e) => e.$1 == aluno.turma).$2;
+        txtTurma.text = getTurmaById(aluno.turma).$2;
         return;
       }
     }
