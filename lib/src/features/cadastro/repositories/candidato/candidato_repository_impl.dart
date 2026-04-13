@@ -4,7 +4,7 @@ import 'package:eleicao/src/models/candidato.dart';
 import 'package:eleicao/src/repositories/api_db.dart';
 
 class CandidatoRepositoryImpl implements CandidatoRepository {
-  final table = 'Candidatos2025';
+  final table = 'Candidatos2026';
   final ApiDb apiDb;
   final Mapper<Candidato> mapper;
 
