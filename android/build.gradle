@@ -5,14 +5,39 @@ allprojects {
     }
 }
 
-rootProject.buildDir = '../build'
+def newBuildDir = rootProject.layout.buildDirectory.dir("../../build").get()
+rootProject.layout.buildDirectory.value(newBuildDir)
+
 subprojects {
-    project.buildDir = "${rootProject.buildDir}/${project.name}"
+    def newSubprojectBuildDir = newBuildDir.dir(project.name)
+    project.layout.buildDirectory.value(newSubprojectBuildDir)
 }
 subprojects {
     project.evaluationDependsOn(':app')
 }
 
+subprojects { project ->
+    def setCompileSdk = {
+        if (project.hasProperty('android')) {
+            project.android {
+                compileSdk = 36
+            }
+        }
+    }
+    if (project.state.executed) {
+        setCompileSdk()
+    } else {
+        project.afterEvaluate {
+            setCompileSdk()
+        }
+    }
+    tasks.configureEach { task ->
+        if (task.class.name.contains("KotlinCompile") && task.hasProperty("incremental")) {
+            task.setProperty("incremental", false)
+        }
+    }
+}
+
 tasks.register("clean", Delete) {
-    delete rootProject.buildDir
+    delete rootProject.layout.buildDirectory
 }
