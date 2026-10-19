@@ -71,9 +71,10 @@ class _ApuracaoPageState extends State<ApuracaoPage> {
   Widget? montaItem(BuildContext context, int index) {
     final item = listApuracao.value[index];
     return ListTile(
-      tileColor: index % 2 == 0 ? Colors.grey[200] : null,
-      title: Text(item.$1),
-      trailing: Text(item.$2.toString()),
+        tileColor: index % 2 == 0 ? Colors.grey[200] : null,
+        title: SelectableText(item.$1),
+        trailing: Text(item.$2.toString()),
+      
     );
   }
 }

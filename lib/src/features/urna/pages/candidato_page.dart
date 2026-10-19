@@ -142,7 +142,7 @@ class _CandidatoPageState extends State<CandidatoPage> {
                                         child: Text(
                                           softWrap: true,
                                           nome,
-                                          style: TextStyle(fontSize: 25),
+                                          style: TextStyle(fontSize: 20),
                                         ),
                                       ),
                                     );
@@ -179,7 +179,7 @@ class _CandidatoPageState extends State<CandidatoPage> {
                                               child: Text(
                                                 softWrap: true,
                                                 nome,
-                                                style: TextStyle(fontSize: 25),
+                                                style: TextStyle(fontSize: 20),
                                               ),
                                             ),
                                           );
