@@ -1,13 +1,11 @@
-import 'package:eleicao/src/features/cadastro/controllers/aluno_control.dart';
 import 'package:eleicao/src/features/cadastro/state/cadastro_state.dart';
+import 'package:eleicao/src/features/urna/enums/cargo.dart';
 import 'package:eleicao/src/injector.dart';
 import 'package:eleicao/src/models/candidato.dart';
 import 'package:flutter/material.dart';
 
 class CandidatoControl extends ChangeNotifier {
-  CandidatoControl() {
-    AlunoControl().listaAlunos();
-  }
+  CandidatoControl();
 
   Future<void> listaCandidatos() async {
     listCandidatos.value = await candidatoRepository.find({}) ?? [];
@@ -21,6 +19,23 @@ class CandidatoControl extends ChangeNotifier {
   Future<Candidato?> getByNumero(int numero) async {
     final list = await candidatoRepository.find({'numero': numero});
     return list?.firstOrNull;
+  }
+
+  Future<Candidato?> verificarNumeroDuplicado({
+    required int numero,
+    required Cargo cargo,
+    required int zone,
+    String? ignorarId,
+  }) async {
+    final todos = await candidatoRepository.find({}) ?? [];
+    listCandidatos.value = todos;
+    return todos.where((c) {
+      if (ignorarId != null && c.id == ignorarId) return false;
+      final mesmoCargo = c.cargo.codigo == cargo.codigo;
+      final mesmoNumero = c.numero == numero;
+      final mesmaZona = c.zone == 0 || zone == 0 || c.zone == zone;
+      return mesmoCargo && mesmoNumero && mesmaZona;
+    }).firstOrNull;
   }
 
   Future<bool> create(Candidato candidato) async {

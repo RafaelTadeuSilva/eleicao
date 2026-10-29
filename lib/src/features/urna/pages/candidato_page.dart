@@ -111,7 +111,11 @@ class _CandidatoPageState extends State<CandidatoPage> {
                           SizedBox(height: 5),
                           Visibility(
                             visible: !emBranco,
-                            child: montaNumeros(numberCandidato),
+                            child: ValueListenableBuilder(
+                              valueListenable: numSeqEleicao,
+                              builder: (context, _, __) =>
+                                  montaNumeros(numberCandidato),
+                            ),
                           ),
                           SizedBox(height: 5),
                           Visibility(

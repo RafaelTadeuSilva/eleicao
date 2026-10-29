@@ -1,6 +1,7 @@
 import 'package:eleicao/src/features/cadastro/controllers/candidato_control.dart';
 import 'package:eleicao/src/features/cadastro/pages/candidato_cad_page.dart';
 import 'package:eleicao/src/features/cadastro/state/cadastro_state.dart';
+import 'package:eleicao/src/features/urna/state/votacao_state.dart';
 import 'package:eleicao/src/models/candidato.dart';
 import 'package:flutter/material.dart';
 
@@ -25,7 +26,7 @@ class _ListaCandidatosCadPageState extends State<ListaCandidatosCadPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Lista de Candidatos'),
+          title: Text('Lista de Candidatos (${colecaoCandidatosAtual.value})'),
         ),
         body: montaBody(),
         floatingActionButton: FloatingActionButton(

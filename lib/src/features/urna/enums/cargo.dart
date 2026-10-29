@@ -16,13 +16,50 @@ enum TipoEleicaoModalidade {
 
 enum Cargo {
   // Política
-  presidente(1, 'Presidente da Câmara', TipoEleicaoModalidade.politica),
-  prefeito(2, 'Prefeito', TipoEleicaoModalidade.politica, temVice: true),
-  senador(3, 'Senador', TipoEleicaoModalidade.politica),
-  vereador(4, 'Vereador', TipoEleicaoModalidade.politica),
-  deputadoEstadual(5, 'Deputado Estadual', TipoEleicaoModalidade.politica),
-  deputadoFederal(6, 'Deputado Federal', TipoEleicaoModalidade.politica),
-  governador(7, 'Governador', TipoEleicaoModalidade.politica, temVice: true),
+  presidente(
+    1,
+    'Presidente da Câmara',
+    TipoEleicaoModalidade.politica,
+    digitosPadrao: 2,
+  ),
+  prefeito(
+    2,
+    'Prefeito',
+    TipoEleicaoModalidade.politica,
+    temVice: true,
+    digitosPadrao: 2,
+  ),
+  senador(
+    3,
+    'Senador',
+    TipoEleicaoModalidade.politica,
+    digitosPadrao: 3,
+  ),
+  vereador(
+    4,
+    'Vereador',
+    TipoEleicaoModalidade.politica,
+    digitosPadrao: 4,
+  ),
+  deputadoEstadual(
+    5,
+    'Deputado Estadual',
+    TipoEleicaoModalidade.politica,
+    digitosPadrao: 5,
+  ),
+  deputadoFederal(
+    6,
+    'Deputado Federal',
+    TipoEleicaoModalidade.politica,
+    digitosPadrao: 4,
+  ),
+  governador(
+    7,
+    'Governador',
+    TipoEleicaoModalidade.politica,
+    temVice: true,
+    digitosPadrao: 2,
+  ),
 
   // CIPA
   cipaRepresentante(10, 'Representante da CIPA', TipoEleicaoModalidade.cipa),
@@ -49,13 +86,14 @@ enum Cargo {
     this.descricao,
     this.modalidade, {
     this.temVice = false,
+    this.digitosPadrao = 2,
   });
 
   final int codigo;
   final String descricao;
   final TipoEleicaoModalidade modalidade;
   final bool temVice;
-  int get digitos => 2;
+  final int digitosPadrao;
 
   static Cargo getCargoByCodigo(int codigo) => Cargo.values.firstWhere(
         (e) => e.codigo == codigo,

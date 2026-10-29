@@ -17,7 +17,7 @@ class _ApuracaoPageState extends State<ApuracaoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Apuração dos Votos'),
+        title: Text('Apuração dos Votos (${colecaoVotosAtual.value})'),
       ),
       body: montaBody(),
       floatingActionButton: Card(
@@ -31,7 +31,7 @@ class _ApuracaoPageState extends State<ApuracaoPage> {
 
   Widget montaBody() {
     return Padding(
-      padding: EdgeInsets.only(bottom: 8, left: 8, right: 8),
+      padding: const EdgeInsets.only(bottom: 8, left: 8, right: 8),
       child: Column(
         children: [
           Row(
@@ -41,7 +41,7 @@ class _ApuracaoPageState extends State<ApuracaoPage> {
                   color: Colors.white,
                   width: 300,
                   child: DropdownMenu(
-                    expandedInsets: EdgeInsets.all(10),
+                    expandedInsets: const EdgeInsets.all(10),
                     dropdownMenuEntries: listTurmas
                         .map((e) => DropdownMenuEntry(label: e.$2, value: e.$1))
                         .toList(),
@@ -71,10 +71,9 @@ class _ApuracaoPageState extends State<ApuracaoPage> {
   Widget? montaItem(BuildContext context, int index) {
     final item = listApuracao.value[index];
     return ListTile(
-        tileColor: index % 2 == 0 ? Colors.grey[200] : null,
-        title: SelectableText(item.$1),
-        trailing: Text(item.$2.toString()),
-      
+      tileColor: index % 2 == 0 ? Colors.grey[200] : null,
+      title: SelectableText(item.$1),
+      trailing: Text(item.$2.toString()),
     );
   }
 }

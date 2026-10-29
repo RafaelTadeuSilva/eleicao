@@ -19,7 +19,6 @@ class VotacaoControl with ChangeNotifier {
     }
     numSeqEleicao.value = tipoEleicao.first;
     corrige();
-    carregaListaEleitores();
     carregaListaCandidatos();
   }
 
@@ -68,12 +67,13 @@ class VotacaoControl with ChangeNotifier {
         matricula: candidatoAtual.value!.matricula,
         zone: zone ?? 0,
       ));
-      corrige();
       etapaIndex++;
       if (etapaIndex < tipoEleicao.length) {
         numSeqEleicao.value = tipoEleicao[etapaIndex];
+        corrige();
       } else {
         etapaIndex = 0;
+        corrige();
         gravaVoto();
         fimVotacao(context);
       }

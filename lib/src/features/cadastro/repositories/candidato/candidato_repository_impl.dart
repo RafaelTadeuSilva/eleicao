@@ -1,10 +1,11 @@
 import 'package:eleicao/src/features/cadastro/mapper/candidato_mapper.dart';
 import 'package:eleicao/src/features/cadastro/repositories/candidato/candidato_repository.dart';
+import 'package:eleicao/src/features/urna/state/votacao_state.dart';
 import 'package:eleicao/src/models/candidato.dart';
 import 'package:eleicao/src/repositories/api_db.dart';
 
 class CandidatoRepositoryImpl implements CandidatoRepository {
-  final table = 'Candidatos2026';
+  String get table => colecaoCandidatosAtual.value;
   final ApiDb apiDb;
   final Mapper<Candidato> mapper;
 

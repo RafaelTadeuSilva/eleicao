@@ -1,10 +1,11 @@
 import 'package:eleicao/src/features/cadastro/mapper/aluno_mapper.dart';
 import 'package:eleicao/src/features/cadastro/repositories/aluno/aluno_repository.dart';
+import 'package:eleicao/src/features/urna/state/votacao_state.dart';
 import 'package:eleicao/src/models/aluno.dart';
 import 'package:eleicao/src/repositories/api_db.dart';
 
 class AlunoRepositoryImpl implements AlunoRepository {
-  final table = 'Alunos2026';
+  String get table => colecaoAlunosAtual.value;
   final ApiDb apiDb;
   final AlunoMapper mapper;
 

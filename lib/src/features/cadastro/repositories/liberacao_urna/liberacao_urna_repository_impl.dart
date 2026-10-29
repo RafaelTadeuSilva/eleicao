@@ -1,10 +1,11 @@
 import 'package:eleicao/src/features/cadastro/mapper/candidato_mapper.dart';
 import 'package:eleicao/src/features/cadastro/repositories/liberacao_urna/liberacao_urna_repository.dart';
+import 'package:eleicao/src/features/urna/state/votacao_state.dart';
 import 'package:eleicao/src/models/liberacao_urna.dart';
 import 'package:eleicao/src/repositories/api_db.dart';
 
 class LiberacaoUrnaRepositoryImpl implements LiberacaoUrnaRepository {
-  final table = "LiberacaoUrna2026";
+  String get table => colecaoLiberacaoAtual.value;
   final ApiDb apiDb;
   final Mapper<LiberacaoUrna> mapper;
 
@@ -19,12 +20,6 @@ class LiberacaoUrnaRepositoryImpl implements LiberacaoUrnaRepository {
   Future<LiberacaoUrna?> proximaLiberacao(int urna) async {
     return LiberacaoUrna(
         matricula: '0', nome: '', titulo: 0, turma: 0, urna: urna, status: 0);
-    //será utilizado na votação de presidente
-    // final list = await apiDb.find(table, {'urna': urna, 'status': 0});
-    // if (list.isNotEmpty) {
-    //   return mapper.fromMap(list.first);
-    // }
-    // return null;
   }
 
   @override

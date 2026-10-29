@@ -7,6 +7,7 @@ import 'package:eleicao/src/features/urna/pages/liberacao_urna_page.dart';
 import 'package:eleicao/src/features/urna/pages/proximo_eleitor_page.dart';
 import 'package:eleicao/src/features/urna/state/votacao_state.dart';
 import 'package:eleicao/src/injector.dart';
+import 'package:eleicao/src/models/evento_eleicao.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -21,6 +22,13 @@ class _HomePageState extends State<HomePage> {
   final txtZone = TextEditingController();
 
   @override
+  void dispose() {
+    txtTerminal.dispose();
+    txtZone.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final terminalAtual = prefs.getInt('terminal') ?? 0;
     final zonaAtual = getTurmaById(prefs.getInt('zone') ?? 0).$2;
@@ -29,7 +37,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text('Urna Eletrônica'),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Card(
           elevation: 2,
@@ -39,18 +47,50 @@ class _HomePageState extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text(
-                  'Configuração Atual da Urna',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Configuração Atual da Urna',
+                      style:
+                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: () => changeTipoEleicao(context),
+                      icon: const Icon(Icons.settings),
+                      label: const Text('Trocar / Criar Eleição'),
+                    ),
+                  ],
                 ),
                 const Divider(),
                 Text(
-                  'Terminal: $terminalAtual',
-                  style: const TextStyle(fontSize: 18),
+                  'Evento / Eleição: ${eventoAtualNome.value} (${eventoAtualId.value})',
+                  style: const TextStyle(
+                      fontSize: 19, fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 6),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 6,
+                  children: [
+                    Chip(
+                      avatar: const Icon(Icons.people, size: 18),
+                      label: Text('Alunos: ${colecaoAlunosAtual.value}'),
+                    ),
+                    Chip(
+                      avatar: const Icon(Icons.person_pin, size: 18),
+                      label:
+                          Text('Candidatos: ${colecaoCandidatosAtual.value}'),
+                    ),
+                    Chip(
+                      avatar: const Icon(Icons.how_to_vote, size: 18),
+                      label: Text('Votos: ${colecaoVotosAtual.value}'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
                 Text(
-                  'Zona Eleitoral: $zonaAtual',
+                  'Terminal: $terminalAtual  |  Zona Eleitoral: $zonaAtual',
                   style: const TextStyle(fontSize: 18),
                 ),
                 const SizedBox(height: 6),
@@ -72,9 +112,31 @@ class _HomePageState extends State<HomePage> {
                     for (int i = 0; i < tipoEleicao.length; i++)
                       Chip(
                         label: Text(
-                          '${i + 1}º ${Cargo.getCargoByCodigo(tipoEleicao[i]).descricao}',
+                          '${i + 1}º ${Cargo.getCargoByCodigo(tipoEleicao[i]).descricao} (${digitosDoCargo(tipoEleicao[i])} díg.)',
                         ),
                       ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Wrap(
+                  spacing: 12,
+                  runSpacing: 8,
+                  children: [
+                    OutlinedButton.icon(
+                      onPressed: () => changeZone(context),
+                      icon: const Icon(Icons.location_on_outlined),
+                      label: const Text('Mudar Zona Eleitoral'),
+                    ),
+                    OutlinedButton.icon(
+                      onPressed: () => changeTerminal(context),
+                      icon: const Icon(Icons.computer),
+                      label: const Text('Mudar Terminal'),
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: () => navigateToVotacao(context),
+                      icon: const Icon(Icons.play_arrow),
+                      label: const Text('Iniciar Urna (Votação)'),
+                    ),
                   ],
                 ),
               ],
@@ -196,35 +258,245 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void changeTipoEleicao(BuildContext context) {
+  Future<void> changeTipoEleicao(BuildContext context) async {
+    final eventosSalvos = await eventoEleicaoRepository.findAll();
+    if (!context.mounted) return;
+
+    const novoEventoKey = '__NOVO_EVENTO__';
+    var itemSelecionadoKey = eventoAtualId.value;
+    if (!eventosSalvos.any((e) => e.id == itemSelecionadoKey)) {
+      itemSelecionadoKey = eventosSalvos.first.id;
+    }
+
+    final txtSufixo = TextEditingController(text: eventoAtualId.value);
+    final txtNomeEvento = TextEditingController(text: eventoAtualNome.value);
+    final txtColAlunos = TextEditingController(text: colecaoAlunosAtual.value);
+    final txtColCandidatos =
+        TextEditingController(text: colecaoCandidatosAtual.value);
+    final txtColVotos = TextEditingController(text: colecaoVotosAtual.value);
+    final txtColLiberacao =
+        TextEditingController(text: colecaoLiberacaoAtual.value);
+
     var modalidadeSelecionada = modalidadeEleicao.value;
     var cargosSelecionados = List<int>.from(tipoEleicao);
+    final mapaDigitosSelecionados = <int, int>{
+      for (final c in Cargo.values) c.codigo: digitosDoCargo(c.codigo),
+    };
+    var salvando = false;
+
+    void preencherComEvento(EventoEleicao ev) {
+      txtSufixo.text = ev.id;
+      txtNomeEvento.text = ev.nome;
+      txtColAlunos.text = ev.colecaoAlunos;
+      txtColCandidatos.text = ev.colecaoCandidatos;
+      txtColVotos.text = ev.colecaoVotos;
+      txtColLiberacao.text = ev.colecaoLiberacao;
+      modalidadeSelecionada = ev.modalidade;
+      cargosSelecionados = List<int>.from(ev.cargos);
+      for (final c in Cargo.values) {
+        mapaDigitosSelecionados[c.codigo] =
+            ev.digitosPorCargo[c.codigo] ?? c.digitosPadrao;
+      }
+    }
 
     showDialog(
       context: context,
-      builder: (context) {
+      builder: (dialogContext) {
         return StatefulBuilder(
           builder: (context, setModalState) {
             final cargosDisponiveis =
                 Cargo.byModalidade(modalidadeSelecionada);
 
             return AlertDialog(
-              title: const Text('Configurar Tipo de Eleição'),
+              title: const Text('Configurar Evento e Tipo de Eleição'),
               content: SizedBox(
-                width: 450,
+                width: 520,
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'Modalidade da Eleição:',
+                        '1. Escolher Eleição / Evento (coleção Eleicoes):',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 8),
+                      DropdownButtonFormField<String>(
+                        key: ValueKey(itemSelecionadoKey),
+                        initialValue: itemSelecionadoKey,
+                        isExpanded: true,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          contentPadding:
+                              EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        ),
+                        items: [
+                          ...eventosSalvos.map(
+                            (ev) => DropdownMenuItem<String>(
+                              value: ev.id,
+                              child: Text('${ev.nome} (${ev.id})'),
+                            ),
+                          ),
+                          const DropdownMenuItem<String>(
+                            value: novoEventoKey,
+                            child: Text(
+                              '+ Criar Novo Evento / Eleição...',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ),
+                        ],
+                        onChanged: (valor) {
+                          if (valor == null) return;
+                          setModalState(() {
+                            itemSelecionadoKey = valor;
+                            if (valor == novoEventoKey) {
+                              txtSufixo.text = '';
+                              txtNomeEvento.text = '';
+                              txtColAlunos.text = 'Alunos2026';
+                              txtColCandidatos.text = 'Candidatos';
+                              txtColVotos.text = 'Votos';
+                              txtColLiberacao.text = 'LiberacaoUrna';
+                            } else {
+                              final escolhido = eventosSalvos
+                                  .firstWhere((e) => e.id == valor);
+                              preencherComEvento(escolhido);
+                            }
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: TextField(
+                              controller: txtSufixo,
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: 'Sufixo / Código (ex: Esportes2026)',
+                                isDense: true,
+                              ),
+                              onChanged: (val) {
+                                final limpo = val.trim();
+                                setModalState(() {
+                                  if (txtNomeEvento.text.isEmpty ||
+                                      txtNomeEvento.text
+                                          .startsWith('Eleição ')) {
+                                    txtNomeEvento.text = 'Eleição $limpo';
+                                  }
+                                  txtColCandidatos.text = 'Candidatos$limpo';
+                                  txtColVotos.text = 'Votos$limpo';
+                                  txtColLiberacao.text = 'LiberacaoUrna$limpo';
+                                });
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            flex: 3,
+                            child: TextField(
+                              controller: txtNomeEvento,
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: 'Nome do Evento (ex: Esportes 2026)',
+                                isDense: true,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      ExpansionTile(
+                        tilePadding: EdgeInsets.zero,
+                        title: const Text(
+                          'Coleções do Firebase deste Evento',
+                          style: TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w600),
+                        ),
+                        subtitle: Text(
+                          'Alunos: ${txtColAlunos.text} | Candidatos: ${txtColCandidatos.text} | Votos: ${txtColVotos.text}',
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                        children: [
+                          const SizedBox(height: 6),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: TextField(
+                                  controller: txtColAlunos,
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: 'Coleção de Alunos',
+                                    isDense: true,
+                                  ),
+                                  onChanged: (_) => setModalState(() {}),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              TextButton(
+                                onPressed: () {
+                                  setModalState(() {
+                                    txtColAlunos.text = 'Alunos2026';
+                                  });
+                                },
+                                child: const Text('Usar Alunos2026'),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: TextField(
+                                  controller: txtColCandidatos,
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: 'Coleção de Candidatos',
+                                    isDense: true,
+                                  ),
+                                  onChanged: (_) => setModalState(() {}),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: TextField(
+                                  controller: txtColVotos,
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: 'Coleção de Votos',
+                                    isDense: true,
+                                  ),
+                                  onChanged: (_) => setModalState(() {}),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          TextField(
+                            controller: txtColLiberacao,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Coleção de Liberação de Urna',
+                              isDense: true,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                        ],
+                      ),
+                      const Divider(),
+                      const Text(
+                        '2. Modalidade da Eleição:',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 8),
                       DropdownButtonFormField<TipoEleicaoModalidade>(
+                        key: ValueKey(modalidadeSelecionada),
                         initialValue: modalidadeSelecionada,
                         decoration: const InputDecoration(
+                          labelText: 'Modalidade',
                           border: OutlineInputBorder(),
                           contentPadding:
                               EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -247,12 +519,12 @@ class _HomePageState extends State<HomePage> {
                           }
                         },
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 12),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Cargos/Modalidades (${cargosSelecionados.length}/10):',
+                            '3. Cargos e Dígitos (${cargosSelecionados.length}/10):',
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                           Row(
@@ -283,40 +555,71 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                       const Text(
-                        'Marque na ordem em que serão votados na urna (mínimo 1, máximo 10):',
+                        'Marque os cargos na ordem de votação e escolha quantos dígitos cada cargo terá na urna:',
                         style: TextStyle(fontSize: 12, color: Colors.black54),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 4),
                       ...cargosDisponiveis.map((cargo) {
                         final indexOrdem =
                             cargosSelecionados.indexOf(cargo.codigo);
                         final selecionado = indexOrdem != -1;
-                        return CheckboxListTile(
+                        final digitosCargo =
+                            mapaDigitosSelecionados[cargo.codigo] ??
+                                cargo.digitosPadrao;
+                        return ListTile(
                           dense: true,
-                          value: selecionado,
-                          title: Text(cargo.descricao),
-                          secondary: selecionado
-                              ? CircleAvatar(
-                                  radius: 14,
+                          contentPadding: EdgeInsets.zero,
+                          leading: Checkbox(
+                            value: selecionado,
+                            onChanged: (checked) {
+                              setModalState(() {
+                                if (checked == true) {
+                                  if (cargosSelecionados.length < 10) {
+                                    cargosSelecionados.add(cargo.codigo);
+                                  }
+                                } else {
+                                  if (cargosSelecionados.length > 1) {
+                                    cargosSelecionados.remove(cargo.codigo);
+                                  }
+                                }
+                              });
+                            },
+                          ),
+                          title: Row(
+                            children: [
+                              if (selecionado) ...[
+                                CircleAvatar(
+                                  radius: 12,
                                   child: Text(
                                     '${indexOrdem + 1}º',
-                                    style: const TextStyle(fontSize: 12),
+                                    style: const TextStyle(fontSize: 11),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                              ],
+                              Expanded(child: Text(cargo.descricao)),
+                            ],
+                          ),
+                          trailing: DropdownButton<int>(
+                            value: digitosCargo,
+                            underline: const SizedBox.shrink(),
+                            items: const [2, 3, 4, 5]
+                                .map(
+                                  (d) => DropdownMenuItem<int>(
+                                    value: d,
+                                    child: Text('$d díg.'),
                                   ),
                                 )
-                              : null,
-                          onChanged: (checked) {
-                            setModalState(() {
-                              if (checked == true) {
-                                if (cargosSelecionados.length < 10) {
-                                  cargosSelecionados.add(cargo.codigo);
-                                }
-                              } else {
-                                if (cargosSelecionados.length > 1) {
-                                  cargosSelecionados.remove(cargo.codigo);
-                                }
+                                .toList(),
+                            onChanged: (novoDig) {
+                              if (novoDig != null) {
+                                setModalState(() {
+                                  mapaDigitosSelecionados[cargo.codigo] =
+                                      novoDig;
+                                });
                               }
-                            });
-                          },
+                            },
+                          ),
                         );
                       }),
                     ],
@@ -325,16 +628,63 @@ class _HomePageState extends State<HomePage> {
               ),
               actions: [
                 TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: salvando
+                      ? null
+                      : () => Navigator.of(dialogContext).pop(),
                   child: const Text('Cancelar'),
                 ),
+                OutlinedButton(
+                  onPressed: salvando
+                      ? null
+                      : () async {
+                          final evento = EventoEleicao.fromSufixo(
+                            sufixo: txtSufixo.text,
+                            nome: txtNomeEvento.text,
+                            colecaoAlunos: txtColAlunos.text,
+                            colecaoCandidatos: txtColCandidatos.text,
+                            colecaoVotos: txtColVotos.text,
+                            colecaoLiberacao: txtColLiberacao.text,
+                            modalidade: modalidadeSelecionada,
+                            cargos: cargosSelecionados,
+                            digitosPorCargo: mapaDigitosSelecionados,
+                          );
+                          await salvarEventoEleicaoLocal(evento);
+                          if (mounted) {
+                            setState(() {});
+                          }
+                          if (dialogContext.mounted) {
+                            Navigator.of(dialogContext).pop();
+                          }
+                        },
+                  child: const Text('Apenas Ativar neste Aparelho'),
+                ),
                 ElevatedButton(
-                  onPressed: () => salvarTipoEleicao(
-                    context,
-                    modalidadeSelecionada,
-                    cargosSelecionados,
-                  ),
-                  child: const Text('Salvar'),
+                  onPressed: salvando
+                      ? null
+                      : () async {
+                          setModalState(() => salvando = true);
+                          final evento = EventoEleicao.fromSufixo(
+                            sufixo: txtSufixo.text,
+                            nome: txtNomeEvento.text,
+                            colecaoAlunos: txtColAlunos.text,
+                            colecaoCandidatos: txtColCandidatos.text,
+                            colecaoVotos: txtColVotos.text,
+                            colecaoLiberacao: txtColLiberacao.text,
+                            modalidade: modalidadeSelecionada,
+                            cargos: cargosSelecionados,
+                            digitosPorCargo: mapaDigitosSelecionados,
+                          );
+                          await eventoEleicaoRepository.save(evento);
+                          await salvarEventoEleicaoLocal(evento);
+                          if (mounted) {
+                            setState(() {});
+                          }
+                          if (dialogContext.mounted) {
+                            Navigator.of(dialogContext).pop();
+                          }
+                        },
+                  child: Text(
+                      salvando ? 'Salvando...' : 'Salvar no Firebase e Ativar'),
                 ),
               ],
             );
@@ -378,26 +728,6 @@ class _HomePageState extends State<HomePage> {
       prefs.setInt('zone', zone);
       setState(() {});
       Navigator.of(context).pop();
-    }
-  }
-
-  Future<void> salvarTipoEleicao(
-    BuildContext context,
-    TipoEleicaoModalidade modalidade,
-    List<int> cargosSelecionados,
-  ) async {
-    await prefs.setInt('modalidade_eleicao', modalidade.codigo);
-    await prefs.setStringList(
-      'cargos_ativos',
-      cargosSelecionados.map((e) => e.toString()).toList(),
-    );
-    aplicarConfigEleicao(
-      modalidade: modalidade,
-      codigosCargos: cargosSelecionados,
-    );
-    if (mounted) {
-      setState(() {});
-      Navigator.of(this.context).pop();
     }
   }
 }
