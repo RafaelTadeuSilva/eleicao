@@ -2,6 +2,7 @@ import 'package:eleicao/src/features/urna/enums/cargo.dart';
 
 class Candidato {
   final String id;
+  final String matricula;
   final int numero;
   final String nome;
   final String? nomeVice;
@@ -13,6 +14,7 @@ class Candidato {
 
   Candidato({
     required this.id,
+    String? matricula,
     required this.numero,
     required this.nome,
     this.nomeVice,
@@ -21,5 +23,5 @@ class Candidato {
     required this.cargo,
     required this.partido,
     required this.zone,
-  });
+  }) : matricula = matricula ?? id.split('_').first;
 }

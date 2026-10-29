@@ -3,7 +3,7 @@
 import 'package:eleicao/src/features/urna/enums/cargo.dart';
 import 'package:eleicao/src/features/urna/functions/functions.dart';
 import 'package:eleicao/src/features/urna/state/votacao_state.dart';
-import 'package:eleicao/src/models/candidato.dart';
+import 'package:eleicao/src/functions/image_helper.dart';
 import 'package:eleicao/src/widgets/number_label.dart';
 import 'package:flutter/material.dart';
 
@@ -45,24 +45,22 @@ class _CandidatoPageState extends State<CandidatoPage> {
             controller: overlay,
             overlayChildBuilder: (context) => Positioned(
               top: height - 40,
-              left: width - width * .3 -5,
+              left: width - width * .3 - 5,
               child: ValueListenableBuilder(
                 valueListenable: urlImageVice,
                 builder: (context, value, child) {
-                  final isPrefeito = switch (candidatoAtual.value?.cargo) {
-                    Cargo.prefeito => true,
-                    _ => false
-                  };
-                  if (!isPrefeito) {
+                  final temVice = candidatoAtual.value?.cargo.temVice ?? false;
+                  if (!temVice) {
                     return Container();
                   }
+                  final viceProvider = resolveImageProvider(urlImageVice.value);
                   return Container(
                     width: width * .3,
                     height: height * .5,
                     decoration: BoxDecoration(
-                        image: urlImageVice.value == ''
+                        image: viceProvider == null
                             ? null
-                            : imageVice(candidatoAtual.value),
+                            : imageDecoration(viceProvider),
                         border: Border.all()),
                   );
                 },
@@ -89,8 +87,7 @@ class _CandidatoPageState extends State<CandidatoPage> {
                               ValueListenableBuilder(
                                 valueListenable: numSeqEleicao,
                                 builder: (context, value, child) => Text(
-                                  Cargo.values
-                                      .firstWhere((e) => e.codigo == value)
+                                  Cargo.getCargoByCodigo(value)
                                       .descricao
                                       .toUpperCase(),
                                   style: TextStyle(fontSize: 28),
@@ -154,8 +151,9 @@ class _CandidatoPageState extends State<CandidatoPage> {
                           Spacer(),
                           Visibility(
                             visible:
-                                candidatoAtual.value?.cargo == Cargo.prefeito,
-                            child: candidatoAtual.value?.nomeVice == null
+                                candidatoAtual.value?.cargo.temVice ?? false,
+                            child: candidatoAtual.value?.nomeVice == null ||
+                                    candidatoAtual.value!.nomeVice!.isEmpty
                                 ? Container()
                                 : Row(
                                     children: [
@@ -188,36 +186,21 @@ class _CandidatoPageState extends State<CandidatoPage> {
                                     ],
                                   ),
                           ),
-
-                          // Visibility(
-                          //   visible: !emBranco,
-                          //   child: Row(
-                          //     children: [
-                          //       Text('Partido:'),
-                          //       SizedBox(width: 10),
-                          //       ValueListenableBuilder(
-                          //         valueListenable: candidatoAtual,
-                          //         builder: (context, value, child) => Text(
-                          //           value?.partido ?? '',
-                          //           style: TextStyle(fontSize: 25),
-                          //         ),
-                          //       ),
-                          //     ],
-                          //   ),
-                          // ),
                         ],
                       ),
                       Spacer(),
                       ValueListenableBuilder(
                         valueListenable: urlImageCandidato,
                         builder: (context, value, child) {
+                          final candidatoProvider =
+                              resolveImageProvider(urlImageCandidato.value);
                           return Container(
                             width: width * .4,
                             height: width * .5,
                             decoration: BoxDecoration(
-                                image: urlImageCandidato.value == ''
+                                image: candidatoProvider == null
                                     ? null
-                                    : imageCandidato(candidatoAtual.value),
+                                    : imageDecoration(candidatoProvider),
                                 border: Border.all()),
                           );
                         },
@@ -231,27 +214,13 @@ class _CandidatoPageState extends State<CandidatoPage> {
     );
   }
 
-  DecorationImage imageCandidato(Candidato? value) {
-    final isPrefeito =
-        switch (value?.cargo) { Cargo.prefeito => true, _ => false };
+  DecorationImage imageDecoration(ImageProvider provider) {
     return DecorationImage(
-        fit: BoxFit.fitWidth,
-        scale: 3,
-        alignment: Alignment
-            .topCenter, // !isPrefeito ? Alignment.topCenter : Alignment.center,
-        image: NetworkImage(urlImageCandidato.value));
-  }
-
-  DecorationImage imageVice(Candidato? value) {
-    final isPrefeito =
-        switch (value?.cargo) { Cargo.prefeito => true, _ => false };
-
-    return DecorationImage(
-        fit: BoxFit.fitWidth,
-        scale: 3,
-        alignment: Alignment
-            .topCenter, //!isPrefeito ? Alignment.topCenter : Alignment.center,
-        image: NetworkImage(urlImageVice.value));
+      fit: BoxFit.fitWidth,
+      scale: 3,
+      alignment: Alignment.topCenter,
+      image: provider,
+    );
   }
 
   Widget montaNumeros(int? numCandidato) {

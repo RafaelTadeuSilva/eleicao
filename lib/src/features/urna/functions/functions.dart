@@ -1,4 +1,4 @@
+import 'package:eleicao/src/features/urna/enums/cargo.dart';
 import 'package:eleicao/src/features/urna/state/votacao_state.dart';
 
-int candidatoDigitos() =>
-    switch (numSeqEleicao.value) { 1 => 2, 2 => 2, 4 => 2, _ => throw Error() };
+int candidatoDigitos() => Cargo.getCargoByCodigo(numSeqEleicao.value).digitos;

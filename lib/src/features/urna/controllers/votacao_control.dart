@@ -10,11 +10,15 @@ import 'package:flutter/material.dart';
 class VotacaoControl with ChangeNotifier {
   List<Voto> votoAtual = [];
   final zone = prefs.getInt('zone');
+  int etapaIndex = 0;
 
   VotacaoControl() {
-    // tipoEleicao.clear();
-    // tipoEleicao.add(prefs.getInt('tipoeleicao') ?? 1);
+    etapaIndex = 0;
+    if (tipoEleicao.isEmpty) {
+      tipoEleicao.add(Cargo.byModalidade(modalidadeEleicao.value).first.codigo);
+    }
     numSeqEleicao.value = tipoEleicao.first;
+    corrige();
     carregaListaEleitores();
     carregaListaCandidatos();
   }
@@ -59,35 +63,37 @@ class VotacaoControl with ChangeNotifier {
   void confirma(BuildContext context) {
     if (candidatoAtual.value != null) {
       votoAtual.add(Voto(
-        cargo: Cargo.values
-            .firstWhere((e) => e.codigo == numSeqEleicao.value)
-            .descricao,
+        cargo: Cargo.getCargoByCodigo(numSeqEleicao.value).descricao,
         nome: candidatoAtual.value!.nome,
-        matricula: candidatoAtual.value!.id,
-        zone: zone!,
+        matricula: candidatoAtual.value!.matricula,
+        zone: zone ?? 0,
       ));
       corrige();
-      numSeqEleicao.value++;
-      if (numSeqEleicao.value > tipoEleicao.length) {
+      etapaIndex++;
+      if (etapaIndex < tipoEleicao.length) {
+        numSeqEleicao.value = tipoEleicao[etapaIndex];
+      } else {
+        etapaIndex = 0;
         gravaVoto();
         fimVotacao(context);
       }
     }
-    print(numSeqEleicao.value);
   }
 
   Future<void> gravaVoto() async {
-    for (var voto in votoAtual) {
+    final votosParaGravar = List<Voto>.from(votoAtual);
+    votoAtual.clear();
+    for (var voto in votosParaGravar) {
       await votoRepository.create(voto);
     }
-    votoAtual.clear();
   }
 
   Future<void> fimVotacao(BuildContext context) async {
+    etapaIndex = 0;
     numSeqEleicao.value = tipoEleicao.first;
     AudioFiles.confirma.play();
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => Scaffold(
+        builder: (context) => const Scaffold(
               body: Center(
                 child: Text(
                   'FIM',
@@ -95,10 +101,12 @@ class VotacaoControl with ChangeNotifier {
                 ),
               ),
             )));
-    Future.delayed(Duration(seconds: 3)).whenComplete(
-        () => Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (context) => const ProximoEleitorPage(),
-            )));
+    Future.delayed(const Duration(seconds: 3)).whenComplete(() {
+      if (!context.mounted) return;
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) => const ProximoEleitorPage(),
+      ));
+    });
   }
 
   Future<void> carregaListaEleitores() async {

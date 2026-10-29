@@ -45,26 +45,57 @@ class _ListaCandidatosCadPageState extends State<ListaCandidatosCadPage> {
   }
 
   Widget montaItem(int index, List<Candidato> list) {
-    final Candidato(id: matricula, :nome, :cargo) = list[index];
+    final Candidato(:id, :numero, :nome, :cargo) = list[index];
     return Card(
       child: InkWell(
-        onTap: () => navigateToCandidatoPage(matricula),
+        onTap: () => navigateToCandidatoPage(id),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                nome,
-                style: const TextStyle(fontSize: 25),
+              Expanded(
+                child: Text(
+                  '$numero - $nome',
+                  style: const TextStyle(fontSize: 22),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
+              const SizedBox(width: 8),
               Text(
                 cargo.descricao,
-                style: const TextStyle(fontSize: 25),
-              )
+                style: const TextStyle(fontSize: 20, color: Colors.black87),
+              ),
+              IconButton(
+                icon: const Icon(Icons.delete_outline, color: Colors.red),
+                onPressed: () => confirmarExclusao(id, nome, cargo.descricao),
+              ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  void confirmarExclusao(String id, String nome, String cargoDesc) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Excluir Candidato'),
+        content: Text('Deseja remover $nome ($cargoDesc)?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancelar'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              Navigator.of(context).pop();
+              await control.delete(id);
+            },
+            child: const Text('Excluir'),
+          ),
+        ],
       ),
     );
   }

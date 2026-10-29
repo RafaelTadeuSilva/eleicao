@@ -11,12 +11,14 @@ import 'package:eleicao/src/features/cadastro/repositories/liberacao_urna/libera
 import 'package:eleicao/src/features/cadastro/repositories/liberacao_urna/liberacao_urna_repository_impl.dart';
 import 'package:eleicao/src/features/cadastro/repositories/voto/voto_repository.dart';
 import 'package:eleicao/src/features/cadastro/repositories/voto/voto_repository_impl.dart';
+import 'package:eleicao/src/features/urna/enums/cargo.dart';
+import 'package:eleicao/src/features/urna/state/votacao_state.dart';
 import 'package:eleicao/src/functions/audio_player.dart';
 import 'package:eleicao/src/repositories/api_db.dart';
 import 'package:eleicao/src/repositories/api_storage.dart';
 import 'package:eleicao/src/repositories/local/sqflite_db.dart';
 import 'package:eleicao/src/repositories/remote/firestore_db.dart';
-import 'package:eleicao/src/repositories/storage/api_storage_firebase.dart';
+import 'package:eleicao/src/repositories/storage/api_storage_base64.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -45,10 +47,30 @@ Future<void> setZone() async {
 }
 
 Future<void> setTipoEleicao() async {
-  final terminal = prefs.getInt('tipoeleicao');
-  if (terminal == null) {
-    prefs.setInt('tipoeleicao', 1);
+  final modCodigo = prefs.getInt('modalidade_eleicao');
+  final cargosSalvos = prefs.getStringList('cargos_ativos');
+
+  if (modCodigo != null && cargosSalvos != null && cargosSalvos.isNotEmpty) {
+    final modalidade = TipoEleicaoModalidade.getByCodigo(modCodigo);
+    final codigos =
+        cargosSalvos.map((e) => int.tryParse(e)).whereType<int>().toList();
+    aplicarConfigEleicao(modalidade: modalidade, codigosCargos: codigos);
+    return;
   }
+
+  // Fallback para configuração legada
+  final legacyTipo = prefs.getInt('tipoeleicao') ?? 1;
+  final codigosIniciais = legacyTipo == 1 ? <int>[1, 2] : <int>[4];
+  await prefs.setInt(
+      'modalidade_eleicao', TipoEleicaoModalidade.politica.codigo);
+  await prefs.setStringList(
+    'cargos_ativos',
+    codigosIniciais.map((e) => e.toString()).toList(),
+  );
+  aplicarConfigEleicao(
+    modalidade: TipoEleicaoModalidade.politica,
+    codigosCargos: codigosIniciais,
+  );
 }
 
 Future<void> inject() async {
@@ -60,7 +82,7 @@ Future<void> inject() async {
 
   soundPlayer = SoundPlayerImpl();
 
-  apiStorage = ApiStorageFirebase();
+  apiStorage = ApiStorageBase64();
   alunoRepository = AlunoRepositoryImpl(apidb, AlunoMapperImpl());
   candidatoRepository = CandidatoRepositoryImpl(apidb, CandidatoMapperImpl());
   votoRepository = VotoRepositoryImpl(apidb, VotoMapperImpl());

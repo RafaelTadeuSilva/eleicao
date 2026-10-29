@@ -14,8 +14,8 @@ class CandidatoControl extends ChangeNotifier {
     listCandidatos.notifyListeners();
   }
 
-  Future<Candidato?> getById(String matricula) async {
-    return await candidatoRepository.findOne(matricula);
+  Future<Candidato?> getById(String id) async {
+    return await candidatoRepository.findOne(id);
   }
 
   Future<Candidato?> getByNumero(int numero) async {
@@ -30,5 +30,13 @@ class CandidatoControl extends ChangeNotifier {
 
   Future<bool> update(Candidato candidato) async {
     return await candidatoRepository.update(candidato.id, candidato);
+  }
+
+  Future<bool> delete(String id) async {
+    final removed = await candidatoRepository.delete(id);
+    if (removed) {
+      await listaCandidatos();
+    }
+    return removed;
   }
 }
