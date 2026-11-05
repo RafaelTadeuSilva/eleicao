@@ -58,7 +58,7 @@ void main() {
     });
 
     await tester.pumpWidget(app(TecladoWidget(control)));
-    expect(find.text('Masculino'), findsOneWidget, reason: 'zona 0');
+    expect(find.text('Geral'), findsOneWidget, reason: 'zona 0');
 
     await tester.tap(find.widgetWithText(NumberButton, '1'));
     await tester.tap(find.widgetWithText(NumberButton, '2'));

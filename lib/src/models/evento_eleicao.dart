@@ -1,4 +1,5 @@
 import 'package:eleicao/src/features/urna/enums/cargo.dart';
+import 'package:eleicao/src/models/zona.dart';
 
 class EventoEleicao {
   final String id;
@@ -11,6 +12,9 @@ class EventoEleicao {
   final List<int> cargos;
   final Map<int, int> digitosPorCargo;
 
+  /// Zonas eleitorais do evento; sempre começa pela zona Geral (0).
+  final List<Zona> zonas;
+
   const EventoEleicao({
     required this.id,
     required this.nome,
@@ -21,6 +25,7 @@ class EventoEleicao {
     required this.modalidade,
     required this.cargos,
     this.digitosPorCargo = const {},
+    this.zonas = const [Zona.geral],
   });
 
   factory EventoEleicao.fromSufixo({
@@ -33,6 +38,7 @@ class EventoEleicao {
     TipoEleicaoModalidade modalidade = TipoEleicaoModalidade.politica,
     List<int>? cargos,
     Map<int, int>? digitosPorCargo,
+    List<Zona>? zonas,
   }) {
     final chaveLimpa = sufixo.trim().isEmpty ? '2026' : sufixo.trim();
     final cargosPadrao = cargos != null && cargos.isNotEmpty
@@ -71,6 +77,7 @@ class EventoEleicao {
       modalidade: modalidade,
       cargos: cargosPadrao,
       digitosPorCargo: mapaDigitos,
+      zonas: Zona.normalizar(zonas ?? const []),
     );
   }
 
@@ -86,6 +93,7 @@ class EventoEleicao {
       'cargos': cargos,
       'digitos_por_cargo':
           digitosPorCargo.map((k, v) => MapEntry(k.toString(), v)),
+      'zonas': zonas.map((z) => z.toMap()).toList(),
     };
   }
 
@@ -122,6 +130,11 @@ class EventoEleicao {
       });
     }
 
+    final rawZonas = map['zonas'];
+    final zonas = rawZonas is List
+        ? rawZonas.map(Zona.fromMap).whereType<Zona>()
+        : const <Zona>[];
+
     return EventoEleicao(
       id: id,
       nome: (map['nome'] ?? 'Eleição $id').toString(),
@@ -134,6 +147,7 @@ class EventoEleicao {
       modalidade: modalidade,
       cargos: cargos,
       digitosPorCargo: mapaDigitos,
+      zonas: Zona.normalizar(zonas),
     );
   }
 }

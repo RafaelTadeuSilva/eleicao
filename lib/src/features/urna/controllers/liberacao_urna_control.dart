@@ -1,6 +1,7 @@
 import 'package:eleicao/src/features/cadastro/state/cadastro_state.dart';
 import 'package:eleicao/src/injector.dart';
 import 'package:eleicao/src/models/liberacao_urna.dart';
+import 'package:eleicao/src/models/zona.dart';
 import 'package:flutter/material.dart';
 
 class LiberacaoUrnaControl {
@@ -13,7 +14,7 @@ class LiberacaoUrnaControl {
   Future<void> confirmar() async {
     final titulo = int.parse(txtTituloEleitor.text);
     final urna = int.parse(txtUrna.text);
-    final turma = (getTurmaByName(txtTurma.text) ?? listTurmas.first).$1;
+    final turma = (zonaPorNome(txtTurma.text) ?? Zona.geral).codigo;
 
     final libUrna = LiberacaoUrna(
       titulo: titulo,
@@ -32,7 +33,7 @@ class LiberacaoUrnaControl {
       if (aluno != null) {
         txtNome.text = aluno.nome;
         txtMatricula.text = aluno.id;
-        txtTurma.text = getTurmaById(aluno.turma).$2;
+        txtTurma.text = zonaPorCodigo(aluno.turma).nome;
         return;
       }
     }

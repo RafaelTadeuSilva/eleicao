@@ -175,11 +175,11 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
                   labelText: 'Turma / Zona Eleitoral',
                   border: OutlineInputBorder(),
                 ),
-                items: listTurmas
+                items: zonasEleitorais.value
                     .map(
                       (t) => DropdownMenuItem<int>(
-                        value: t.$1,
-                        child: Text(t.$2),
+                        value: t.codigo,
+                        child: Text(t.nome),
                       ),
                     )
                     .toList(),

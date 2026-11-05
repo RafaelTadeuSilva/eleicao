@@ -3,6 +3,7 @@ import 'package:eleicao/src/features/urna/enums/cargo.dart';
 import 'package:eleicao/src/features/urna/state/votacao_state.dart';
 import 'package:eleicao/src/models/aluno.dart';
 import 'package:eleicao/src/models/evento_eleicao.dart';
+import 'package:eleicao/src/models/zona.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -25,6 +26,14 @@ void main() {
       expect(modalidadeEleicao.value, TipoEleicaoModalidade.cipa);
       expect(tipoEleicao, [11, 12]);
       expect(numSeqEleicao.value, 11);
+      expect(zonasEleitorais.value, [Zona.geral]);
+    });
+
+    test('aplica as zonas do evento', () {
+      aplicarEventoEleicao(EventoEleicao.fromSufixo(
+          sufixo: 'z', zonas: const [Zona(1, 'Turma A')]));
+      expect(zonasEleitorais.value, const [Zona.geral, Zona(1, 'Turma A')]);
+      expect(eventoEleicaoAtual().zonas, zonasEleitorais.value);
     });
 
     test('limpa caches em memória do evento anterior', () {

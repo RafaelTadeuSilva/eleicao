@@ -3,6 +3,7 @@ import 'package:eleicao/src/features/urna/enums/cargo.dart';
 import 'package:eleicao/src/models/aluno.dart';
 import 'package:eleicao/src/models/candidato.dart';
 import 'package:eleicao/src/models/evento_eleicao.dart';
+import 'package:eleicao/src/models/zona.dart';
 import 'package:flutter/material.dart';
 
 final numAtual = ValueNotifier(0);
@@ -42,6 +43,7 @@ EventoEleicao eventoEleicaoAtual() {
     modalidade: modalidadeEleicao.value,
     cargos: List<int>.from(tipoEleicao),
     digitosPorCargo: Map<int, int>.from(digitosPorCargo),
+    zonas: List<Zona>.from(zonasEleitorais.value),
   );
 }
 
@@ -73,6 +75,7 @@ void aplicarEventoEleicao(EventoEleicao evento) {
   colecaoCandidatosAtual.value = evento.colecaoCandidatos;
   colecaoVotosAtual.value = evento.colecaoVotos;
   colecaoLiberacaoAtual.value = evento.colecaoLiberacao;
+  zonasEleitorais.value = Zona.normalizar(evento.zonas);
   aplicarConfigEleicao(
     modalidade: evento.modalidade,
     codigosCargos: evento.cargos,

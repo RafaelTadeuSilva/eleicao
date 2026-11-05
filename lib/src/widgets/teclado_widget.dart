@@ -43,7 +43,7 @@ class TecladoWidget extends StatelessWidget {
                       builder: (context) => HomePage(),
                     )),
                 child: Text(
-                  getTurmaById(control.zone ?? 0).$2,
+                  zonaPorCodigo(control.zone ?? 0).nome,
                   style: TextStyle(fontSize: 20),
                 ),
               ),

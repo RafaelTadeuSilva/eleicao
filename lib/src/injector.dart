@@ -17,6 +17,7 @@ import 'package:eleicao/src/features/urna/enums/cargo.dart';
 import 'package:eleicao/src/features/urna/state/votacao_state.dart';
 import 'package:eleicao/src/functions/audio_player.dart';
 import 'package:eleicao/src/models/evento_eleicao.dart';
+import 'package:eleicao/src/models/zona.dart';
 import 'package:eleicao/src/repositories/api_db.dart';
 import 'package:eleicao/src/repositories/api_storage.dart';
 import 'package:eleicao/src/repositories/remote/firestore_db.dart';
@@ -64,6 +65,10 @@ Future<void> salvarEventoEleicaoLocal(EventoEleicao evento) async {
     'cargos_ativos',
     evento.cargos.map((e) => e.toString()).toList(),
   );
+  await prefs.setStringList(
+    'zonas',
+    evento.zonas.map((z) => '${z.codigo}:${z.nome}').toList(),
+  );
   aplicarEventoEleicao(evento);
 }
 
@@ -91,6 +96,11 @@ Future<void> setTipoEleicao() async {
     }
   }
   final cargosSalvos = prefs.getStringList('cargos_ativos');
+  final zonas = Zona.normalizar([
+    for (final item in prefs.getStringList('zonas') ?? const <String>[])
+      if (item.indexOf(':') case final i when i > 0)
+        Zona(int.tryParse(item.substring(0, i)) ?? -1, item.substring(i + 1)),
+  ]);
 
   if (modCodigo != null && cargosSalvos != null && cargosSalvos.isNotEmpty) {
     final modalidade = TipoEleicaoModalidade.getByCodigo(modCodigo);
@@ -107,6 +117,7 @@ Future<void> setTipoEleicao() async {
         modalidade: modalidade,
         cargos: codigos,
         digitosPorCargo: mapaDigitos,
+        zonas: zonas,
       ),
     );
     return;

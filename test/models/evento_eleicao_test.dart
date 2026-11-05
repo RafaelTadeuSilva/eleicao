@@ -1,5 +1,6 @@
 import 'package:eleicao/src/features/urna/enums/cargo.dart';
 import 'package:eleicao/src/models/evento_eleicao.dart';
+import 'package:eleicao/src/models/zona.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -109,6 +110,36 @@ void main() {
       expect(e.modalidade, TipoEleicaoModalidade.politica);
       expect(e.cargos, [Cargo.presidente.codigo]);
       expect(e.colecaoAlunos, 'Alunos2026');
+    });
+  });
+
+  group('EventoEleicao zonas', () {
+    test('padrão é apenas a zona Geral', () {
+      expect(EventoEleicao.fromSufixo(sufixo: 'a').zonas, [Zona.geral]);
+      expect(EventoEleicao.fromMap({}).zonas, [Zona.geral]);
+    });
+
+    test('fromSufixo normaliza as zonas informadas', () {
+      final e = EventoEleicao.fromSufixo(
+          sufixo: 'a', zonas: const [Zona(2, 'B'), Zona(1, 'A')]);
+      expect(e.zonas, const [Zona.geral, Zona(1, 'A'), Zona(2, 'B')]);
+    });
+
+    test('ida e volta por toMap/fromMap preserva as zonas', () {
+      final e = EventoEleicao.fromSufixo(
+          sufixo: 'a', zonas: const [Zona(1, '1º Ano A'), Zona(3, '3º Ano')]);
+      expect(EventoEleicao.fromMap(e.toMap()).zonas, e.zonas);
+    });
+
+    test('fromMap ignora itens inválidos', () {
+      final e = EventoEleicao.fromMap({
+        'zonas': [
+          {'codigo': 1, 'nome': 'A'},
+          'lixo',
+          {'nome': 'sem código'},
+        ]
+      });
+      expect(e.zonas, const [Zona.geral, Zona(1, 'A')]);
     });
   });
 }

@@ -106,19 +106,45 @@ void main() {
   });
 
   group('zona eleitoral', () {
-    test('urna da zona 0 enxerga candidatos de todas as zonas', () async {
+    test('urna da zona Geral só enxerga candidatos da zona Geral', () async {
       final control = await criaControl();
-      expect(listCandidato.map((e) => e.nome), contains('Eva'));
+      expect(
+          listCandidato.map((e) => e.nome).toSet(), {'Ana', 'Bruno', 'Diego'});
+      digita(control, '45');
+      expect(candidatoAtual.value, isNull);
+    });
+
+    test('urna da zona N enxerga candidatos da zona Geral e da zona N',
+        () async {
+      await prefs.setInt('zone', 1);
+      final control = await criaControl();
+      expect(listCandidato.map((e) => e.nome).toSet(),
+          {'Ana', 'Bruno', 'Diego', 'Eva'});
       digita(control, '45');
       expect(candidatoAtual.value?.nome, 'Eva');
     });
 
-    test('urna de outra zona só enxerga candidatos daquela zona', () async {
-      await prefs.setInt('zone', 1);
-      final control = await criaControl();
-      expect(listCandidato.map((e) => e.nome), ['Eva']);
-      digita(control, '12');
-      expect(candidatoAtual.value, isNull);
+    test('urna de outra zona não enxerga candidatos da zona 1', () async {
+      await prefs.setInt('zone', 2);
+      await criaControl();
+      expect(listCandidato.map((e) => e.nome), isNot(contains('Eva')));
+    });
+
+    test('cargosSemCandidato aponta cargos que travariam o eleitor', () async {
+      final todos = await candidatoRepository.find({});
+      final cargos = [Cargo.presidente.codigo, Cargo.vereador.codigo];
+
+      expect(VotacaoControl.cargosSemCandidato(todos, 0, cargos), isEmpty);
+      expect(
+          VotacaoControl.cargosSemCandidato(
+              todos, 0, [...cargos, Cargo.prefeito.codigo]),
+          [Cargo.prefeito]);
+
+      final soZona1 = todos.where((c) => c.zone == 1).toList();
+      expect(VotacaoControl.cargosSemCandidato(soZona1, 0, cargos),
+          [Cargo.presidente, Cargo.vereador]);
+      expect(VotacaoControl.cargosSemCandidato(soZona1, 1, cargos),
+          [Cargo.vereador]);
     });
   });
 

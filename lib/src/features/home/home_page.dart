@@ -1,6 +1,7 @@
 import 'package:eleicao/src/features/cadastro/pages/lista_alunos_cad_page.dart';
 import 'package:eleicao/src/features/cadastro/pages/lista_candidatos_cad_page.dart';
 import 'package:eleicao/src/features/cadastro/state/cadastro_state.dart';
+import 'package:eleicao/src/features/urna/controllers/votacao_control.dart';
 import 'package:eleicao/src/features/urna/enums/cargo.dart';
 import 'package:eleicao/src/features/urna/pages/apuracao_page.dart';
 import 'package:eleicao/src/features/urna/pages/liberacao_urna_page.dart';
@@ -8,6 +9,7 @@ import 'package:eleicao/src/features/urna/pages/proximo_eleitor_page.dart';
 import 'package:eleicao/src/features/urna/state/votacao_state.dart';
 import 'package:eleicao/src/injector.dart';
 import 'package:eleicao/src/models/evento_eleicao.dart';
+import 'package:eleicao/src/models/zona.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -31,7 +33,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final terminalAtual = prefs.getInt('terminal') ?? 0;
-    final zonaAtual = getTurmaById(prefs.getInt('zone') ?? 0).$2;
+    final zonaAtual = zonaPorCodigo(prefs.getInt('zone') ?? 0).nome;
 
     return Scaffold(
       appBar: AppBar(
@@ -221,7 +223,42 @@ class _HomePageState extends State<HomePage> {
     ));
   }
 
-  void navigateToVotacao(BuildContext context) {
+  /// Antes de abrir a urna, confere se todos os cargos têm candidato
+  /// visível na zona deste aparelho; sem isso o eleitor ficaria travado.
+  Future<void> navigateToVotacao(BuildContext context) async {
+    final zona = prefs.getInt('zone') ?? 0;
+    final candidatos = await candidatoRepository.find({});
+    final faltando =
+        VotacaoControl.cargosSemCandidato(candidatos, zona, tipoEleicao);
+    if (!context.mounted) return;
+
+    if (faltando.isNotEmpty) {
+      final continuar = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Cargos sem candidatos nesta urna'),
+          content: Text(
+            'Zona da urna: ${zonaPorCodigo(zona).nome}\n\n'
+            'Não há candidatos visíveis para:\n'
+            '${faltando.map((c) => '• ${c.descricao}').join('\n')}\n\n'
+            'O eleitor não conseguirá concluir o voto. Verifique a zona '
+            'desta urna e o cadastro dos candidatos.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Iniciar mesmo assim'),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Voltar'),
+            ),
+          ],
+        ),
+      );
+      if (continuar != true || !context.mounted) return;
+    }
+
     Navigator.of(context).pushReplacement(MaterialPageRoute(
       builder: (context) => const ProximoEleitorPage(),
     ));
@@ -282,6 +319,8 @@ class _HomePageState extends State<HomePage> {
     final mapaDigitosSelecionados = <int, int>{
       for (final c in Cargo.values) c.codigo: digitosDoCargo(c.codigo),
     };
+    var zonasSelecionadas = List<Zona>.from(zonasEleitorais.value);
+    final txtNovaZona = TextEditingController();
     var salvando = false;
 
     void preencherComEvento(EventoEleicao ev) {
@@ -293,6 +332,7 @@ class _HomePageState extends State<HomePage> {
       txtColLiberacao.text = ev.colecaoLiberacao;
       modalidadeSelecionada = ev.modalidade;
       cargosSelecionados = List<int>.from(ev.cargos);
+      zonasSelecionadas = List<Zona>.from(ev.zonas);
       for (final c in Cargo.values) {
         mapaDigitosSelecionados[c.codigo] =
             ev.digitosPorCargo[c.codigo] ?? c.digitosPadrao;
@@ -358,6 +398,7 @@ class _HomePageState extends State<HomePage> {
                               txtColCandidatos.text = 'Candidatos';
                               txtColVotos.text = 'Votos';
                               txtColLiberacao.text = 'LiberacaoUrna';
+                              zonasSelecionadas = [Zona.geral];
                             } else {
                               final escolhido = eventosSalvos
                                   .firstWhere((e) => e.id == valor);
@@ -620,6 +661,65 @@ class _HomePageState extends State<HomePage> {
                           ),
                         );
                       }),
+                      const Divider(),
+                      const Text(
+                        '4. Zonas Eleitorais:',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const Text(
+                        'Candidatos da zona Geral aparecem em todas as urnas; '
+                        'os de outra zona (ex.: uma turma) só nas urnas daquela zona.',
+                        style: TextStyle(fontSize: 12, color: Colors.black54),
+                      ),
+                      const SizedBox(height: 6),
+                      Wrap(
+                        spacing: 6,
+                        runSpacing: 6,
+                        children: [
+                          for (final z in zonasSelecionadas)
+                            Chip(
+                              label: Text('${z.codigo} - ${z.nome}'),
+                              onDeleted: z.isGeral
+                                  ? null
+                                  : () => setModalState(() =>
+                                      zonasSelecionadas = zonasSelecionadas
+                                          .where((e) => e != z)
+                                          .toList()),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: txtNovaZona,
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: 'Nova zona (ex: 1º Ano A)',
+                                isDense: true,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          OutlinedButton.icon(
+                            onPressed: () {
+                              final nome = txtNovaZona.text.trim();
+                              if (nome.isEmpty) return;
+                              setModalState(() {
+                                zonasSelecionadas = Zona.normalizar([
+                                  ...zonasSelecionadas,
+                                  Zona(Zona.proximoCodigo(zonasSelecionadas),
+                                      nome),
+                                ]);
+                                txtNovaZona.clear();
+                              });
+                            },
+                            icon: const Icon(Icons.add),
+                            label: const Text('Adicionar'),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -644,6 +744,7 @@ class _HomePageState extends State<HomePage> {
                             modalidade: modalidadeSelecionada,
                             cargos: cargosSelecionados,
                             digitosPorCargo: mapaDigitosSelecionados,
+                            zonas: zonasSelecionadas,
                           );
                           await salvarEventoEleicaoLocal(evento);
                           if (mounted) {
@@ -670,6 +771,7 @@ class _HomePageState extends State<HomePage> {
                             modalidade: modalidadeSelecionada,
                             cargos: cargosSelecionados,
                             digitosPorCargo: mapaDigitosSelecionados,
+                            zonas: zonasSelecionadas,
                           );
                           await eventoEleicaoRepository.save(evento);
                           await salvarEventoEleicaoLocal(evento);
@@ -692,14 +794,14 @@ class _HomePageState extends State<HomePage> {
   }
 
   void changeZone(BuildContext context) {
-    txtZone.text = getTurmaById(prefs.getInt('zone') ?? 0).$2;
+    txtZone.text = zonaPorCodigo(prefs.getInt('zone') ?? 0).nome;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Mudar Zona Eleitoral'),
         content: DropdownMenu(
-          dropdownMenuEntries: listTurmas
-              .map((e) => DropdownMenuEntry(value: e.$1, label: e.$2))
+          dropdownMenuEntries: zonasEleitorais.value
+              .map((e) => DropdownMenuEntry(value: e.codigo, label: e.nome))
               .toList(),
           controller: txtZone,
         ),
@@ -721,7 +823,7 @@ class _HomePageState extends State<HomePage> {
 
   void setZone(BuildContext context) {
     if (txtZone.text.isNotEmpty) {
-      final zone = getTurmaByName(txtZone.text)?.$1 ?? 0;
+      final zone = zonaPorNome(txtZone.text)?.codigo ?? 0;
       prefs.setInt('zone', zone);
       setState(() {});
       Navigator.of(context).pop();

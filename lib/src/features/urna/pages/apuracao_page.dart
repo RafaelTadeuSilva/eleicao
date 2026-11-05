@@ -88,8 +88,8 @@ class _ApuracaoPageState extends State<ApuracaoPage> {
             ),
             items: [
               const DropdownMenuItem(value: null, child: Text('Todas')),
-              for (final z in listTurmas)
-                DropdownMenuItem(value: z.$1, child: Text(z.$2)),
+              for (final z in zonasEleitorais.value)
+                DropdownMenuItem(value: z.codigo, child: Text(z.nome)),
             ],
             onChanged: (z) => _filtrar(cargo: control.cargo, zona: z),
           ),

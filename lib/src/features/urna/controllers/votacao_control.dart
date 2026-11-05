@@ -4,6 +4,7 @@ import 'package:eleicao/src/features/urna/pages/proximo_eleitor_page.dart';
 import 'package:eleicao/src/features/urna/state/votacao_state.dart';
 import 'package:eleicao/src/functions/audio_player.dart';
 import 'package:eleicao/src/injector.dart';
+import 'package:eleicao/src/models/candidato.dart';
 import 'package:eleicao/src/models/voto.dart';
 import 'package:flutter/material.dart';
 
@@ -111,14 +112,29 @@ class VotacaoControl with ChangeNotifier {
     });
   }
 
+  /// Carrega os candidatos visíveis nesta urna: os da zona Geral (0) e os
+  /// da zona configurada no aparelho.
   Future<void> carregaListaCandidatos() async {
     final list = await candidatoRepository.find({});
-    listCandidato.clear();
-    if (zone == 0) {
-      listCandidato.addAll(list);
-      return;
-    }
-    final listFiltrada = list.where((e) => e.zone == zone);
-    listCandidato.addAll(listFiltrada);
+    listCandidato
+      ..clear()
+      ..addAll(candidatosDaUrna(list, zone ?? 0));
+  }
+
+  static Iterable<Candidato> candidatosDaUrna(
+          Iterable<Candidato> candidatos, int zonaUrna) =>
+      candidatos.where((c) => c.zone == 0 || c.zone == zonaUrna);
+
+  /// Cargos do evento sem nenhum candidato visível na urna. Se houver
+  /// algum, o eleitor ficaria travado nessa etapa (não há voto em branco).
+  static List<Cargo> cargosSemCandidato(
+      Iterable<Candidato> candidatos, int zonaUrna, List<int> cargos) {
+    final visiveis = candidatosDaUrna(candidatos, zonaUrna)
+        .map((c) => c.cargo.codigo)
+        .toSet();
+    return [
+      for (final c in cargos)
+        if (!visiveis.contains(c)) Cargo.getCargoByCodigo(c)
+    ];
   }
 }

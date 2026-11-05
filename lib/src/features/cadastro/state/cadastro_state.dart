@@ -1,37 +1,32 @@
 import 'package:eleicao/src/models/aluno.dart';
 import 'package:eleicao/src/models/candidato.dart';
+import 'package:eleicao/src/models/zona.dart';
 import 'package:flutter/material.dart';
 
-final listTurmas = [
-  (0, 'Masculino'),
-  (1, 'Feminino'),
-  // (0, 'Geral'),
-  // (1, '1° Turma A'),
-  // (2, '1° Turma B'),
-  // (3, '1° Turma C'),
-  // (4, '2° Turma A'),
-  // (5, '2° Turma B'),
-  // (6, '2° Turma C'),
-  // (7, '3° Turma A'),
-  // (8, '3° Turma B'),
-  // (9, '4° Turma A'),
-  // (10, '4° Turma B'),
-  // (11, '4° Turma C'),
-  // (12, '5° Turma A'),
-  // (13, '5° Turma B'),
-  // (14, '5° Turma C'),
-];
+/// Zonas eleitorais do evento ativo (atualizadas ao trocar de evento).
+/// Sempre começa pela zona Geral (0).
+final zonasEleitorais = ValueNotifier<List<Zona>>(const [Zona.geral]);
 
-(int, String)? getTurmaByName(String name) =>
-    listTurmas.where((e) => e.$2 == name).firstOrNull;
+/// Zona com o nome exato informado.
+Zona? zonaPorNome(String nome) =>
+    zonasEleitorais.value.where((z) => z.nome == nome.trim()).firstOrNull;
 
-(int, String)? findTurmaByName(String name) =>
-    listTurmas.where((e) => e.$2.contains(name)).firstOrNull;
+/// Primeira zona cujo nome contém o texto (sem diferenciar maiúsculas).
+Zona? buscaZonaPorNome(String texto) {
+  final t = texto.trim().toLowerCase();
+  return zonasEleitorais.value
+      .where((z) => z.nome.toLowerCase().contains(t))
+      .firstOrNull;
+}
 
-(int, String) getTurmaById(int? id) => listTurmas.firstWhere((e) => e.$1 == id);
+/// Zona pelo código; se não existir no evento ativo, devolve "Zona N" para
+/// não quebrar telas com dados de outra configuração.
+Zona zonaPorCodigo(int? codigo) {
+  final c = codigo ?? Zona.geral.codigo;
+  return zonasEleitorais.value.where((z) => z.codigo == c).firstOrNull ??
+      (c == Zona.geral.codigo ? Zona.geral : Zona(c, 'Zona $c'));
+}
 
 final listAlunos = ValueNotifier(<Aluno>[]);
 
 final listCandidatos = ValueNotifier(<Candidato>[]);
-// final alunoAtual = ValueNotifier<Aluno?>(null);
-// final alunoAtual = ValueNotifier<Aluno?>(null);

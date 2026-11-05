@@ -60,7 +60,7 @@ class _ListaAlunosCadPageState extends State<ListaAlunosCadPage> {
                 style: const TextStyle(fontSize: 25),
               ),
               Text(
-                getTurmaById(turma).$2,
+                zonaPorCodigo(turma).nome,
                 style: const TextStyle(fontSize: 25),
               )
             ],

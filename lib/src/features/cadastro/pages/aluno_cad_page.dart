@@ -1,6 +1,7 @@
 import 'package:eleicao/src/features/cadastro/controllers/aluno_control.dart';
 import 'package:eleicao/src/features/cadastro/state/cadastro_state.dart';
 import 'package:eleicao/src/models/aluno.dart';
+import 'package:eleicao/src/models/zona.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -84,14 +85,15 @@ class _AlunoCadPageState extends State<AlunoCadPage> {
                     label: const Text('Escolha a turma'),
                     enableFilter: true,
                     onSelected: (value) =>
-                        txtTurma.text = getTurmaById(value).$2,
-                    dropdownMenuEntries: listTurmas
-                        .map((e) => DropdownMenuEntry(value: e.$1, label: e.$2))
+                        txtTurma.text = zonaPorCodigo(value).nome,
+                    dropdownMenuEntries: zonasEleitorais.value
+                        .map((e) =>
+                            DropdownMenuEntry(value: e.codigo, label: e.nome))
                         .toList()),
                 onFocusChange: (hasFocus) {
                   if (!hasFocus) {
                     txtTurma.text =
-                        (findTurmaByName(txtTurma.text) ?? listTurmas.first).$2;
+                        (buscaZonaPorNome(txtTurma.text) ?? Zona.geral).nome;
                   }
                 },
               ),
@@ -134,7 +136,7 @@ class _AlunoCadPageState extends State<AlunoCadPage> {
         id: txtId.text,
         nome: txtNome.text,
         titulo: int.parse(txtTitulo.text),
-        turma: (getTurmaByName(txtTurma.text) ?? listTurmas.first).$1,
+        turma: (zonaPorNome(txtTurma.text) ?? Zona.geral).codigo,
       );
 
       final success = switch (widget.id) {
@@ -169,7 +171,7 @@ class _AlunoCadPageState extends State<AlunoCadPage> {
       final Aluno(:id, :nome, :turma, :titulo) = await control.getById(idAluno);
       txtId.text = id;
       txtNome.text = nome;
-      txtTurma.text = getTurmaById(turma).$2;
+      txtTurma.text = zonaPorCodigo(turma).nome;
       txtTitulo.text = titulo.toString();
     }
   }
