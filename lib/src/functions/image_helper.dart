@@ -3,6 +3,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+/// Imagem exibida para candidatos ainda sem foto.
+const fotoPadraoCandidato = AssetImage('assets/images/candidato.png');
+
 /// Converte links de compartilhamento do Google Drive em links diretos de imagem.
 String normalizeImageUrl(String url) {
   final trimmed = url.trim();
@@ -70,12 +73,12 @@ ImageProvider? resolveImageProvider(String? source) {
 Widget buildCandidatoPreviewImage(String? source) {
   final provider = resolveImageProvider(source);
   if (provider == null) {
-    return Image.asset('assets/images/candidato.png');
+    return const Image(image: fotoPadraoCandidato);
   }
   return Image(
     image: provider,
     fit: BoxFit.contain,
     errorBuilder: (context, error, stackTrace) =>
-        Image.asset('assets/images/candidato.png'),
+        const Image(image: fotoPadraoCandidato),
   );
 }

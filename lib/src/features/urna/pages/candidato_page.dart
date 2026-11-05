@@ -53,14 +53,14 @@ class _CandidatoPageState extends State<CandidatoPage> {
                   if (!temVice) {
                     return Container();
                   }
-                  final viceProvider = resolveImageProvider(urlImageVice.value);
+                  final viceProvider =
+                      resolveImageProvider(urlImageVice.value) ??
+                          fotoPadraoCandidato;
                   return Container(
                     width: width * .3,
                     height: height * .5,
                     decoration: BoxDecoration(
-                        image: viceProvider == null
-                            ? null
-                            : imageDecoration(viceProvider),
+                        image: imageDecoration(viceProvider),
                         border: Border.all()),
                   );
                 },
@@ -176,8 +176,12 @@ class _CandidatoPageState extends State<CandidatoPage> {
                       ValueListenableBuilder(
                         valueListenable: urlImageCandidato,
                         builder: (context, value, child) {
+                          // Candidato encontrado sem foto: imagem padrão.
                           final candidatoProvider =
-                              resolveImageProvider(urlImageCandidato.value);
+                              resolveImageProvider(urlImageCandidato.value) ??
+                                  (candidatoAtual.value == null
+                                      ? null
+                                      : fotoPadraoCandidato);
                           return Container(
                             width: width * .4,
                             height: width * .5,

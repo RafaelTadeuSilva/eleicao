@@ -1,5 +1,7 @@
+import 'package:eleicao/src/features/cadastro/controllers/verificacao_candidatos.dart';
 import 'package:eleicao/src/features/cadastro/state/cadastro_state.dart';
 import 'package:eleicao/src/features/urna/enums/cargo.dart';
+import 'package:eleicao/src/features/urna/state/votacao_state.dart';
 import 'package:eleicao/src/injector.dart';
 import 'package:eleicao/src/models/candidato.dart';
 import 'package:flutter/material.dart';
@@ -57,6 +59,18 @@ class CandidatoControl extends ChangeNotifier {
 
   Future<bool> update(Candidato candidato) async {
     return await candidatoRepository.update(candidato.id, candidato);
+  }
+
+  /// Carrega os candidatos da eleição ativa e procura problemas de cadastro
+  /// (sem foto, número duplicado, dígitos errados etc.).
+  Future<ResultadoVerificacao> verificarCandidatos() async {
+    await listaCandidatos();
+    return VerificacaoCandidatos.verificar(
+      listCandidatos.value,
+      cargos: tipoEleicao,
+      digitosDoCargo: digitosDoCargo,
+      zonas: zonasEleitorais.value,
+    );
   }
 
   Future<bool> delete(String id) async {

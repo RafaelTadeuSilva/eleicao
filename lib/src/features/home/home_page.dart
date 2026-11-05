@@ -1,5 +1,6 @@
 import 'package:eleicao/src/features/cadastro/pages/lista_alunos_cad_page.dart';
 import 'package:eleicao/src/features/cadastro/pages/lista_candidatos_cad_page.dart';
+import 'package:eleicao/src/features/cadastro/pages/verificacao_candidatos_page.dart';
 import 'package:eleicao/src/features/cadastro/state/cadastro_state.dart';
 import 'package:eleicao/src/features/home/widgets/evento_eleicao_dialog.dart';
 import 'package:eleicao/src/features/urna/controllers/votacao_control.dart';
@@ -160,6 +161,15 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () => navigateToCandidatos(context),
                 child: const Text(
                   'Candidatos',
+                  style: TextStyle(fontSize: 25),
+                )),
+            const SizedBox(height: 10),
+            ElevatedButton(
+                onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const VerificacaoCandidatosPage(),
+                    )),
+                child: const Text(
+                  'Verificar Candidatos',
                   style: TextStyle(fontSize: 25),
                 )),
             const SizedBox(height: 10),

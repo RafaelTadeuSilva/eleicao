@@ -1,5 +1,7 @@
 import 'package:eleicao/src/features/cadastro/controllers/candidato_control.dart';
+import 'package:eleicao/src/features/cadastro/controllers/verificacao_candidatos.dart';
 import 'package:eleicao/src/features/cadastro/pages/candidato_cad_page.dart';
+import 'package:eleicao/src/features/cadastro/pages/verificacao_candidatos_page.dart';
 import 'package:eleicao/src/features/cadastro/state/cadastro_state.dart';
 import 'package:eleicao/src/features/urna/state/votacao_state.dart';
 import 'package:eleicao/src/models/candidato.dart';
@@ -27,6 +29,24 @@ class _ListaCandidatosCadPageState extends State<ListaCandidatosCadPage> {
     return Scaffold(
         appBar: AppBar(
           title: Text('Lista de Candidatos (${colecaoCandidatosAtual.value})'),
+          actions: [
+            ValueListenableBuilder(
+              valueListenable: listCandidatos,
+              builder: (context, list, _) {
+                final r = verificar(list);
+                final qtd = r.candidatos.length + r.cargosSemCandidato.length;
+                return TextButton.icon(
+                  onPressed: navigateToVerificacao,
+                  icon: Badge(
+                    isLabelVisible: qtd > 0,
+                    label: Text('$qtd'),
+                    child: const Icon(Icons.fact_check),
+                  ),
+                  label: const Text('Verificar'),
+                );
+              },
+            ),
+          ],
         ),
         body: montaBody(),
         floatingActionButton: FloatingActionButton(
@@ -38,14 +58,27 @@ class _ListaCandidatosCadPageState extends State<ListaCandidatosCadPage> {
   Widget montaBody() {
     return ValueListenableBuilder(
       valueListenable: listCandidatos,
-      builder: (context, list, child) => ListView.builder(
-        itemBuilder: (context, index) => montaItem(index, list),
-        itemCount: list.length,
-      ),
+      builder: (context, list, child) {
+        final problemas = verificar(list).porId;
+        return ListView.builder(
+          itemBuilder: (context, index) =>
+              montaItem(index, list, problemas[list[index].id]),
+          itemCount: list.length,
+        );
+      },
     );
   }
 
-  Widget montaItem(int index, List<Candidato> list) {
+  ResultadoVerificacao verificar(List<Candidato> list) =>
+      VerificacaoCandidatos.verificar(
+        list,
+        cargos: tipoEleicao,
+        digitosDoCargo: digitosDoCargo,
+        zonas: zonasEleitorais.value,
+      );
+
+  Widget montaItem(
+      int index, List<Candidato> list, CandidatoComProblemas? problemas) {
     final Candidato(:id, :numero, :nome, :cargo) = list[index];
     return Card(
       child: InkWell(
@@ -62,6 +95,15 @@ class _ListaCandidatosCadPageState extends State<ListaCandidatosCadPage> {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
+              if (problemas != null)
+                Tooltip(
+                  message:
+                      problemas.problemas.map((p) => p.descricao).join('\n'),
+                  child: Icon(
+                    problemas.temErro ? Icons.error : Icons.warning,
+                    color: problemas.temErro ? Colors.red : Colors.orange,
+                  ),
+                ),
               const SizedBox(width: 8),
               Text(
                 cargo.descricao,
@@ -99,6 +141,13 @@ class _ListaCandidatosCadPageState extends State<ListaCandidatosCadPage> {
         ],
       ),
     );
+  }
+
+  void navigateToVerificacao() {
+    Navigator.of(context)
+        .push(MaterialPageRoute(
+            builder: (context) => const VerificacaoCandidatosPage()))
+        .whenComplete(() => control.listaCandidatos());
   }
 
   void navigateToCandidatoPage([String? id]) {

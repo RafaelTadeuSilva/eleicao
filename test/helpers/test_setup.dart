@@ -15,6 +15,7 @@ import 'package:eleicao/src/injector.dart';
 import 'package:eleicao/src/models/evento_eleicao.dart';
 import 'package:eleicao/src/repositories/api_db.dart';
 import 'package:eleicao/src/repositories/remote/firestore_db.dart';
+import 'package:eleicao/src/repositories/storage/api_storage_base64.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -82,6 +83,7 @@ Future<void> resetAmbiente({
     _injected = true;
     prefs = await SharedPreferences.getInstance();
     soundPlayer = fakeSound;
+    apiStorage = ApiStorageBase64();
     alunoRepository = AlunoRepositoryImpl(_apiDb, AlunoMapperImpl());
     candidatoRepository =
         CandidatoRepositoryImpl(_apiDb, CandidatoMapperImpl());

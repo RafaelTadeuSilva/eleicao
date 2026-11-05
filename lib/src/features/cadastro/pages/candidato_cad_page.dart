@@ -303,30 +303,15 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
       return;
     }
 
-    if (txtUrlImage.text.isEmpty) {
-      if (!mounted) return;
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          actions: [
-            ElevatedButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('OK'),
-            ),
-          ],
-          content: const Text('Imagem é obrigatória'),
-        ),
-      );
-      return;
-    }
-
-    var remoteImagePath = txtUrlImage.text;
-    if (!txtUrlImage.text.startsWith('http') &&
-        !txtUrlImage.text.startsWith('data:image')) {
+    // Foto é opcional: vazia, o candidato é salvo sem foto e aparece no
+    // relatório "Verificar Candidatos".
+    var remoteImagePath = txtUrlImage.text.trim();
+    if (remoteImagePath.startsWith('http')) {
+      remoteImagePath = normalizeImageUrl(remoteImagePath);
+    } else if (remoteImagePath.isNotEmpty &&
+        !remoteImagePath.startsWith('data:image')) {
       remoteImagePath =
-          await apiStorage.uploadFile(txtUrlImage.text, 'cand$numeroCand');
-    } else if (txtUrlImage.text.startsWith('http')) {
-      remoteImagePath = normalizeImageUrl(txtUrlImage.text);
+          await apiStorage.uploadFile(remoteImagePath, 'cand$numeroCand');
     }
 
     var remoteImageVicePath = txtUrlImageVice.text;
@@ -367,7 +352,12 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
             ),
           ],
           content: Text(
-            success ? 'Salvo com sucesso' : 'Erro ao salvar',
+            !success
+                ? 'Erro ao salvar'
+                : txtUrlImage.text.trim().isEmpty
+                    ? 'Salvo sem foto. Adicione a foto depois; ela aparece '
+                        'em "Verificar candidatos".'
+                    : 'Salvo com sucesso',
           ),
         ),
       ).whenComplete(() {
