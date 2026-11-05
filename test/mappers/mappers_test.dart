@@ -91,12 +91,18 @@ void main() {
     test('toMap não inclui id (gerado pelo banco)', () {
       final map = mapper.toMap(
           Voto(id: 'x', cargo: 'Prefeito', matricula: '1', nome: 'A', zone: 1));
-      expect(map, {'cargo': 'Prefeito', 'matricula': '1', 'nome': 'A', 'zone': 1});
+      expect(
+          map, {'cargo': 'Prefeito', 'matricula': '1', 'nome': 'A', 'zone': 1});
     });
 
     test('fromMap lê todos os campos', () {
-      final v = mapper.fromMap(
-          {'id': 'v1', 'cargo': 'Prefeito', 'matricula': '1', 'nome': 'A', 'zone': 0});
+      final v = mapper.fromMap({
+        'id': 'v1',
+        'cargo': 'Prefeito',
+        'matricula': '1',
+        'nome': 'A',
+        'zone': 0
+      });
       expect(v.id, 'v1');
       expect(v.cargo, 'Prefeito');
       expect(v.zone, 0);
@@ -108,7 +114,13 @@ void main() {
 
     test('ida e volta preserva os campos e toMap não inclui id', () {
       final lib = LiberacaoUrna(
-          id: 'l1', matricula: '10', nome: 'Ana', titulo: 99, turma: 1, urna: 3, status: 0);
+          id: 'l1',
+          matricula: '10',
+          nome: 'Ana',
+          titulo: 99,
+          turma: 1,
+          urna: 3,
+          status: 0);
       final map = mapper.toMap(lib);
       expect(map.containsKey('id'), isFalse);
       final copia = mapper.fromMap({...map, 'id': 'l1'});

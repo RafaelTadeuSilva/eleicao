@@ -177,7 +177,12 @@ void main() {
       final gravados = votos.docs.map((d) => d.data()).toList()
         ..sort((a, b) => (a['nome'] as String).compareTo(b['nome']));
       expect(gravados, [
-        {'cargo': 'Presidente da Câmara', 'matricula': '100', 'nome': 'Ana', 'zone': 0},
+        {
+          'cargo': 'Presidente da Câmara',
+          'matricula': '100',
+          'nome': 'Ana',
+          'zone': 0
+        },
         {'cargo': 'Vereador', 'matricula': '200', 'nome': 'Bruno', 'zone': 0},
       ]);
       expect(control.votoAtual, isEmpty);

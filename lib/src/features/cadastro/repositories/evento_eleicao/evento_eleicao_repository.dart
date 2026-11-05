@@ -6,4 +6,3 @@ abstract interface class EventoEleicaoRepository {
   Future<String> save(EventoEleicao evento);
   Future<bool> delete(String id);
 }
-

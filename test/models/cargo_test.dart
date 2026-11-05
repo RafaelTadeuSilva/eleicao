@@ -4,15 +4,19 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('TipoEleicaoModalidade', () {
     test('getByCodigo retorna a modalidade correspondente', () {
-      expect(TipoEleicaoModalidade.getByCodigo(1), TipoEleicaoModalidade.politica);
+      expect(
+          TipoEleicaoModalidade.getByCodigo(1), TipoEleicaoModalidade.politica);
       expect(TipoEleicaoModalidade.getByCodigo(2), TipoEleicaoModalidade.cipa);
-      expect(TipoEleicaoModalidade.getByCodigo(3), TipoEleicaoModalidade.esportes);
+      expect(
+          TipoEleicaoModalidade.getByCodigo(3), TipoEleicaoModalidade.esportes);
     });
 
     test('getByCodigo usa política como fallback para código inválido ou nulo',
         () {
-      expect(TipoEleicaoModalidade.getByCodigo(99), TipoEleicaoModalidade.politica);
-      expect(TipoEleicaoModalidade.getByCodigo(null), TipoEleicaoModalidade.politica);
+      expect(TipoEleicaoModalidade.getByCodigo(99),
+          TipoEleicaoModalidade.politica);
+      expect(TipoEleicaoModalidade.getByCodigo(null),
+          TipoEleicaoModalidade.politica);
     });
   });
 

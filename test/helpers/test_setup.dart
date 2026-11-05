@@ -57,7 +57,8 @@ bool _injected = false;
 
 /// Evento usado por padrão nos testes: política, presidente (2 dígitos)
 /// e vereador (4 dígitos).
-EventoEleicao eventoTeste({String sufixo = 'Teste'}) => EventoEleicao.fromSufixo(
+EventoEleicao eventoTeste({String sufixo = 'Teste'}) =>
+    EventoEleicao.fromSufixo(
       sufixo: sufixo,
       modalidade: TipoEleicaoModalidade.politica,
       cargos: [Cargo.presidente.codigo, Cargo.vereador.codigo],

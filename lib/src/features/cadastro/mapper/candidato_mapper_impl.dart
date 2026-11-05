@@ -6,8 +6,7 @@ class CandidatoMapperImpl implements Mapper<Candidato> {
   @override
   Candidato fromMap(Map<String, dynamic> map) {
     final rawId = map['id']?.toString() ?? '';
-    final rawMatricula =
-        map['matricula']?.toString() ?? rawId.split('_').first;
+    final rawMatricula = map['matricula']?.toString() ?? rawId.split('_').first;
     return Candidato(
       id: rawId,
       matricula: rawMatricula,

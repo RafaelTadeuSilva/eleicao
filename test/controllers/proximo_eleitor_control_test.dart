@@ -19,7 +19,13 @@ class LiberacaoFake implements LiberacaoUrnaRepository {
     consultas++;
     if (consultas < liberarApos) return null;
     return LiberacaoUrna(
-        id: 'l1', matricula: '0', nome: 'Eleitor', titulo: 0, turma: 0, urna: urna, status: 0);
+        id: 'l1',
+        matricula: '0',
+        nome: 'Eleitor',
+        titulo: 0,
+        turma: 0,
+        urna: urna,
+        status: 0);
   }
 
   @override
@@ -62,8 +68,7 @@ void main() {
     expect(fake.consultas, 1);
   });
 
-  testWidgets('continua consultando enquanto não há liberação',
-      (tester) async {
+  testWidgets('continua consultando enquanto não há liberação', (tester) async {
     fake.liberarApos = 3;
     final control = ProximoEleitorControl();
     var chamadas = 0;

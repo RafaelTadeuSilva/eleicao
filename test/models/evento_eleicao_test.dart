@@ -53,8 +53,10 @@ void main() {
       expect(e.digitosPorCargo[Cargo.vereador.codigo], 6);
       expect(e.digitosPorCargo[Cargo.presidente.codigo], 1);
       expect(e.digitosPorCargo[Cargo.deputadoEstadual.codigo], 5);
-      expect(e.digitosPorCargo.keys,
-          containsAll(Cargo.byModalidade(TipoEleicaoModalidade.politica).map((c) => c.codigo)));
+      expect(
+          e.digitosPorCargo.keys,
+          containsAll(Cargo.byModalidade(TipoEleicaoModalidade.politica)
+              .map((c) => c.codigo)));
     });
   });
 
@@ -79,7 +81,8 @@ void main() {
       expect(copia.digitosPorCargo, original.digitosPorCargo);
     });
 
-    test('toMap serializa chaves de dígitos como String (exigência do Firestore)',
+    test(
+        'toMap serializa chaves de dígitos como String (exigência do Firestore)',
         () {
       final map = EventoEleicao.fromSufixo(sufixo: 'a').toMap();
       final digitos = map['digitos_por_cargo'] as Map;

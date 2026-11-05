@@ -126,7 +126,8 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
                   }
                   final duplicado = listCandidatos.value.where((c) {
                     if (widget.id != null && c.id == widget.id) return false;
-                    final mesmoCargo = c.cargo.codigo == cargoSelecionado.codigo;
+                    final mesmoCargo =
+                        c.cargo.codigo == cargoSelecionado.codigo;
                     final mesmoNumero = c.numero == numero;
                     final mesmaZona = c.zone == 0 ||
                         zoneSelecionada == 0 ||

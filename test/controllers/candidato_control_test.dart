@@ -51,7 +51,8 @@ void main() {
   group('verificarNumeroDuplicado', () {
     setUp(() async {
       await control.create(candidato('1_2', 'Ana', 10, zone: 1));
-      await control.create(candidato('2_4', 'Bia', 10, cargo: Cargo.vereador, zone: 1));
+      await control
+          .create(candidato('2_4', 'Bia', 10, cargo: Cargo.vereador, zone: 1));
     });
 
     test('encontra mesmo número, cargo e zona', () async {

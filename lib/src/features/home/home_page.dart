@@ -304,8 +304,7 @@ class _HomePageState extends State<HomePage> {
       builder: (dialogContext) {
         return StatefulBuilder(
           builder: (context, setModalState) {
-            final cargosDisponiveis =
-                Cargo.byModalidade(modalidadeSelecionada);
+            final cargosDisponiveis = Cargo.byModalidade(modalidadeSelecionada);
 
             return AlertDialog(
               title: const Text('Configurar Evento e Tipo de Eleição'),
@@ -512,8 +511,7 @@ class _HomePageState extends State<HomePage> {
                               novaModalidade != modalidadeSelecionada) {
                             setModalState(() {
                               modalidadeSelecionada = novaModalidade;
-                              final padrao =
-                                  Cargo.byModalidade(novaModalidade);
+                              final padrao = Cargo.byModalidade(novaModalidade);
                               cargosSelecionados = [padrao.first.codigo];
                             });
                           }
@@ -628,9 +626,8 @@ class _HomePageState extends State<HomePage> {
               ),
               actions: [
                 TextButton(
-                  onPressed: salvando
-                      ? null
-                      : () => Navigator.of(dialogContext).pop(),
+                  onPressed:
+                      salvando ? null : () => Navigator.of(dialogContext).pop(),
                   child: const Text('Cancelar'),
                 ),
                 OutlinedButton(

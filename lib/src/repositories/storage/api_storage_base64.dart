@@ -49,4 +49,3 @@ class ApiStorageBase64 implements ApiStorage {
     }
   }
 }
-

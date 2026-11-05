@@ -79,4 +79,3 @@ Widget buildCandidatoPreviewImage(String? source) {
         Image.asset('assets/images/candidato.png'),
   );
 }
-

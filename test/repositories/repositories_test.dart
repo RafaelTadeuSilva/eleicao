@@ -157,7 +157,13 @@ void main() {
 
   group('LiberacaoUrnaRepositoryImpl', () {
     LiberacaoUrna lib({String? id, int urna = 1}) => LiberacaoUrna(
-        id: id, matricula: '10', nome: 'Ana', titulo: 99, turma: 0, urna: urna, status: 0);
+        id: id,
+        matricula: '10',
+        nome: 'Ana',
+        titulo: 99,
+        turma: 0,
+        urna: urna,
+        status: 0);
 
     test('registra grava liberação pendente (status 0)', () async {
       await liberacaoUrnaRepository.registra(lib());

@@ -63,4 +63,3 @@ class EventoEleicaoRepositoryImpl implements EventoEleicaoRepository {
     return await apiDb.delete(table, id);
   }
 }
-

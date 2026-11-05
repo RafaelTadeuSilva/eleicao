@@ -51,8 +51,8 @@ void main() {
     });
 
     test('limita a 10 etapas de votação', () {
-      final codigos =
-          Cargo.byModalidade(TipoEleicaoModalidade.esportes).map((c) => c.codigo);
+      final codigos = Cargo.byModalidade(TipoEleicaoModalidade.esportes)
+          .map((c) => c.codigo);
       aplicarConfigEleicao(
         modalidade: TipoEleicaoModalidade.esportes,
         codigosCargos: [...codigos, ...codigos],

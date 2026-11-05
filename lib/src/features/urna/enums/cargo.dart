@@ -100,8 +100,7 @@ enum Cargo {
         orElse: () => Cargo.vereador,
       );
 
-  static Cargo getCargoByDescricao(String descricao) =>
-      Cargo.values.firstWhere(
+  static Cargo getCargoByDescricao(String descricao) => Cargo.values.firstWhere(
         (e) => e.descricao == descricao,
         orElse: () => Cargo.vereador,
       );
