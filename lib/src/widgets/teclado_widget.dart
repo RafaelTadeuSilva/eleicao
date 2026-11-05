@@ -3,6 +3,7 @@
 import 'package:eleicao/src/features/cadastro/state/cadastro_state.dart';
 import 'package:eleicao/src/features/home/home_page.dart';
 import 'package:eleicao/src/features/urna/controllers/votacao_control.dart';
+import 'package:eleicao/src/features/urna/state/votacao_state.dart';
 import 'package:eleicao/src/widgets/function_button.dart';
 import 'package:eleicao/src/widgets/number_button.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +34,7 @@ class TecladoWidget extends StatelessWidget {
                 style: TextStyle(fontSize: 15),
               ),
               Text(
-                'Eleição da Michelândia',
+                eventoAtualNome.value,
                 style: TextStyle(fontSize: 15),
               ),
               GestureDetector(

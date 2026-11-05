@@ -59,6 +59,9 @@ void main() {
 
     await tester.pumpWidget(app(TecladoWidget(control)));
     expect(find.text('Geral'), findsOneWidget, reason: 'zona 0');
+    expect(find.text('Colégio Santa Teresinha'), findsOneWidget);
+    expect(find.text(eventoAtualNome.value), findsOneWidget,
+        reason: 'nome da eleição vem do evento ativo');
 
     await tester.tap(find.widgetWithText(NumberButton, '1'));
     await tester.tap(find.widgetWithText(NumberButton, '2'));
