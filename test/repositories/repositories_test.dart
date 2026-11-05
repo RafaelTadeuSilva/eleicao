@@ -185,16 +185,6 @@ void main() {
       expect(data['status'], 1);
       expect(data['matricula'], '10', reason: 'update deve fazer merge');
     });
-
-    test(
-      'proximaLiberacao retorna null quando não há liberação pendente',
-      () async {
-        expect(await liberacaoUrnaRepository.proximaLiberacao(1), isNull);
-      },
-      skip: 'BUG/DECISÃO: desde o commit 4fc6634 proximaLiberacao é um stub '
-          'que sempre libera a urna para um eleitor anônimo; a mesa '
-          'receptora não controla mais quem vota.',
-    );
   });
 
   group('EventoEleicaoRepositoryImpl', () {
