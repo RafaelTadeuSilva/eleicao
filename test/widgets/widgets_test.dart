@@ -77,8 +77,5 @@ void main() {
       await tester.pumpWidget(app(const NumberLabel(lbNum: '1')));
       await tester.pumpWidget(const SizedBox());
     },
-    // BUG: o Timer.periodic criado no initState nunca é cancelado (falta
-    // dispose), vazando um timer a cada dígito exibido na urna.
-    skip: true,
   );
 }

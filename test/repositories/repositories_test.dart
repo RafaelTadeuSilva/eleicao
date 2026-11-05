@@ -67,8 +67,6 @@ void main() {
         final nomes = (await alunoRepository.find({})).map((e) => e.nome);
         expect(nomes, containsAll(['Ana', 'Érica', 'Ícaro']));
       },
-      skip: 'BUG: FirestoreDb.findByNome usa endAt([nome + "z"]); "É" (U+00C9) '
-          'é maior que "z" e esses alunos somem da listagem. Usar "\\uf8ff".',
     );
 
     test('findByTitulo aceita o título como texto', () async {
@@ -131,8 +129,6 @@ void main() {
       () async {
         expect(await candidatoRepository.findOne('inexistente'), isNull);
       },
-      skip: 'BUG: CandidatoRepositoryImpl.findOne mapeia um mapa vazio e '
-          'retorna um Candidato "fantasma" (id vazio, número 0).',
     );
   });
 

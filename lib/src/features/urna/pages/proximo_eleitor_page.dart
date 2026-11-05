@@ -1,5 +1,5 @@
-import 'package:eleicao/src/features/home/home_page.dart';
 import 'package:eleicao/src/features/urna/controllers/proximo_eleitor_control.dart';
+import 'package:eleicao/src/features/urna/pages/votacao_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -18,26 +18,28 @@ class _ProximoEleitorPageState extends State<ProximoEleitorPage> {
     super.initState();
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.landscapeRight, DeviceOrientation.landscapeLeft]);
+    control.iniciar(() {
+      if (!mounted) return;
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const VotacaoPage()));
+    });
+  }
+
+  @override
+  void dispose() {
+    control.parar();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    control.buscaProximoEleitor(context);
     return const Scaffold(
-      body: InkWell(
-          // onLongPress: () {
-          //   Navigator.of(context).pushReplacement(MaterialPageRoute(
-          //     builder: (context) {
-          //       control.stopTimer();
-          //       return HomePage();
-          //     },
-          //   ));
-          // },
-          child: Center(
-              child: Text(
-        'Aguarde a liberação da urna',
-        style: TextStyle(fontSize: 30),
-      ))),
+      body: Center(
+        child: Text(
+          'Aguarde a liberação da urna',
+          style: TextStyle(fontSize: 30),
+        ),
+      ),
     );
   }
 }

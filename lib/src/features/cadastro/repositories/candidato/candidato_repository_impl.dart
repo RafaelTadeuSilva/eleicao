@@ -28,9 +28,10 @@ class CandidatoRepositoryImpl implements CandidatoRepository {
   }
 
   @override
-  Future<Candidato> findOne(String matricula) async {
-    final map = await apiDb.findOne(table, matricula);
-    return mapper.fromMap(map);
+  Future<Candidato?> findOne(String id) async {
+    final map = await apiDb.findOne(table, id);
+    if (map.isEmpty) return null;
+    return mapper.fromMap({...map, 'id': id});
   }
 
   @override

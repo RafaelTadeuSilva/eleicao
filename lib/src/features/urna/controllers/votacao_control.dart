@@ -24,12 +24,10 @@ class VotacaoControl with ChangeNotifier {
 
   void carregaCandidato(int num) {
     final digitos = candidatoDigitos();
-    final displayedNumbers = '${numCandidato.value ?? ''}$num';
-    if (numAtual.value < digitos) {
-      numCandidato.value = int.parse(displayedNumbers);
-      AudioFiles.tecla.play();
-    }
-    numAtual.value = displayedNumbers.length;
+    if (numAtual.value >= digitos) return;
+    numCandidato.value = int.parse('${numCandidato.value ?? ''}$num');
+    numAtual.value++;
+    AudioFiles.tecla.play();
     if (numAtual.value == digitos) {
       buscaCandidato(numCandidato.value!, numSeqEleicao.value);
     }

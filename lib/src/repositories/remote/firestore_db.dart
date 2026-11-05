@@ -23,71 +23,38 @@ class FirestoreDb implements ApiDb {
     return true;
   }
 
-  Future<QuerySnapshot<Map<String, dynamic>>> findByNome(
-      String colName, String nome) {
-    return db
-        .collection(colName)
-        .orderBy('nome')
-        .startAt([nome]).endAt(['${nome}z']).get();
-  }
-
-  Future<QuerySnapshot<Map<String, dynamic>>> findByTitulo(
-      String colName, String value) {
-    return db
-        .collection(colName)
-        .where('titulo', isEqualTo: int.parse(value))
-        .get();
-  }
-
-  Future<QuerySnapshot<Map<String, dynamic>>> findByZone(
-      String colName, String value) {
-    return db
-        .collection(colName)
-        .where('zone', isEqualTo: int.parse(value))
-        .get();
-  }
-
-  Future<QuerySnapshot<Map<String, dynamic>>> findByUrnaStatus(
-      String colName, String urna, String status) {
-    return db
-        .collection(colName)
-        .where('urna', isEqualTo: int.parse(urna))
-        .where('status', isEqualTo: int.parse(status))
-        .get();
-  }
-
+  /// Busca documentos de [colName].
+  ///
+  /// - Sem filtros de igualdade: ordena por `nome` e filtra pelo prefixo
+  ///   `filter['nome']` (vazio = todos).
+  /// - Com filtros de igualdade (qualquer outra chave com valor não vazio):
+  ///   aplica todos com `isEqualTo` e ignora `nome`. Os valores devem ter o
+  ///   mesmo tipo gravado no banco (ex.: int para `zone`, `titulo`, `numero`).
   @override
   Future<List<Map<String, dynamic>>> find(
       String colName, Map<String, dynamic> filter) async {
-    final String nome = filter['nome'] ?? '';
-    final String titulo = filter['titulo'] ?? '';
-    final String urna = filter['urna']?.toString() ?? '';
-    final String status = filter['status']?.toString() ?? '';
-    final String zone = filter['zone']?.toString() ?? '';
-    QuerySnapshot<Map<String, dynamic>> query;
+    final igualdade = <String, Object>{
+      for (final e in filter.entries)
+        if (e.key != 'nome' && e.value != null && e.value.toString().isNotEmpty)
+          e.key: e.value as Object,
+    };
 
-    if (titulo.isNotEmpty && int.tryParse(titulo) != null) {
-      query = await findByTitulo(colName, titulo);
-    } else if (zone.isNotEmpty && int.tryParse(zone) != null) {
-      query = await findByZone(colName, zone);
-    } else if (urna.isNotEmpty &&
-        int.tryParse(urna) != null &&
-        status.isNotEmpty &&
-        int.tryParse(status) != null) {
-      query = await findByUrnaStatus(colName, urna, status);
+    Query<Map<String, dynamic>> query = db.collection(colName);
+    if (igualdade.isEmpty) {
+      final String nome = filter['nome']?.toString() ?? '';
+      // \uf8ff fica acima de qualquer letra (inclusive acentuadas), então o
+      // intervalo cobre todos os nomes que começam com o prefixo.
+      query = query.orderBy('nome').startAt([nome]).endAt(['$nome\uf8ff']);
     } else {
-      query = await findByNome(colName, nome);
+      igualdade.forEach((campo, valor) {
+        query = query.where(campo, isEqualTo: valor);
+      });
     }
 
-    final list = <Map<String, dynamic>>[];
-    for (var e in query.docs) {
-      final map = e.data();
-      if (!map.containsKey('id')) {
-        map['id'] = e.id;
-      }
-      list.add(map);
-    }
-    return list;
+    final snapshot = await query.get();
+    return [
+      for (final doc in snapshot.docs) {...doc.data(), 'id': doc.id},
+    ];
   }
 
   @override

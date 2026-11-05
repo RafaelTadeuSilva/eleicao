@@ -5,6 +5,7 @@ import 'package:eleicao/src/features/cadastro/mapper/voto_mapper_impl.dart';
 import 'package:eleicao/src/features/cadastro/repositories/aluno/aluno_repository_impl.dart';
 import 'package:eleicao/src/features/cadastro/repositories/candidato/candidato_repository_impl.dart';
 import 'package:eleicao/src/features/cadastro/repositories/evento_eleicao/evento_eleicao_repository_impl.dart';
+import 'package:eleicao/src/features/cadastro/repositories/liberacao_urna/liberacao_urna_repository.dart';
 import 'package:eleicao/src/features/cadastro/repositories/liberacao_urna/liberacao_urna_repository_impl.dart';
 import 'package:eleicao/src/features/cadastro/repositories/voto/voto_repository_impl.dart';
 import 'package:eleicao/src/features/urna/enums/cargo.dart';
@@ -64,7 +65,14 @@ EventoEleicao eventoTeste({String sufixo = 'Teste'}) => EventoEleicao.fromSufixo
 
 /// Injeta fakes nas dependências globais (uma vez por arquivo de teste)
 /// e reinicia banco, preferências e estado global.
-Future<void> resetAmbiente({int zone = 0, int terminal = 1}) async {
+///
+/// [liberacaoUrna] substitui o repositório de liberação; só tem efeito na
+/// primeira chamada do arquivo, pois as dependências são `late final`.
+Future<void> resetAmbiente({
+  int zone = 0,
+  int terminal = 1,
+  LiberacaoUrnaRepository? liberacaoUrna,
+}) async {
   SharedPreferences.setMockInitialValues({'zone': zone, 'terminal': terminal});
   if (!_injected) {
     _injected = true;
@@ -74,7 +82,7 @@ Future<void> resetAmbiente({int zone = 0, int terminal = 1}) async {
     candidatoRepository =
         CandidatoRepositoryImpl(_apiDb, CandidatoMapperImpl());
     votoRepository = VotoRepositoryImpl(_apiDb, VotoMapperImpl());
-    liberacaoUrnaRepository =
+    liberacaoUrnaRepository = liberacaoUrna ??
         LiberacaoUrnaRepositoryImpl(_apiDb, LiberacaoUrnaMapperImpl());
     eventoEleicaoRepository = EventoEleicaoRepositoryImpl(_apiDb);
   }

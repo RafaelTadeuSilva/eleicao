@@ -93,7 +93,5 @@ void main() {
       await control.create(candidato('2_2', 'Bia', 20));
       expect((await control.getByNumero(20))?.nome, 'Bia');
     },
-    skip: 'BUG: FirestoreDb.find ignora o filtro "numero" e retorna todos '
-        'ordenados por nome; getByNumero devolve sempre o primeiro.',
   );
 }

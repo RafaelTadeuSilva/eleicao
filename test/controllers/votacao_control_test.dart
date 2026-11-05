@@ -85,8 +85,6 @@ void main() {
         digita(control, '129');
         expect(numAtual.value, 2);
       },
-      skip: 'BUG: carregaCandidato atualiza numAtual mesmo quando o dígito é '
-          'ignorado (vira 3, 4, ...), deslocando o cursor piscante na tela.',
     );
 
     test('número inexistente não seleciona candidato', () async {

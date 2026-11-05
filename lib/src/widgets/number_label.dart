@@ -17,16 +17,21 @@ class NumberLabel extends StatefulWidget {
 
 class _NumberLabelState extends State<NumberLabel> {
   final visible = ValueNotifier(true);
+  late final Timer _timer;
+
   @override
   void initState() {
-    Timer.periodic(Durations.short4, (timer) {
-      if (widget.shouldBlink) {
-        visible.value = !visible.value;
-      } else {
-        visible.value = true;
-      }
-    });
     super.initState();
+    _timer = Timer.periodic(Durations.short4, (timer) {
+      visible.value = widget.shouldBlink ? !visible.value : true;
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    visible.dispose();
+    super.dispose();
   }
 
   @override

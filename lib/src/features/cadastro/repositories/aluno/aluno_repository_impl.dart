@@ -41,7 +41,9 @@ class AlunoRepositoryImpl implements AlunoRepository {
 
   @override
   Future<Aluno?> findByTitulo(String titulo) async {
-    final map = await apiDb.find(table, {'titulo': titulo});
+    final valor = int.tryParse(titulo.trim());
+    if (valor == null) return null;
+    final map = await apiDb.find(table, {'titulo': valor});
     if (map.isEmpty) return null;
     return mapper.fromMap(map.first);
   }
