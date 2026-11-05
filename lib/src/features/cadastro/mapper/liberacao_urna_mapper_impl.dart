@@ -1,4 +1,4 @@
-import 'package:eleicao/src/features/cadastro/mapper/candidato_mapper.dart';
+import 'package:eleicao/src/features/cadastro/mapper/mapper.dart';
 import 'package:eleicao/src/models/liberacao_urna.dart';
 
 class LiberacaoUrnaMapperImpl implements Mapper<LiberacaoUrna> {

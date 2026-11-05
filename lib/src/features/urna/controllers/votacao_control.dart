@@ -44,11 +44,6 @@ class VotacaoControl with ChangeNotifier {
     }
   }
 
-  void votoBranco() {
-    // numCandidato.value = 'BRANCO';
-    numAtual.value = 2;
-  }
-
   void corrige() {
     numCandidato.value = null;
     numAtual.value = 0;
@@ -105,12 +100,6 @@ class VotacaoControl with ChangeNotifier {
         builder: (context) => const ProximoEleitorPage(),
       ));
     });
-  }
-
-  Future<void> carregaListaEleitores() async {
-    final list = await alunoRepository.find({});
-    listEleitor.clear();
-    listEleitor.addAll(list);
   }
 
   Future<void> carregaListaCandidatos() async {

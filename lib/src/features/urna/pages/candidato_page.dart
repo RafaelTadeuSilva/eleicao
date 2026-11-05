@@ -70,7 +70,6 @@ class _CandidatoPageState extends State<CandidatoPage> {
           ValueListenableBuilder(
               valueListenable: numCandidato,
               builder: (context, numberCandidato, child) {
-                const emBranco = false; // numCandidato.value == "BRANCO";
                 return Padding(
                   padding: const EdgeInsets.all(5.0),
                   child: Row(
@@ -95,62 +94,43 @@ class _CandidatoPageState extends State<CandidatoPage> {
                               ),
                             ],
                           ),
-                          Visibility(
-                            visible: emBranco,
-                            child: Column(
-                              children: const [
-                                SizedBox(height: 25),
-                                Text(
-                                  'VOTO EM BRANCO',
-                                  style: TextStyle(fontSize: 45),
-                                ),
-                                SizedBox(height: 24),
-                              ],
-                            ),
+                          SizedBox(height: 5),
+                          ValueListenableBuilder(
+                            valueListenable: numSeqEleicao,
+                            builder: (context, _, __) =>
+                                montaNumeros(numberCandidato),
                           ),
                           SizedBox(height: 5),
-                          Visibility(
-                            visible: !emBranco,
-                            child: ValueListenableBuilder(
-                              valueListenable: numSeqEleicao,
-                              builder: (context, _, __) =>
-                                  montaNumeros(numberCandidato),
-                            ),
-                          ),
-                          SizedBox(height: 5),
-                          Visibility(
-                            visible: !emBranco,
-                            child: Row(
-                              children: [
-                                Text(
-                                  'Nome:',
-                                  style: TextStyle(fontSize: 25),
-                                ),
-                                SizedBox(width: 10),
-                                ValueListenableBuilder(
-                                  valueListenable: candidatoAtual,
-                                  builder: (context, value, child) {
-                                    final nome = numberCandidato == null
-                                        ? ''
-                                        : value?.nome == null
-                                            ? 'CANDIDATO INVÁLIDO'
-                                            : value!.nome;
-                                    return ConstrainedBox(
-                                      constraints: BoxConstraints(
-                                          minHeight: 80, maxWidth: width * .4),
-                                      child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          softWrap: true,
-                                          nome,
-                                          style: TextStyle(fontSize: 20),
-                                        ),
+                          Row(
+                            children: [
+                              Text(
+                                'Nome:',
+                                style: TextStyle(fontSize: 25),
+                              ),
+                              SizedBox(width: 10),
+                              ValueListenableBuilder(
+                                valueListenable: candidatoAtual,
+                                builder: (context, value, child) {
+                                  final nome = numberCandidato == null
+                                      ? ''
+                                      : value?.nome == null
+                                          ? 'CANDIDATO INVÁLIDO'
+                                          : value!.nome;
+                                  return ConstrainedBox(
+                                    constraints: BoxConstraints(
+                                        minHeight: 80, maxWidth: width * .4),
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        softWrap: true,
+                                        nome,
+                                        style: TextStyle(fontSize: 20),
                                       ),
-                                    );
-                                  },
-                                ),
-                              ],
-                            ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
                           ),
                           Spacer(),
                           Visibility(

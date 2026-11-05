@@ -155,7 +155,7 @@ class _AlunoCadPageState extends State<AlunoCadPage> {
                     content: Text(
                       success ? 'Salvo com sucesso' : 'Erro ao salvar',
                     ))).whenComplete(() {
-          if (success) {
+          if (success && mounted) {
             Navigator.of(context).pop();
           }
         });

@@ -19,12 +19,10 @@ import 'package:eleicao/src/functions/audio_player.dart';
 import 'package:eleicao/src/models/evento_eleicao.dart';
 import 'package:eleicao/src/repositories/api_db.dart';
 import 'package:eleicao/src/repositories/api_storage.dart';
-import 'package:eleicao/src/repositories/local/sqflite_db.dart';
 import 'package:eleicao/src/repositories/remote/firestore_db.dart';
 import 'package:eleicao/src/repositories/storage/api_storage_base64.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 late final AlunoRepository alunoRepository;
 late final CandidatoRepository candidatoRepository;
@@ -151,11 +149,4 @@ Future<void> inject() async {
 Future<ApiDb> configFirebase() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   return FirestoreDb();
-}
-
-Future<ApiDb> configSQFlite() async {
-  sqfliteFfiInit();
-  databaseFactory = databaseFactoryFfi;
-  final db = await SqfliteDb.createDatabase();
-  return SqfliteDb(db: db);
 }

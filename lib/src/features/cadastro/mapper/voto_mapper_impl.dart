@@ -1,4 +1,4 @@
-import 'package:eleicao/src/features/cadastro/mapper/candidato_mapper.dart';
+import 'package:eleicao/src/features/cadastro/mapper/mapper.dart';
 import 'package:eleicao/src/models/voto.dart';
 
 class VotoMapperImpl implements Mapper<Voto> {

@@ -6,7 +6,6 @@ import 'package:eleicao/src/features/urna/controllers/votacao_control.dart';
 import 'package:eleicao/src/widgets/function_button.dart';
 import 'package:eleicao/src/widgets/number_button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class TecladoWidget extends StatelessWidget {
   const TecladoWidget(
@@ -118,11 +117,6 @@ class TecladoWidget extends StatelessWidget {
               ),
               Row(
                 children: [
-                  // FunctionButton(
-                  //   onPressed: control.votoBranco,
-                  //   backgroundColor: Colors.white,
-                  //   text: 'BRANCO',
-                  // ),
                   Flexible(
                     child: FunctionButton(
                       onPressed: control.corrige,

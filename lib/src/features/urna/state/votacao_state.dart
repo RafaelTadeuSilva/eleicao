@@ -16,7 +16,6 @@ final urlImageCandidato = ValueNotifier<String>('');
 final urlImageVice = ValueNotifier<String>('');
 final eleitorAtual = ValueNotifier<Aluno?>(null);
 final candidatoAtual = ValueNotifier<Candidato?>(null);
-final listEleitor = <Aluno>[];
 final listCandidato = <Candidato>[];
 final listApuracao = ValueNotifier(<(String, int)>[]);
 
@@ -82,7 +81,6 @@ void aplicarEventoEleicao(EventoEleicao evento) {
   );
 
   // Limpa caches em memória para forçar recarregamento da nova coleção
-  listEleitor.clear();
   listCandidato.clear();
   listAlunos.value = [];
   listCandidatos.value = [];

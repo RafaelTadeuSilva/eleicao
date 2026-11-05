@@ -1,7 +1,7 @@
-import 'package:eleicao/src/features/cadastro/mapper/aluno_mapper.dart';
+import 'package:eleicao/src/features/cadastro/mapper/mapper.dart';
 import 'package:eleicao/src/models/aluno.dart';
 
-class AlunoMapperImpl implements AlunoMapper {
+class AlunoMapperImpl implements Mapper<Aluno> {
   @override
   Aluno fromMap(Map<String, dynamic> map) {
     return Aluno(

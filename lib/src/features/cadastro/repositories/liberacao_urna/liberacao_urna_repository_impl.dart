@@ -1,4 +1,4 @@
-import 'package:eleicao/src/features/cadastro/mapper/candidato_mapper.dart';
+import 'package:eleicao/src/features/cadastro/mapper/mapper.dart';
 import 'package:eleicao/src/features/cadastro/repositories/liberacao_urna/liberacao_urna_repository.dart';
 import 'package:eleicao/src/features/urna/state/votacao_state.dart';
 import 'package:eleicao/src/models/liberacao_urna.dart';
