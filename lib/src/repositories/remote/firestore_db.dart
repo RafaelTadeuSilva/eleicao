@@ -2,7 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eleicao/src/repositories/api_db.dart';
 
 class FirestoreDb implements ApiDb {
-  final db = FirebaseFirestore.instance;
+  final FirebaseFirestore db;
+
+  /// [db] permite injetar uma instância alternativa (ex.: fake em testes).
+  FirestoreDb({FirebaseFirestore? db}) : db = db ?? FirebaseFirestore.instance;
 
   @override
   Future<String> create(String colName, Map<String, dynamic> map) async {
