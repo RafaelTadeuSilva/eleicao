@@ -17,7 +17,6 @@ final urlImageVice = ValueNotifier<String>('');
 final eleitorAtual = ValueNotifier<Aluno?>(null);
 final candidatoAtual = ValueNotifier<Candidato?>(null);
 final listCandidato = <Candidato>[];
-final listApuracao = ValueNotifier(<(String, int)>[]);
 
 // Estado das coleções / evento ativo
 final eventoAtualId = ValueNotifier<String>('2026');
@@ -84,5 +83,4 @@ void aplicarEventoEleicao(EventoEleicao evento) {
   listCandidato.clear();
   listAlunos.value = [];
   listCandidatos.value = [];
-  listApuracao.value = [];
 }

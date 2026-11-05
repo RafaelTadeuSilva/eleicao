@@ -29,14 +29,12 @@ void main() {
 
     test('limpa caches em memória do evento anterior', () {
       listAlunos.value = [Aluno(id: '1', nome: 'A', turma: 0, titulo: 1)];
-      listApuracao.value = [('A', 1)];
 
       aplicarEventoEleicao(EventoEleicao.fromSufixo(sufixo: 'outro'));
 
       expect(listCandidato, isEmpty);
       expect(listAlunos.value, isEmpty);
       expect(listCandidatos.value, isEmpty);
-      expect(listApuracao.value, isEmpty);
     });
   });
 

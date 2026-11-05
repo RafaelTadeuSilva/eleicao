@@ -52,7 +52,6 @@ void main() {
           nome: 'Ana',
           urlImage: '',
           cargo: Cargo.presidente,
-          partido: '',
           zone: 0));
       control = VotacaoControl();
       await control.carregaListaCandidatos();

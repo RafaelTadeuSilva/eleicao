@@ -17,6 +17,11 @@ class VotoRepositoryImpl implements VotoRepository {
   }
 
   @override
+  Future<void> createAll(List<Voto> votos) {
+    return apiDb.createAll(table, votos.map(mapper.toMap).toList());
+  }
+
+  @override
   Future<List<Voto>> find(Map<String, dynamic> filter) async {
     final list = await apiDb.find(table, filter);
     return list.map((e) => mapper.fromMap(e)).toList();

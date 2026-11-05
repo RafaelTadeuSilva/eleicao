@@ -37,6 +37,9 @@ class SwitchableApiDb implements ApiDb {
   Future<String> create(String table, Map<String, dynamic> map) =>
       delegate.create(table, map);
   @override
+  Future<void> createAll(String table, List<Map<String, dynamic>> maps) =>
+      delegate.createAll(table, maps);
+  @override
   Future<bool> delete(String table, String id) => delegate.delete(table, id);
   @override
   Future<List<Map<String, dynamic>>> find(

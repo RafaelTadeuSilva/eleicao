@@ -54,4 +54,23 @@ void main() {
     expect(gerado, isNot('abc'));
     expect((await db.findOne('X', gerado))['nome'], 'B');
   });
+
+  test('createAll grava todos os documentos de uma vez', () async {
+    await db.createAll('V', [
+      {'nome': 'A', 'zone': 0},
+      {'nome': 'B', 'zone': 1},
+      {'id': 'fixo', 'nome': 'C', 'zone': 1},
+    ]);
+    final snap = await firestore.collection('V').get();
+    expect(snap.docs.map((d) => d.data()['nome']).toSet(), {'A', 'B', 'C'});
+    expect((await firestore.collection('V').doc('fixo').get()).exists, isTrue);
+    expect(snap.docs.every((d) => !d.data().containsKey('id')), isTrue);
+  });
+
+  test('create com id vazio também gera id automático', () async {
+    final id = await db.create('X', {'id': '', 'nome': 'A'});
+    expect(id, isNotEmpty);
+    final doc = await firestore.collection('X').doc(id).get();
+    expect(doc.data()!.containsKey('id'), isFalse);
+  });
 }

@@ -8,7 +8,7 @@ class CandidatoControl extends ChangeNotifier {
   CandidatoControl();
 
   Future<void> listaCandidatos() async {
-    listCandidatos.value = await candidatoRepository.find({}) ?? [];
+    listCandidatos.value = await candidatoRepository.find({});
     listCandidatos.notifyListeners();
   }
 
@@ -18,7 +18,7 @@ class CandidatoControl extends ChangeNotifier {
 
   Future<Candidato?> getByNumero(int numero) async {
     final list = await candidatoRepository.find({'numero': numero});
-    return list?.firstOrNull;
+    return list.firstOrNull;
   }
 
   Future<Candidato?> verificarNumeroDuplicado({
@@ -27,7 +27,7 @@ class CandidatoControl extends ChangeNotifier {
     required int zone,
     String? ignorarId,
   }) async {
-    final todos = await candidatoRepository.find({}) ?? [];
+    final todos = await candidatoRepository.find({});
     listCandidatos.value = todos;
     return todos.where((c) {
       if (ignorarId != null && c.id == ignorarId) return false;

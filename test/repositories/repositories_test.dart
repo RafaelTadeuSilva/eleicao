@@ -21,8 +21,14 @@ Candidato candidato(String id, String nome, int numero,
         nome: nome,
         urlImage: '',
         cargo: cargo,
-        partido: '',
         zone: zone);
+
+Voto voto(String nome, {int zone = 0}) => Voto(
+    cargo: Cargo.prefeito,
+    candidatoId: 'id-$nome',
+    numero: 10,
+    nome: nome,
+    zone: zone);
 
 void main() {
   setUp(() => resetAmbiente());
@@ -104,7 +110,7 @@ void main() {
       await candidatoRepository.create(
           candidato('2_4', 'Bruno', 1234, cargo: Cargo.vereador, zone: 1));
 
-      final todos = (await candidatoRepository.find({}))!;
+      final todos = await candidatoRepository.find({});
       expect(todos.map((e) => e.nome), ['Ana', 'Bruno']);
       expect(todos.last.cargo, Cargo.vereador);
       expect(todos.last.zone, 1);
@@ -120,8 +126,34 @@ void main() {
     test('find por zona', () async {
       await candidatoRepository.create(candidato('1_1', 'Ana', 12, zone: 0));
       await candidatoRepository.create(candidato('2_1', 'Bia', 13, zone: 1));
-      final zona1 = (await candidatoRepository.find({'zone': 1}))!;
+      final zona1 = await candidatoRepository.find({'zone': 1});
       expect(zona1.map((e) => e.nome), ['Bia']);
+    });
+
+    test('sem id, o banco gera um id automático', () async {
+      final id = await candidatoRepository.create(Candidato(
+          numero: 12,
+          nome: 'Ana',
+          urlImage: '',
+          cargo: Cargo.prefeito,
+          zone: 0));
+      expect(id, isNotEmpty);
+      final lido = await candidatoRepository.findOne(id);
+      expect(lido!.id, id);
+      expect(lido.nome, 'Ana');
+    });
+
+    test('mesmo cargo e número em zonas diferentes não se sobrescrevem',
+        () async {
+      Candidato c(String nome, int zone) => Candidato(
+          numero: 12,
+          nome: nome,
+          urlImage: '',
+          cargo: Cargo.vereador,
+          zone: zone);
+      await candidatoRepository.create(c('Turma A', 1));
+      await candidatoRepository.create(c('Turma B', 2));
+      expect(await candidatoRepository.find({}), hasLength(2));
     });
 
     test(
@@ -134,21 +166,18 @@ void main() {
 
   group('VotoRepositoryImpl', () {
     test('create gera id automático e find filtra por zona', () async {
-      final id1 = await votoRepository.create(
-          Voto(cargo: 'Prefeito', matricula: '1', nome: 'Ana', zone: 0));
-      await votoRepository.create(
-          Voto(cargo: 'Prefeito', matricula: '2', nome: 'Bia', zone: 1));
+      final id1 = await votoRepository.create(voto('Ana', zone: 0));
+      await votoRepository.create(voto('Bia', zone: 1));
       expect(id1, isNotEmpty);
 
-      final zona0 = (await votoRepository.find({'zone': 0}))!;
+      final zona0 = await votoRepository.find({'zone': 0});
       expect(zona0, hasLength(1));
       expect(zona0.first.nome, 'Ana');
       expect(zona0.first.id, id1);
     });
 
     test('votos ficam na coleção do evento ativo', () async {
-      await votoRepository.create(
-          Voto(cargo: 'Prefeito', matricula: '1', nome: 'Ana', zone: 0));
+      await votoRepository.create(voto('Ana', zone: 0));
       final snap = await firestore.collection(colecaoVotosAtual.value).get();
       expect(snap.docs, hasLength(1));
       expect(colecaoVotosAtual.value, 'VotosTeste');

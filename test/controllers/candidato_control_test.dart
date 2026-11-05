@@ -14,7 +14,6 @@ Candidato candidato(String id, String nome, int numero,
         nome: nome,
         urlImage: '',
         cargo: cargo,
-        partido: '',
         zone: zone);
 
 void main() {

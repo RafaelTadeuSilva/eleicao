@@ -32,21 +32,24 @@ void main() {
   group('CandidatoMapperImpl', () {
     final mapper = CandidatoMapperImpl();
 
-    test('ida e volta preserva os campos', () {
+    test('ida e volta preserva os campos (id vem da chave do documento)', () {
       final c = Candidato(
-        id: '555_1',
+        id: 'doc1',
         numero: 12,
         nome: 'Ana',
         nomeVice: 'Bia',
         urlImage: 'https://x/a.png',
         urlImageVice: 'https://x/b.png',
         cargo: Cargo.prefeito,
-        partido: 'P',
         zone: 1,
       );
-      final copia = mapper.fromMap(mapper.toMap(c));
-      expect(copia.id, '555_1');
-      expect(copia.matricula, '555');
+      final map = mapper.toMap(c);
+      expect(map.containsKey('id'), isFalse);
+      expect(map.containsKey('matricula'), isFalse);
+      expect(map.containsKey('partido'), isFalse);
+
+      final copia = mapper.fromMap({...map, 'id': 'doc1'});
+      expect(copia.id, 'doc1');
       expect(copia.numero, 12);
       expect(copia.nome, 'Ana');
       expect(copia.nomeVice, 'Bia');
@@ -57,8 +60,8 @@ void main() {
     });
 
     test('mapa incompleto usa valores padrão', () {
-      final c = mapper.fromMap({'id': '42_4'});
-      expect(c.matricula, '42');
+      final c = mapper.fromMap({});
+      expect(c.id, '');
       expect(c.numero, 0);
       expect(c.nome, '');
       expect(c.urlImage, '');
@@ -66,36 +69,67 @@ void main() {
       expect(c.zone, 0);
     });
 
-    test('matrícula explícita tem prioridade sobre o id', () {
-      final c = mapper.fromMap({'id': 'abc', 'matricula': '999'});
-      expect(c.matricula, '999');
+    test('documentos antigos com matrícula e partido continuam legíveis', () {
+      final c = mapper.fromMap({
+        'id': '4_1234',
+        'matricula': '1234',
+        'partido': '',
+        'numero': 1234,
+        'nome': 'Velho',
+        'cargo': 4,
+      });
+      expect(c.id, '4_1234');
+      expect(c.numero, 1234);
+      expect(c.cargo, Cargo.vereador);
     });
   });
 
-  test('Candidato deriva a matrícula do id quando não informada', () {
+  test('Candidato novo tem id vazio (gerado pelo banco ao salvar)', () {
     final c = Candidato(
-      id: '321_2',
-      numero: 1,
-      nome: 'X',
-      urlImage: '',
-      cargo: Cargo.prefeito,
-      partido: '',
-      zone: 0,
-    );
-    expect(c.matricula, '321');
+        numero: 1, nome: 'X', urlImage: '', cargo: Cargo.prefeito, zone: 0);
+    expect(c.id, '');
   });
 
   group('VotoMapperImpl', () {
     final mapper = VotoMapperImpl();
 
-    test('toMap não inclui id (gerado pelo banco)', () {
-      final map = mapper.toMap(
-          Voto(id: 'x', cargo: 'Prefeito', matricula: '1', nome: 'A', zone: 1));
-      expect(
-          map, {'cargo': 'Prefeito', 'matricula': '1', 'nome': 'A', 'zone': 1});
+    test('toMap grava código e descrição do cargo, sem id', () {
+      final map = mapper.toMap(Voto(
+          id: 'x',
+          cargo: Cargo.prefeito,
+          candidatoId: 'c1',
+          numero: 12,
+          nome: 'A',
+          zone: 1));
+      expect(map, {
+        'cargo': 2,
+        'cargoDescricao': 'Prefeito',
+        'candidatoId': 'c1',
+        'numero': 12,
+        'nome': 'A',
+        'zone': 1,
+      });
     });
 
-    test('fromMap lê todos os campos', () {
+    test('ida e volta preserva os campos', () {
+      final v = mapper.fromMap({
+        ...mapper.toMap(Voto(
+            cargo: Cargo.vereador,
+            candidatoId: 'c9',
+            numero: 1234,
+            nome: 'B',
+            zone: 2)),
+        'id': 'v1',
+      });
+      expect(v.id, 'v1');
+      expect(v.cargo, Cargo.vereador);
+      expect(v.candidatoId, 'c9');
+      expect(v.numero, 1234);
+      expect(v.nome, 'B');
+      expect(v.zone, 2);
+    });
+
+    test('lê votos antigos (cargo como descrição, sem candidatoId)', () {
       final v = mapper.fromMap({
         'id': 'v1',
         'cargo': 'Prefeito',
@@ -103,9 +137,10 @@ void main() {
         'nome': 'A',
         'zone': 0
       });
-      expect(v.id, 'v1');
-      expect(v.cargo, 'Prefeito');
-      expect(v.zone, 0);
+      expect(v.cargo, Cargo.prefeito);
+      expect(v.candidatoId, '');
+      expect(v.numero, 0);
+      expect(v.nome, 'A');
     });
   });
 

@@ -468,16 +468,12 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
       remoteImageVicePath = normalizeImageUrl(txtUrlImageVice.text);
     }
 
-    final docId = widget.id ?? '${cargoSelecionado.codigo}_$numeroCand';
-
     final candidato = Candidato(
-      id: docId,
-      matricula: numeroCand.toString(),
+      id: widget.id ?? '', // vazio: o Firebase gera o id
       numero: numeroCand,
       nome: txtNome.text.trim(),
       nomeVice: txtNomeVice.text.trim(),
       cargo: cargoSelecionado,
-      partido: '',
       urlImage: remoteImagePath,
       urlImageVice: remoteImageVicePath,
       zone: zoneSelecionada,

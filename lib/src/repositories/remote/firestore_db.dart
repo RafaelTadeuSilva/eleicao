@@ -9,12 +9,25 @@ class FirestoreDb implements ApiDb {
 
   @override
   Future<String> create(String colName, Map<String, dynamic> map) async {
-    if (map['id'] == null) {
-      final doc = await db.collection(colName).add(map);
+    final id = map['id']?.toString() ?? '';
+    if (id.isEmpty) {
+      final doc = await db.collection(colName).add({...map}..remove('id'));
       return doc.id;
     }
-    await db.collection(colName).doc(map['id']).set(map);
-    return map['id'];
+    await db.collection(colName).doc(id).set(map);
+    return id;
+  }
+
+  @override
+  Future<void> createAll(
+      String colName, List<Map<String, dynamic>> maps) async {
+    final batch = db.batch();
+    final col = db.collection(colName);
+    for (final map in maps) {
+      final id = map['id']?.toString() ?? '';
+      batch.set(id.isEmpty ? col.doc() : col.doc(id), {...map}..remove('id'));
+    }
+    await batch.commit();
   }
 
   @override

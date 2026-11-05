@@ -19,7 +19,6 @@ Future<void> cadastraCandidatos() async {
           urlImage: 'https://x/$id.png',
           urlImageVice: cargo.temVice ? 'https://x/vice.png' : null,
           cargo: cargo,
-          partido: '',
           zone: zone));
 
   await c('100_1', 'Ana', 12, Cargo.presidente);
@@ -178,12 +177,21 @@ void main() {
         ..sort((a, b) => (a['nome'] as String).compareTo(b['nome']));
       expect(gravados, [
         {
-          'cargo': 'Presidente da Câmara',
-          'matricula': '100',
+          'cargo': Cargo.presidente.codigo,
+          'cargoDescricao': 'Presidente da Câmara',
+          'candidatoId': '100_1',
+          'numero': 12,
           'nome': 'Ana',
           'zone': 0
         },
-        {'cargo': 'Vereador', 'matricula': '200', 'nome': 'Bruno', 'zone': 0},
+        {
+          'cargo': Cargo.vereador.codigo,
+          'cargoDescricao': 'Vereador',
+          'candidatoId': '200_4',
+          'numero': 1234,
+          'nome': 'Bruno',
+          'zone': 0
+        },
       ]);
       expect(control.votoAtual, isEmpty);
 

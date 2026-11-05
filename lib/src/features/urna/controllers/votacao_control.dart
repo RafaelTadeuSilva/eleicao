@@ -54,10 +54,12 @@ class VotacaoControl with ChangeNotifier {
 
   void confirma(BuildContext context) {
     if (candidatoAtual.value != null) {
+      final candidato = candidatoAtual.value!;
       votoAtual.add(Voto(
-        cargo: Cargo.getCargoByCodigo(numSeqEleicao.value).descricao,
-        nome: candidatoAtual.value!.nome,
-        matricula: candidatoAtual.value!.matricula,
+        cargo: candidato.cargo,
+        candidatoId: candidato.id,
+        numero: candidato.numero,
+        nome: candidato.nome,
         zone: zone ?? 0,
       ));
       etapaIndex++;
@@ -73,11 +75,18 @@ class VotacaoControl with ChangeNotifier {
     }
   }
 
+  /// Grava todos os votos do eleitor de uma vez (atômico: ou grava todos
+  /// os cargos ou nenhum). Não bloqueia a urna: com o Firestore offline a
+  /// gravação fica pendente localmente e é enviada quando a rede voltar.
   Future<void> gravaVoto() async {
     final votosParaGravar = List<Voto>.from(votoAtual);
     votoAtual.clear();
-    for (var voto in votosParaGravar) {
-      await votoRepository.create(voto);
+    if (votosParaGravar.isEmpty) return;
+    try {
+      await votoRepository.createAll(votosParaGravar);
+    } catch (e, s) {
+      debugPrint('Erro ao gravar votos: $e');
+      debugPrintStack(stackTrace: s);
     }
   }
 
@@ -106,10 +115,10 @@ class VotacaoControl with ChangeNotifier {
     final list = await candidatoRepository.find({});
     listCandidato.clear();
     if (zone == 0) {
-      listCandidato.addAll(list ?? []);
+      listCandidato.addAll(list);
       return;
     }
-    final listFiltrada = list?.where((e) => e.zone == zone) ?? [];
+    final listFiltrada = list.where((e) => e.zone == zone);
     listCandidato.addAll(listFiltrada);
   }
 }
