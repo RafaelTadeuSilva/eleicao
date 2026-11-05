@@ -1,13 +1,11 @@
-import 'dart:io';
-
 import 'package:eleicao/src/features/cadastro/controllers/candidato_control.dart';
 import 'package:eleicao/src/features/cadastro/state/cadastro_state.dart';
+import 'package:eleicao/src/features/cadastro/widgets/foto_candidato_field.dart';
 import 'package:eleicao/src/features/urna/enums/cargo.dart';
 import 'package:eleicao/src/features/urna/state/votacao_state.dart';
 import 'package:eleicao/src/functions/image_helper.dart';
 import 'package:eleicao/src/injector.dart';
 import 'package:eleicao/src/models/candidato.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 class CandidatoCadPage extends StatefulWidget {
@@ -28,9 +26,6 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
 
   late Cargo cargoSelecionado;
   int zoneSelecionada = 0;
-
-  var imageFile = File('');
-  var imageFileVice = File('');
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   var ativaValidacaoForm = false;
@@ -124,16 +119,13 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
                   if (texto.length != digitosEsperados) {
                     return 'Para ${cargoSelecionado.descricao}, informe $digitosEsperados dígitos';
                   }
-                  final duplicado = listCandidatos.value.where((c) {
-                    if (widget.id != null && c.id == widget.id) return false;
-                    final mesmoCargo =
-                        c.cargo.codigo == cargoSelecionado.codigo;
-                    final mesmoNumero = c.numero == numero;
-                    final mesmaZona = c.zone == 0 ||
-                        zoneSelecionada == 0 ||
-                        c.zone == zoneSelecionada;
-                    return mesmoCargo && mesmoNumero && mesmaZona;
-                  }).firstOrNull;
+                  final duplicado = CandidatoControl.numeroDuplicado(
+                    listCandidatos.value,
+                    numero: numero,
+                    cargo: cargoSelecionado,
+                    zone: zoneSelecionada,
+                    ignorarId: widget.id,
+                  );
                   if (duplicado != null) {
                     return 'Número $numero já pertence a "${duplicado.nome}" em ${cargoSelecionado.descricao}';
                   }
@@ -194,52 +186,9 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
                 },
               ),
               const SizedBox(height: 12),
-              ValueListenableBuilder(
-                valueListenable: txtUrlImage,
-                builder: (context, value, child) => Column(
-                  children: [
-                    GestureDetector(
-                      onTap: () async {
-                        final (filepath, file) = await buscaImagem();
-                        if (file != null) {
-                          imageFile = file;
-                          txtUrlImage.text = filepath;
-                        }
-                      },
-                      child: Container(
-                        height: 200,
-                        width: 200,
-                        decoration: BoxDecoration(
-                          border: Border.all(),
-                        ),
-                        child: buildCandidatoPreviewImage(txtUrlImage.text),
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Wrap(
-                      spacing: 8,
-                      children: [
-                        OutlinedButton.icon(
-                          onPressed: () async {
-                            final (filepath, file) = await buscaImagem();
-                            if (file != null) {
-                              imageFile = file;
-                              txtUrlImage.text = filepath;
-                            }
-                          },
-                          icon: const Icon(Icons.photo_library),
-                          label: const Text('Escolher Arquivo'),
-                        ),
-                        OutlinedButton.icon(
-                          onPressed: () =>
-                              informarLinkImagem(txtUrlImage, 'Candidato'),
-                          icon: const Icon(Icons.link),
-                          label: const Text('Colar Link / Drive'),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+              FotoCandidatoField(
+                controller: txtUrlImage,
+                titulo: 'Candidato',
               ),
               ValueListenableBuilder(
                 valueListenable: showVice,
@@ -257,54 +206,10 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
                           ),
                         ),
                         const SizedBox(height: 10),
-                        ValueListenableBuilder(
-                          valueListenable: txtUrlImageVice,
-                          builder: (context, value, child) => Column(
-                            children: [
-                              GestureDetector(
-                                onTap: () async {
-                                  final (filepath, file) = await buscaImagem();
-                                  if (file != null) {
-                                    imageFileVice = file;
-                                    txtUrlImageVice.text = filepath;
-                                  }
-                                },
-                                child: Container(
-                                  height: 200,
-                                  width: 200,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(),
-                                  ),
-                                  child: buildCandidatoPreviewImage(
-                                      txtUrlImageVice.text),
-                                ),
-                              ),
-                              const SizedBox(height: 6),
-                              Wrap(
-                                spacing: 8,
-                                children: [
-                                  OutlinedButton.icon(
-                                    onPressed: () async {
-                                      final (filepath, file) =
-                                          await buscaImagem();
-                                      if (file != null) {
-                                        imageFileVice = file;
-                                        txtUrlImageVice.text = filepath;
-                                      }
-                                    },
-                                    icon: const Icon(Icons.photo_library),
-                                    label: const Text('Escolher Arquivo Vice'),
-                                  ),
-                                  OutlinedButton.icon(
-                                    onPressed: () => informarLinkImagem(
-                                        txtUrlImageVice, 'Vice'),
-                                    icon: const Icon(Icons.link),
-                                    label: const Text('Colar Link / Drive'),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
+                        FotoCandidatoField(
+                          controller: txtUrlImageVice,
+                          titulo: 'Vice',
+                          rotuloArquivo: 'Escolher Arquivo Vice',
                         ),
                       ],
                     ),
@@ -328,40 +233,6 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  void informarLinkImagem(TextEditingController controller, String titulo) {
-    final txtLink = TextEditingController(
-      text: controller.text.startsWith('http') ? controller.text : '',
-    );
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Link da Foto ($titulo)'),
-        content: TextField(
-          controller: txtLink,
-          decoration: const InputDecoration(
-            labelText: 'Cole a URL da imagem ou link do Google Drive',
-            border: OutlineInputBorder(),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancelar'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              if (txtLink.text.trim().isNotEmpty) {
-                controller.text = normalizeImageUrl(txtLink.text.trim());
-              }
-              Navigator.of(context).pop();
-            },
-            child: const Text('Confirmar'),
-          ),
-        ],
       ),
     );
   }
@@ -505,17 +376,5 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
         }
       });
     }
-  }
-
-  Future<(String, File?)> buscaImagem() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.image,
-    );
-
-    if (result != null && result.files.single.path != null) {
-      final file = File(result.files.single.path!);
-      return (result.files.single.path!, file);
-    }
-    return ('', null);
   }
 }

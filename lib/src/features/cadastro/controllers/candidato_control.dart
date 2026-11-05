@@ -29,12 +29,24 @@ class CandidatoControl extends ChangeNotifier {
   }) async {
     final todos = await candidatoRepository.find({});
     listCandidatos.value = todos;
-    return todos.where((c) {
+    return numeroDuplicado(todos,
+        numero: numero, cargo: cargo, zone: zone, ignorarId: ignorarId);
+  }
+
+  /// Candidato que conflita com o número informado: mesmo cargo e número,
+  /// em zonas que aparecem juntas em alguma urna (mesma zona, ou uma delas
+  /// é a Geral, que aparece em todas).
+  static Candidato? numeroDuplicado(
+    Iterable<Candidato> candidatos, {
+    required int numero,
+    required Cargo cargo,
+    required int zone,
+    String? ignorarId,
+  }) {
+    return candidatos.where((c) {
       if (ignorarId != null && c.id == ignorarId) return false;
-      final mesmoCargo = c.cargo.codigo == cargo.codigo;
-      final mesmoNumero = c.numero == numero;
       final mesmaZona = c.zone == 0 || zone == 0 || c.zone == zone;
-      return mesmoCargo && mesmoNumero && mesmaZona;
+      return c.cargo == cargo && c.numero == numero && mesmaZona;
     }).firstOrNull;
   }
 
