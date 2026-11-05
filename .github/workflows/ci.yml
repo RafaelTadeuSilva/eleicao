@@ -1,0 +1,53 @@
+# Verifica formatação, análise estática e testes a cada push e pull request.
+# Repositório público: GitHub Actions é gratuito em runners padrão.
+name: CI
+
+on:
+  push:
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  testes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.47.7
+          cache: true
+
+      # lib/firebase_options.dart não é versionado (contém as chaves do
+      # projeto). Os testes usam um Firestore falso, então basta um stub
+      # para o código compilar.
+      - name: Gera firebase_options.dart de teste
+        run: |
+          cat > lib/firebase_options.dart <<'EOF'
+          import 'package:firebase_core/firebase_core.dart';
+
+          class DefaultFirebaseOptions {
+            static FirebaseOptions get currentPlatform => const FirebaseOptions(
+                  apiKey: 'ci',
+                  appId: 'ci',
+                  messagingSenderId: 'ci',
+                  projectId: 'ci',
+                );
+          }
+          EOF
+
+      - run: flutter pub get
+
+      - name: Formatação
+        run: dart format --output=none --set-exit-if-changed lib/src lib/main.dart test
+
+      - name: Análise estática
+        run: flutter analyze
+
+      - name: Testes
+        run: flutter test
