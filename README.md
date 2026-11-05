@@ -23,6 +23,29 @@ Firebase (Cloud Firestore). Suporta três modalidades:
 - **Apuração**: filtra por cargo e por zona, mostra o percentual e destaca o
   mais votado (ou o empate) de cada cargo.
 
+## Planilhas (CSV)
+
+Nas listas de **Candidatos** e **Alunos**, o ícone de planilha permite:
+
+- **Baixar planilha**: gera um CSV (separado por `;`, abre direto no Excel)
+  com os cadastros da eleição ativa.
+- **Enviar planilha**: mostra uma prévia do que será criado, alterado e
+  excluído; só grava depois da confirmação, e nada é gravado se houver erros.
+
+Regras para candidatos:
+
+| Coluna | Como usar |
+|---|---|
+| `id` | Vazio cria um candidato novo; preenchido altera aquele candidato |
+| `numero`, `nome`, `cargo` | Obrigatórias. `cargo` aceita o código (ex.: `4`) ou o nome (ex.: `Vereador`) |
+| `zona` | Código ou nome da zona; vazio = Geral |
+| `foto`, `foto_vice` | Vazio mantém a foto atual; um link (inclusive Google Drive) troca a foto |
+| `acao` | `EXCLUIR` exclui o candidato da linha (basta o `id`) |
+| `cargo_descricao`, `zona_nome` | Só informativas |
+
+Para alunos, a `matricula` é a chave: matrícula nova cria, existente altera.
+Quem não estiver na planilha não é alterado nem excluído.
+
 ## Como rodar
 
 1. Instale o Flutter (versão usada no CI: 3.47.7, canal stable).

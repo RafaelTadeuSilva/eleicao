@@ -2,6 +2,7 @@ import 'package:eleicao/src/features/cadastro/controllers/candidato_control.dart
 import 'package:eleicao/src/features/cadastro/controllers/verificacao_candidatos.dart';
 import 'package:eleicao/src/features/cadastro/pages/candidato_cad_page.dart';
 import 'package:eleicao/src/features/cadastro/pages/verificacao_candidatos_page.dart';
+import 'package:eleicao/src/features/cadastro/widgets/planilha_csv_menu.dart';
 import 'package:eleicao/src/features/cadastro/state/cadastro_state.dart';
 import 'package:eleicao/src/features/urna/state/votacao_state.dart';
 import 'package:eleicao/src/models/candidato.dart';
@@ -30,6 +31,12 @@ class _ListaCandidatosCadPageState extends State<ListaCandidatosCadPage> {
         appBar: AppBar(
           title: Text('Lista de Candidatos (${colecaoCandidatosAtual.value})'),
           actions: [
+            PlanilhaCsvMenu(
+              nomeArquivo: 'candidatos_${eventoAtualId.value}.csv',
+              exportar: control.exportarCsv,
+              planejar: control.planejarImportacao,
+              aplicar: control.aplicarImportacao,
+            ),
             ValueListenableBuilder(
               valueListenable: listCandidatos,
               builder: (context, list, _) {

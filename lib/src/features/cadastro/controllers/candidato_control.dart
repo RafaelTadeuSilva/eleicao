@@ -1,4 +1,7 @@
 import 'package:eleicao/src/features/cadastro/controllers/verificacao_candidatos.dart';
+import 'package:eleicao/src/features/cadastro/importacao/aplicar_importacao.dart';
+import 'package:eleicao/src/features/cadastro/importacao/candidato_csv.dart';
+import 'package:eleicao/src/features/cadastro/importacao/plano_importacao.dart';
 import 'package:eleicao/src/features/cadastro/state/cadastro_state.dart';
 import 'package:eleicao/src/features/urna/enums/cargo.dart';
 import 'package:eleicao/src/features/urna/state/votacao_state.dart';
@@ -71,6 +74,35 @@ class CandidatoControl extends ChangeNotifier {
       digitosDoCargo: digitosDoCargo,
       zonas: zonasEleitorais.value,
     );
+  }
+
+  /// Planilha CSV com os candidatos da eleição ativa.
+  Future<String> exportarCsv() async => CandidatoCsv.exportar(
+        await candidatoRepository.find({}),
+        cargos: tipoEleicao,
+        zonas: zonasEleitorais.value,
+      );
+
+  /// Analisa a planilha contra os candidatos atuais, sem gravar nada.
+  Future<PlanoImportacao<Candidato>> planejarImportacao(String csv) async =>
+      CandidatoCsv.planejar(
+        csv,
+        existentes: await candidatoRepository.find({}),
+        cargos: tipoEleicao,
+        digitosDoCargo: digitosDoCargo,
+        zonas: zonasEleitorais.value,
+      );
+
+  Future<ResultadoImportacao> aplicarImportacao(
+      PlanoImportacao<Candidato> plano) async {
+    final resultado = await aplicarPlano(
+      plano,
+      criar: candidatoRepository.create,
+      atualizar: (c) => candidatoRepository.update(c.id, c),
+      excluir: (c) => candidatoRepository.delete(c.id),
+    );
+    await listaCandidatos();
+    return resultado;
   }
 
   Future<bool> delete(String id) async {

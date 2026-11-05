@@ -1,6 +1,7 @@
 import 'package:eleicao/src/features/cadastro/controllers/aluno_control.dart';
 import 'package:eleicao/src/features/cadastro/pages/aluno_cad_page.dart';
 import 'package:eleicao/src/features/cadastro/state/cadastro_state.dart';
+import 'package:eleicao/src/features/cadastro/widgets/planilha_csv_menu.dart';
 import 'package:eleicao/src/features/urna/state/votacao_state.dart';
 import 'package:eleicao/src/models/aluno.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,14 @@ class _ListaAlunosCadPageState extends State<ListaAlunosCadPage> {
     return Scaffold(
         appBar: AppBar(
           title: Text('Lista de Alunos (${colecaoAlunosAtual.value})'),
+          actions: [
+            PlanilhaCsvMenu(
+              nomeArquivo: 'alunos_${eventoAtualId.value}.csv',
+              exportar: control.exportarCsv,
+              planejar: control.planejarImportacao,
+              aplicar: control.aplicarImportacao,
+            ),
+          ],
         ),
         body: montaBody(),
         floatingActionButton: FloatingActionButton(
