@@ -46,3 +46,4 @@ app.*.map.json
 
 /lib/firebase_options.dart
 /ios/firebase_app_id_file.json
+/macos/build/
