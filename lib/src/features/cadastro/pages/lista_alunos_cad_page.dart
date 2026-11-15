@@ -1,6 +1,7 @@
 import 'package:eleicao/src/features/cadastro/controllers/aluno_control.dart';
 import 'package:eleicao/src/features/cadastro/pages/aluno_cad_page.dart';
 import 'package:eleicao/src/features/cadastro/state/cadastro_state.dart';
+import 'package:eleicao/src/features/urna/state/votacao_state.dart';
 import 'package:eleicao/src/models/aluno.dart';
 import 'package:flutter/material.dart';
 
@@ -25,7 +26,7 @@ class _ListaAlunosCadPageState extends State<ListaAlunosCadPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Lista de Alunos'),
+          title: Text('Lista de Alunos (${colecaoAlunosAtual.value})'),
         ),
         body: montaBody(),
         floatingActionButton: FloatingActionButton(
