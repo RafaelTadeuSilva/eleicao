@@ -1,5 +1,5 @@
 import 'package:eleicao/src/features/urna/controllers/liberacao_urna_control.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class LiberacaoUrnaPage extends StatefulWidget {
   const LiberacaoUrnaPage({super.key});

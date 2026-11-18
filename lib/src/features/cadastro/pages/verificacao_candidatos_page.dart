@@ -4,7 +4,7 @@ import 'package:eleicao/src/features/cadastro/pages/candidato_cad_page.dart';
 import 'package:eleicao/src/features/cadastro/state/cadastro_state.dart';
 import 'package:eleicao/src/features/urna/state/votacao_state.dart';
 import 'package:eleicao/src/functions/image_helper.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Relatório de problemas no cadastro dos candidatos da eleição ativa.
 /// Tocar num candidato abre o cadastro para corrigir; ao voltar, a análise

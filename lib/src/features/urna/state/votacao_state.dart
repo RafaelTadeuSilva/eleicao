@@ -4,7 +4,7 @@ import 'package:eleicao/src/models/aluno.dart';
 import 'package:eleicao/src/models/candidato.dart';
 import 'package:eleicao/src/models/evento_eleicao.dart';
 import 'package:eleicao/src/models/zona.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 final numAtual = ValueNotifier(0);
 final modalidadeEleicao =

@@ -5,7 +5,7 @@ import 'package:eleicao/src/features/urna/functions/functions.dart';
 import 'package:eleicao/src/features/urna/state/votacao_state.dart';
 import 'package:eleicao/src/functions/image_helper.dart';
 import 'package:eleicao/src/widgets/number_label.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class CandidatoPage extends StatefulWidget {
   const CandidatoPage({super.key, this.id});

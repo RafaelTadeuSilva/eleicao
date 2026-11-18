@@ -1,7 +1,7 @@
 import 'package:eleicao/src/models/aluno.dart';
 import 'package:eleicao/src/models/candidato.dart';
 import 'package:eleicao/src/models/zona.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Zonas eleitorais do evento ativo (atualizadas ao trocar de evento).
 /// Sempre começa pela zona Geral (0).

@@ -10,7 +10,7 @@ import 'package:eleicao/src/features/urna/pages/liberacao_urna_page.dart';
 import 'package:eleicao/src/features/urna/pages/proximo_eleitor_page.dart';
 import 'package:eleicao/src/features/urna/state/votacao_state.dart';
 import 'package:eleicao/src/injector.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

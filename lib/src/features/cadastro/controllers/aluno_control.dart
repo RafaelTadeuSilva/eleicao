@@ -4,7 +4,7 @@ import 'package:eleicao/src/features/cadastro/importacao/plano_importacao.dart';
 import 'package:eleicao/src/features/cadastro/state/cadastro_state.dart';
 import 'package:eleicao/src/injector.dart';
 import 'package:eleicao/src/models/aluno.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class AlunoControl with ChangeNotifier {
   Future<void> listaAlunos() async {

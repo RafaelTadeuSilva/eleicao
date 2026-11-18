@@ -1,7 +1,7 @@
 import 'package:eleicao/src/features/urna/controllers/votacao_control.dart';
 import 'package:eleicao/src/features/urna/pages/candidato_page.dart';
 import 'package:eleicao/src/widgets/teclado_widget.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 
 class VotacaoPage extends StatefulWidget {

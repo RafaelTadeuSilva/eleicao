@@ -2,7 +2,7 @@ import 'package:eleicao/src/features/cadastro/state/cadastro_state.dart';
 import 'package:eleicao/src/features/urna/controllers/apuracao_control.dart';
 import 'package:eleicao/src/features/urna/enums/cargo.dart';
 import 'package:eleicao/src/features/urna/state/votacao_state.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ApuracaoPage extends StatefulWidget {
   const ApuracaoPage({super.key});
