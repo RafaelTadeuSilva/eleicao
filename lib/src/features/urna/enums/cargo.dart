@@ -69,17 +69,15 @@ enum Cargo {
   cipaSuplente(14, 'Suplente da CIPA', TipoEleicaoModalidade.cipa),
 
   // Esportes (Até 10 modalidades)
-  futsal(20, 'Melhor Jogador - Futsal', TipoEleicaoModalidade.esportes),
-  futebol(21, 'Melhor Jogador - Futebol', TipoEleicaoModalidade.esportes),
-  handebol(22, 'Melhor Jogador - Handebol', TipoEleicaoModalidade.esportes),
-  volei(23, 'Melhor Jogador - Vôlei', TipoEleicaoModalidade.esportes),
-  basquete(24, 'Melhor Jogador - Basquete', TipoEleicaoModalidade.esportes),
-  queimada(25, 'Melhor Jogador - Queimada', TipoEleicaoModalidade.esportes),
-  tenisDeMesa(
-      26, 'Melhor Jogador - Tênis de Mesa', TipoEleicaoModalidade.esportes),
-  xadrez(27, 'Melhor Jogador - Xadrez', TipoEleicaoModalidade.esportes),
-  atletismo(28, 'Melhor Jogador - Atletismo', TipoEleicaoModalidade.esportes),
-  natacao(29, 'Melhor Jogador - Natação', TipoEleicaoModalidade.esportes);
+  futsalMasc(20, 'Futsal Masculino', TipoEleicaoModalidade.esportes),
+  handebolMasc(21, 'Handebol Masculino', TipoEleicaoModalidade.esportes),
+  handebolFem(22, 'Handebol Feminino', TipoEleicaoModalidade.esportes),
+  basqueteMasc(23, 'Basquete Masculino', TipoEleicaoModalidade.esportes),
+  basqueteFem(24, 'Basquete Feminino', TipoEleicaoModalidade.esportes),
+  voleiFem(25, 'Vôlei Feminino', TipoEleicaoModalidade.esportes),
+  ginastica(26, 'Ginástica', TipoEleicaoModalidade.esportes),
+  badmintonFem(27, 'Badminton Feminino', TipoEleicaoModalidade.esportes),
+  badmintonMasc(28, 'Badminton Masculino', TipoEleicaoModalidade.esportes);
 
   const Cargo(
     this.codigo,

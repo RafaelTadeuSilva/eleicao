@@ -97,9 +97,35 @@ class _EventoEleicaoDialogState extends State<EventoEleicaoDialog> {
         zonas: zonasSelecionadas,
       );
 
+  /// O código (sufixo) é o id do documento na coleção Eleicoes; repetir o
+  /// código de outro evento sobrescreveria esse evento no Firebase.
+  /// Retorna a mensagem de erro, ou `null` se o código é válido.
+  String? validarCodigo() {
+    final codigo = txtSufixo.text.trim();
+    if (codigo.isEmpty) {
+      return 'Informe o Sufixo / Código do evento.';
+    }
+    if (codigo.contains('/')) {
+      return 'O código do evento não pode conter "/".';
+    }
+    final editandoMesmoEvento =
+        itemSelecionadoKey != novoEventoKey && codigo == itemSelecionadoKey;
+    if (!editandoMesmoEvento && eventosSalvos.any((e) => e.id == codigo)) {
+      return 'Já existe um evento com o código "$codigo". '
+          'Selecione-o na lista para editá-lo ou use outro código.';
+    }
+    return null;
+  }
+
   /// Ativa o evento neste aparelho e, se [salvarNoFirebase], grava também
   /// na coleção Eleicoes. Em caso de erro, mantém o diálogo aberto.
   Future<void> ativar({required bool salvarNoFirebase}) async {
+    final erro = validarCodigo();
+    if (erro != null) {
+      ScaffoldMessenger.maybeOf(context)
+          ?.showSnackBar(SnackBar(content: Text(erro)));
+      return;
+    }
     setState(() => salvando = true);
     final evento = montaEvento();
     try {
@@ -145,9 +171,13 @@ class _EventoEleicaoDialogState extends State<EventoEleicaoDialog> {
           onPressed: salvando ? null : () => Navigator.of(context).pop(),
           child: const Text('Cancelar'),
         ),
-        OutlinedButton(
-          onPressed: salvando ? null : () => ativar(salvarNoFirebase: false),
-          child: const Text('Apenas Ativar neste Aparelho'),
+        Tooltip(
+          message: 'Não grava no Firebase: o evento não aparecerá na lista '
+              'depois que outro evento for ativado.',
+          child: OutlinedButton(
+            onPressed: salvando ? null : () => ativar(salvarNoFirebase: false),
+            child: const Text('Apenas Ativar neste Aparelho'),
+          ),
         ),
         ElevatedButton(
           onPressed: salvando ? null : () => ativar(salvarNoFirebase: true),

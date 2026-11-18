@@ -51,8 +51,8 @@ void main() {
     test('lista de cargos vazia usa o primeiro cargo da modalidade', () {
       aplicarConfigEleicao(
           modalidade: TipoEleicaoModalidade.esportes, codigosCargos: []);
-      expect(tipoEleicao, [Cargo.futsal.codigo]);
-      expect(numSeqEleicao.value, Cargo.futsal.codigo);
+      expect(tipoEleicao, [Cargo.futsalMasc.codigo]);
+      expect(numSeqEleicao.value, Cargo.futsalMasc.codigo);
     });
 
     test('limita a 10 etapas de votação', () {

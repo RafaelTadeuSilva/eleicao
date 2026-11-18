@@ -17,8 +17,8 @@ void main() {
       sufixo: 'Esportes',
       nome: 'Esportes 2026',
       modalidade: TipoEleicaoModalidade.esportes,
-      cargos: [Cargo.futsal.codigo, Cargo.volei.codigo],
-      digitosPorCargo: {Cargo.futsal.codigo: 3},
+      cargos: [Cargo.futsalMasc.codigo, Cargo.voleiFem.codigo],
+      digitosPorCargo: {Cargo.futsalMasc.codigo: 3},
       zonas: const [Zona(1, 'Turma: A'), Zona(2, 'Turma B')],
     );
     await salvarEventoEleicaoLocal(evento);
@@ -31,8 +31,8 @@ void main() {
     expect(eventoAtualId.value, 'Esportes');
     expect(eventoAtualNome.value, 'Esportes 2026');
     expect(modalidadeEleicao.value, TipoEleicaoModalidade.esportes);
-    expect(tipoEleicao, [Cargo.futsal.codigo, Cargo.volei.codigo]);
-    expect(digitosDoCargo(Cargo.futsal.codigo), 3);
+    expect(tipoEleicao, [Cargo.futsalMasc.codigo, Cargo.voleiFem.codigo]);
+    expect(digitosDoCargo(Cargo.futsalMasc.codigo), 3);
     expect(colecaoVotosAtual.value, 'VotosEsportes');
     expect(zonasEleitorais.value,
         const [Zona.geral, Zona(1, 'Turma: A'), Zona(2, 'Turma B')]);

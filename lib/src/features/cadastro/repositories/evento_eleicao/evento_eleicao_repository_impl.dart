@@ -2,6 +2,7 @@ import 'package:eleicao/src/features/cadastro/repositories/evento_eleicao/evento
 import 'package:eleicao/src/features/urna/state/votacao_state.dart';
 import 'package:eleicao/src/models/evento_eleicao.dart';
 import 'package:eleicao/src/repositories/api_db.dart';
+import 'package:flutter/foundation.dart';
 
 class EventoEleicaoRepositoryImpl implements EventoEleicaoRepository {
   final String table = 'Eleicoes';
@@ -15,8 +16,9 @@ class EventoEleicaoRepositoryImpl implements EventoEleicaoRepository {
     try {
       final list = await apiDb.find(table, {});
       eventos.addAll(list.map(EventoEleicao.fromMap));
-    } catch (_) {
+    } catch (e) {
       // Se falhar ou estiver offline, mantém pelo menos o evento atual
+      debugPrint('Falha ao carregar a coleção $table: $e');
     }
 
     // Garante que o evento ativo atual esteja sempre na lista

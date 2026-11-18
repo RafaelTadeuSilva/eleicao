@@ -28,7 +28,7 @@ void main() {
 
     test('getCargoByCodigo encontra cargo e usa vereador como fallback', () {
       expect(Cargo.getCargoByCodigo(2), Cargo.prefeito);
-      expect(Cargo.getCargoByCodigo(20), Cargo.futsal);
+      expect(Cargo.getCargoByCodigo(20), Cargo.futsalMasc);
       expect(Cargo.getCargoByCodigo(-1), Cargo.vereador);
     });
 

@@ -4,6 +4,7 @@ import 'package:eleicao/src/features/home/widgets/evento_eleicao_dialog.dart';
 import 'package:eleicao/src/features/urna/enums/cargo.dart';
 import 'package:eleicao/src/features/urna/state/votacao_state.dart';
 import 'package:eleicao/src/injector.dart';
+import 'package:eleicao/src/models/evento_eleicao.dart';
 import 'package:eleicao/src/models/zona.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -101,6 +102,65 @@ void main() {
       expect(doc.data()!['zonas'], [
         {'codigo': 0, 'nome': 'Geral'}
       ]);
+    });
+
+    Future<void> selecionaNovoEvento(WidgetTester tester) async {
+      await tester.tap(find.byType(DropdownButtonFormField<String>));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('+ Criar Novo Evento / Eleição...').last);
+      await tester.pumpAndSettle();
+    }
+
+    Future<void> tocaSalvar(WidgetTester tester) async {
+      await tester.runAsync(() async {
+        await tester.tap(find.text('Salvar no Firebase e Ativar'));
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+      });
+      await tester.pump();
+    }
+
+    final campoCodigo =
+        find.widgetWithText(TextField, 'Sufixo / Código (ex: Esportes2026)');
+
+    testWidgets('novo evento sem código não sobrescreve o evento 2026',
+        (tester) async {
+      await abre(tester);
+      await selecionaNovoEvento(tester);
+      await tocaSalvar(tester);
+
+      expect(find.text('Informe o Sufixo / Código do evento.'), findsOneWidget);
+      final docs =
+          await tester.runAsync(() => firestore.collection('Eleicoes').get());
+      expect(docs!.docs, isEmpty);
+      expect(eventoAtualId.value, 'Teste');
+    });
+
+    testWidgets('novo evento com código já existente é recusado',
+        (tester) async {
+      await abre(tester);
+      await selecionaNovoEvento(tester);
+      await tester.enterText(campoCodigo, '2025');
+      await tocaSalvar(tester);
+
+      expect(find.textContaining('Já existe um evento com o código "2025"'),
+          findsOneWidget);
+      final docs =
+          await tester.runAsync(() => firestore.collection('Eleicoes').get());
+      expect(docs!.docs, isEmpty);
+    });
+
+    testWidgets('novo evento com código inédito é salvo ao lado dos demais',
+        (tester) async {
+      await tester.runAsync(() => eventoEleicaoRepository
+          .save(EventoEleicao.fromSufixo(sufixo: 'CIPA')));
+      await abre(tester);
+      await selecionaNovoEvento(tester);
+      await tester.enterText(campoCodigo, 'Esportes');
+      await tocaSalvar(tester);
+
+      final ids = await tester.runAsync(() async =>
+          (await eventoEleicaoRepository.findAll()).map((e) => e.id).toList());
+      expect(ids, containsAll(['CIPA', 'Esportes', '2026', '2025']));
     });
   });
 }
