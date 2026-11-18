@@ -1,6 +1,6 @@
 import 'package:eleicao/src/features/urna/controllers/proximo_eleitor_control.dart';
 import 'package:eleicao/src/features/urna/pages/votacao_page.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 
 class ProximoEleitorPage extends StatefulWidget {

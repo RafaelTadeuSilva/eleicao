@@ -4,7 +4,7 @@ import 'package:eleicao/src/features/urna/state/votacao_state.dart';
 import 'package:eleicao/src/injector.dart';
 import 'package:eleicao/src/models/evento_eleicao.dart';
 import 'package:eleicao/src/models/zona.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Diálogo para escolher, criar ou editar o evento (eleição) ativo:
 /// coleções do Firebase, modalidade, cargos/dígitos e zonas eleitorais.

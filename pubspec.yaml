@@ -38,6 +38,7 @@ dependencies:
   audioplayers: ^6.0.0
 
 
+  material_ui: any
 dev_dependencies:
   fake_cloud_firestore: ^3.1.0
   flutter_lints: ^5.0.0

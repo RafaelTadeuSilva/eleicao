@@ -5,7 +5,7 @@ import 'package:eleicao/src/features/urna/enums/cargo.dart';
 import 'package:eleicao/src/features/urna/state/votacao_state.dart';
 import 'package:eleicao/src/injector.dart';
 import 'package:eleicao/src/models/candidato.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../helpers/test_setup.dart';

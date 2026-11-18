@@ -6,7 +6,7 @@ import 'package:eleicao/src/features/urna/controllers/votacao_control.dart';
 import 'package:eleicao/src/features/urna/state/votacao_state.dart';
 import 'package:eleicao/src/widgets/function_button.dart';
 import 'package:eleicao/src/widgets/number_button.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class TecladoWidget extends StatelessWidget {
   const TecladoWidget(

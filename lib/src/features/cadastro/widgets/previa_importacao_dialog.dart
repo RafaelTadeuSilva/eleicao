@@ -1,5 +1,5 @@
 import 'package:eleicao/src/features/cadastro/importacao/plano_importacao.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Mostra o que a planilha vai mudar antes de gravar. Fecha retornando
 /// `true` quando o usuário confirma.

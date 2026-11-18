@@ -4,7 +4,7 @@ import 'package:eleicao/src/features/cadastro/state/cadastro_state.dart';
 import 'package:eleicao/src/features/cadastro/widgets/planilha_csv_menu.dart';
 import 'package:eleicao/src/features/urna/state/votacao_state.dart';
 import 'package:eleicao/src/models/aluno.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ListaAlunosCadPage extends StatefulWidget {
   const ListaAlunosCadPage({super.key});

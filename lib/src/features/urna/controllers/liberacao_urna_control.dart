@@ -2,7 +2,7 @@ import 'package:eleicao/src/features/cadastro/state/cadastro_state.dart';
 import 'package:eleicao/src/injector.dart';
 import 'package:eleicao/src/models/liberacao_urna.dart';
 import 'package:eleicao/src/models/zona.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class LiberacaoUrnaControl {
   final txtTituloEleitor = TextEditingController();

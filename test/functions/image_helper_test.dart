@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:eleicao/src/functions/image_helper.dart';
 import 'package:eleicao/src/repositories/storage/api_storage_base64.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

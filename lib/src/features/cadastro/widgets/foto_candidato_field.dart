@@ -1,6 +1,6 @@
 import 'package:eleicao/src/functions/image_helper.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Campo de foto do candidato (ou do vice): pré-visualização e botões para
 /// escolher um arquivo ou colar um link (inclusive do Google Drive).

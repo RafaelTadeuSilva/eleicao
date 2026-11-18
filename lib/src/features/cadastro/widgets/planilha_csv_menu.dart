@@ -1,7 +1,7 @@
 import 'package:eleicao/src/features/cadastro/importacao/arquivo_csv.dart';
 import 'package:eleicao/src/features/cadastro/importacao/plano_importacao.dart';
 import 'package:eleicao/src/features/cadastro/widgets/previa_importacao_dialog.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Menu "Planilha" com as opções de baixar e enviar CSV de um cadastro.
 ///

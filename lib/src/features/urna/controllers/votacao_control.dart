@@ -6,7 +6,7 @@ import 'package:eleicao/src/functions/audio_player.dart';
 import 'package:eleicao/src/injector.dart';
 import 'package:eleicao/src/models/candidato.dart';
 import 'package:eleicao/src/models/voto.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class VotacaoControl with ChangeNotifier {
   List<Voto> votoAtual = [];
