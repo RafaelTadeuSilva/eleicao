@@ -1,3 +1,4 @@
+import 'package:eleicao/src/features/cadastro/state/cadastro_state.dart';
 import 'package:eleicao/src/features/cadastro/mapper/aluno_mapper_impl.dart';
 import 'package:eleicao/src/features/cadastro/mapper/candidato_mapper_impl.dart';
 import 'package:eleicao/src/features/cadastro/mapper/liberacao_urna_mapper_impl.dart';
@@ -99,5 +100,6 @@ Future<void> resetAmbiente({
   firestore = FakeFirebaseFirestore();
   _apiDb.delegate = FirestoreDb(db: firestore);
   fakeSound.played.clear();
+  ultimoCargoCadastrado = null;
   aplicarEventoEleicao(eventoTeste());
 }

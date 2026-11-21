@@ -33,17 +33,31 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
   final showVice = ValueNotifier(false);
   final focusNome = FocusNode();
 
-  List<Cargo> get _cargosOrdenados {
-    final ativos = Cargo.byModalidade(modalidadeEleicao.value);
-    final outros =
-        Cargo.values.where((c) => c.modalidade != modalidadeEleicao.value);
-    return [...ativos, ...outros];
+  /// Cargos do evento ativo, na ordem de votação.
+  static List<Cargo> get cargosDoEvento =>
+      tipoEleicao.map(Cargo.getCargoByCodigo).toList();
+
+  /// Cargos do evento ativo; ao editar um candidato de cargo que não está
+  /// mais no evento, inclui esse cargo para não perder o valor gravado.
+  List<Cargo> get cargosDisponiveis {
+    final cargos = cargosDoEvento;
+    return cargos.contains(cargoSelecionado)
+        ? cargos
+        : [...cargos, cargoSelecionado];
+  }
+
+  /// Último cargo usado no cadastro, se ainda fizer parte do evento ativo;
+  /// senão, o primeiro cargo do evento.
+  static Cargo cargoInicial() {
+    final cargos = cargosDoEvento;
+    final ultimo = ultimoCargoCadastrado;
+    return cargos.where((c) => c.codigo == ultimo).firstOrNull ?? cargos.first;
   }
 
   @override
   void initState() {
     super.initState();
-    cargoSelecionado = Cargo.getCargoByCodigo(tipoEleicao.first);
+    cargoSelecionado = cargoInicial();
     showVice.value = cargoSelecionado.temVice;
     control.listaCandidatos();
     buscaCandidato(widget.id);
@@ -140,7 +154,7 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
                   labelText: 'Cargo / Modalidade',
                   border: OutlineInputBorder(),
                 ),
-                items: _cargosOrdenados
+                items: cargosDisponiveis
                     .map(
                       (c) => DropdownMenuItem<Cargo>(
                         value: c,
@@ -339,6 +353,7 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
       null => await control.create(candidato),
       _ => await control.update(candidato),
     };
+    if (success) ultimoCargoCadastrado = cargoSelecionado.codigo;
 
     if (mounted) {
       showDialog(

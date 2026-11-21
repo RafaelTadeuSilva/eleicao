@@ -85,4 +85,60 @@ void main() {
     expect(find.text('Para Presidente da Câmara, informe 2 dígitos'),
         findsOneWidget);
   });
+
+  Cargo cargoNoCombo(WidgetTester tester) => tester
+      .widget<DropdownButtonFormField<Cargo>>(
+          find.byType(DropdownButtonFormField<Cargo>))
+      .initialValue!;
+
+  testWidgets('CandidatoCadPage só oferece os cargos do evento ativo',
+      (tester) async {
+    telaGrande(tester);
+    await tester.pumpWidget(const MaterialApp(home: CandidatoCadPage()));
+    await tester.pump(const Duration(milliseconds: 100));
+
+    await tester.tap(find.byType(DropdownButtonFormField<Cargo>));
+    await tester.pumpAndSettle();
+
+    final opcoes = tester
+        .widgetList<DropdownMenuItem<Cargo>>(
+            find.byType(DropdownMenuItem<Cargo>))
+        .map((i) => i.value)
+        .toSet();
+    expect(opcoes, {Cargo.presidente, Cargo.vereador});
+  });
+
+  testWidgets('CandidatoCadPage sugere o cargo do último candidato salvo',
+      (tester) async {
+    telaGrande(tester);
+    await tester.pumpWidget(const MaterialApp(home: CandidatoCadPage()));
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(cargoNoCombo(tester), Cargo.presidente);
+
+    await tester.tap(find.byType(DropdownButtonFormField<Cargo>));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Vereador').last);
+    await tester.pumpAndSettle();
+
+    await tester.enterText(
+        find.widgetWithText(TextFormField, 'Nome do Candidato'), 'Bruno');
+    await tester.enterText(
+        find.byWidgetPredicate((w) =>
+            w is TextField &&
+            (w.decoration?.labelText ?? '').startsWith('Número do Candidato')),
+        '1234');
+    await tester.runAsync(() async {
+      await tester.tap(find.text('Salvar'));
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+    });
+    await tester.pumpAndSettle();
+    expect(find.text('Salvo sem foto. Adicione a foto depois; ela aparece '
+        'em "Verificar candidatos".'), findsOneWidget);
+
+    // Novo cadastro já abre no cargo usado por último.
+    await tester.pumpWidget(const SizedBox());
+    await tester.pumpWidget(const MaterialApp(home: CandidatoCadPage()));
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(cargoNoCombo(tester), Cargo.vereador);
+  });
 }

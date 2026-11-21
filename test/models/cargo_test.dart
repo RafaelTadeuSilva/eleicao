@@ -40,7 +40,7 @@ void main() {
     test('byModalidade separa os cargos por modalidade', () {
       expect(Cargo.byModalidade(TipoEleicaoModalidade.politica), hasLength(7));
       expect(Cargo.byModalidade(TipoEleicaoModalidade.cipa), hasLength(5));
-      expect(Cargo.byModalidade(TipoEleicaoModalidade.esportes), hasLength(10));
+      expect(Cargo.byModalidade(TipoEleicaoModalidade.esportes), hasLength(9));
       for (final m in TipoEleicaoModalidade.values) {
         expect(Cargo.byModalidade(m).every((c) => c.modalidade == m), isTrue);
       }

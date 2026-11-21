@@ -30,3 +30,7 @@ Zona zonaPorCodigo(int? codigo) {
 final listAlunos = ValueNotifier(<Aluno>[]);
 
 final listCandidatos = ValueNotifier(<Candidato>[]);
+
+/// Cargo do último candidato salvo no cadastro, para sugerir o mesmo cargo
+/// no próximo. Fica só em memória: volta a ser nulo ao reabrir o app.
+int? ultimoCargoCadastrado;
