@@ -77,7 +77,9 @@ enum Cargo {
   voleiFem(25, 'Vôlei Feminino', TipoEleicaoModalidade.esportes),
   ginastica(26, 'Ginástica', TipoEleicaoModalidade.esportes),
   badmintonFem(27, 'Badminton Feminino', TipoEleicaoModalidade.esportes),
-  badmintonMasc(28, 'Badminton Masculino', TipoEleicaoModalidade.esportes);
+  badmintonMasc(28, 'Badminton Masculino', TipoEleicaoModalidade.esportes),
+  karateFem(29, 'Karatê Feminino', TipoEleicaoModalidade.esportes),
+  karateMasc(30, 'Karatê Masculino', TipoEleicaoModalidade.esportes);
 
   const Cargo(
     this.codigo,

@@ -5,8 +5,18 @@ import 'package:eleicao/src/features/cadastro/pages/verificacao_candidatos_page.
 import 'package:eleicao/src/features/cadastro/widgets/planilha_csv_menu.dart';
 import 'package:eleicao/src/features/cadastro/state/cadastro_state.dart';
 import 'package:eleicao/src/features/urna/state/votacao_state.dart';
+import 'package:eleicao/src/functions/csv.dart';
 import 'package:eleicao/src/models/candidato.dart';
 import 'package:material_ui/material_ui.dart';
+
+enum OrdemCandidatos {
+  codigo('Código'),
+  nome('Nome'),
+  cargo('Cargo');
+
+  const OrdemCandidatos(this.descricao);
+  final String descricao;
+}
 
 class ListaCandidatosCadPage extends StatefulWidget {
   const ListaCandidatosCadPage({super.key});
@@ -17,6 +27,8 @@ class ListaCandidatosCadPage extends StatefulWidget {
 
 class _ListaCandidatosCadPageState extends State<ListaCandidatosCadPage> {
   late final CandidatoControl control;
+  OrdemCandidatos ordem = OrdemCandidatos.cargo;
+  bool crescente = true;
 
   @override
   void initState() {
@@ -31,6 +43,7 @@ class _ListaCandidatosCadPageState extends State<ListaCandidatosCadPage> {
         appBar: AppBar(
           title: Text('Lista de Candidatos (${colecaoCandidatosAtual.value})'),
           actions: [
+            montaMenuOrdenacao(),
             PlanilhaCsvMenu(
               nomeArquivo: 'candidatos_${eventoAtualId.value}.csv',
               exportar: control.exportarCsv,
@@ -65,8 +78,9 @@ class _ListaCandidatosCadPageState extends State<ListaCandidatosCadPage> {
   Widget montaBody() {
     return ValueListenableBuilder(
       valueListenable: listCandidatos,
-      builder: (context, list, child) {
-        final problemas = verificar(list).porId;
+      builder: (context, original, child) {
+        final problemas = verificar(original).porId;
+        final list = ordenar(original);
         return ListView.builder(
           itemBuilder: (context, index) =>
               montaItem(index, list, problemas[list[index].id]),
@@ -74,6 +88,56 @@ class _ListaCandidatosCadPageState extends State<ListaCandidatosCadPage> {
         );
       },
     );
+  }
+
+  Widget montaMenuOrdenacao() {
+    return PopupMenuButton<OrdemCandidatos>(
+      tooltip: 'Ordenar por ${ordem.descricao} '
+          '(${crescente ? 'crescente' : 'decrescente'})',
+      icon: Icon(crescente ? Icons.arrow_upward : Icons.arrow_downward),
+      onSelected: (selecionada) => setState(() {
+        // Escolher a mesma ordem de novo inverte o sentido.
+        if (selecionada == ordem) {
+          crescente = !crescente;
+        } else {
+          ordem = selecionada;
+          crescente = true;
+        }
+      }),
+      itemBuilder: (context) => [
+        for (final o in OrdemCandidatos.values)
+          CheckedPopupMenuItem(
+            value: o,
+            checked: o == ordem,
+            child: Text(o == ordem
+                ? '${o.descricao} ${crescente ? '↑' : '↓'}'
+                : o.descricao),
+          ),
+      ],
+    );
+  }
+
+  List<Candidato> ordenar(List<Candidato> list) {
+    int porCodigo(Candidato a, Candidato b) => a.numero.compareTo(b.numero);
+    int porNome(Candidato a, Candidato b) =>
+        normalizarCabecalho(a.nome).compareTo(normalizarCabecalho(b.nome));
+    // Cargo segue a ordem de declaração do enum (ordem da urna).
+    int porCargo(Candidato a, Candidato b) =>
+        a.cargo.index.compareTo(b.cargo.index);
+
+    final criterios = switch (ordem) {
+      OrdemCandidatos.codigo => [porCodigo, porCargo, porNome],
+      OrdemCandidatos.nome => [porNome, porCodigo],
+      OrdemCandidatos.cargo => [porCargo, porCodigo, porNome],
+    };
+    final ordenada = [...list]..sort((a, b) {
+        for (final c in criterios) {
+          final r = c(a, b);
+          if (r != 0) return crescente ? r : -r;
+        }
+        return 0;
+      });
+    return ordenada;
   }
 
   ResultadoVerificacao verificar(List<Candidato> list) =>
