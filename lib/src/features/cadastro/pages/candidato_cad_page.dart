@@ -4,6 +4,7 @@ import 'package:eleicao/src/features/cadastro/widgets/foto_candidato_field.dart'
 import 'package:eleicao/src/features/urna/enums/cargo.dart';
 import 'package:eleicao/src/features/urna/state/votacao_state.dart';
 import 'package:eleicao/src/functions/image_helper.dart';
+import 'package:eleicao/src/functions/nome_formatter.dart';
 import 'package:eleicao/src/injector.dart';
 import 'package:eleicao/src/models/candidato.dart';
 import 'package:material_ui/material_ui.dart';
@@ -99,6 +100,8 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
               TextFormField(
                 focusNode: focusNome,
                 controller: txtNome,
+                textCapitalization: TextCapitalization.characters,
+                inputFormatters: const [NomeInputFormatter()],
                 decoration: const InputDecoration(
                   labelText: 'Nome do Candidato',
                   border: OutlineInputBorder(),
@@ -214,6 +217,8 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
                         const SizedBox(height: 12),
                         TextFormField(
                           controller: txtNomeVice,
+                          textCapitalization: TextCapitalization.characters,
+                          inputFormatters: const [NomeInputFormatter()],
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             labelText: 'Nome do Vice-Candidato',
@@ -267,8 +272,8 @@ class _CandidatoCadPageState extends State<CandidatoCadPage> {
         ) = candidato;
         setState(() {
           txtId.text = numero.toString();
-          txtNome.text = nome;
-          txtNomeVice.text = nomeVice ?? '';
+          txtNome.text = NomeInputFormatter.formatar(nome);
+          txtNomeVice.text = NomeInputFormatter.formatar(nomeVice ?? '');
           cargoSelecionado = cargo;
           zoneSelecionada = zone;
           txtUrlImage.text = urlImage;
